@@ -1,0 +1,220 @@
+/* animations.css
+ * Custom animation utilities for LineChip.
+ * Separated from globals.css for easier maintenance.
+ * Each feature's animations are grouped by section comment.
+ */
+
+/* ── Entrance & reveal ───────────────────────────────────────── */
+
+@keyframes rise-in-kf {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Ambient / decorative loops ─────────────────────────────── */
+
+@keyframes soft-bob-kf {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes float-drift-kf {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  33%  { transform: translate(12px, -10px) rotate(2deg); }
+  66%  { transform: translate(-8px, 6px) rotate(-2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-drift-slow-kf {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  33%  { transform: translate(-10px, 8px) rotate(-1.5deg); }
+  66%  { transform: translate(6px, -12px) rotate(1.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes grid-drift-kf {
+  0%   { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+@keyframes spin-slow-kf {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow-rev-kf {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* ── Battle Lab characters ───────────────────────────────────── */
+
+@keyframes battle-float-kf {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes battle-shake-kf {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+@keyframes defeat-left-kf {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-120px); opacity: 0; }
+}
+
+@keyframes defeat-right-kf {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(120px); opacity: 0; }
+}
+
+@keyframes victory-pop-kf {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25); }
+  70%  { transform: scale(0.95); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes arena-enter-kf {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes impact-ring-expand-kf {
+  0%   { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* ── 404 page ────────────────────────────────────────────────── */
+
+@keyframes glow-pulse-kf {
+  0%, 100% { text-shadow: 0 0 20px rgba(37,99,235,0.3); }
+  50%       { text-shadow: 0 0 40px rgba(37,99,235,0.5), 0 0 60px rgba(236,72,153,0.3); }
+}
+
+@keyframes glitch-hover-kf {
+  0%   { text-shadow:  2px 0 0 rgba(37,99,235,.3), -2px 0 0 rgba(236,72,153,.3); }
+  25%  { text-shadow: -2px 0 0 rgba(37,99,235,.3),  2px 0 0 rgba(236,72,153,.3); }
+  50%  { text-shadow:  1px 0 0 rgba(37,99,235,.3), -1px 0 0 rgba(236,72,153,.3); }
+  75%  { text-shadow: -1px 0 0 rgba(37,99,235,.3),  1px 0 0 rgba(236,72,153,.3); }
+  100% { text-shadow: none; }
+}
+
+/* ── Auth pages ──────────────────────────────────────────────── */
+
+@keyframes check-pop-kf {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-slide-in-kf {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-down-kf {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Utility classes ─────────────────────────────────────────── */
+
+@layer utilities {
+  .rise-in {
+    animation: rise-in-kf 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  .soft-bob {
+    animation: soft-bob-kf 3s ease-in-out infinite;
+  }
+
+  .float-drift {
+    animation: float-drift-kf 10s ease-in-out infinite;
+  }
+
+  .float-drift-slow {
+    animation: float-drift-slow-kf 14s ease-in-out infinite;
+  }
+
+  .grid-drift {
+    background-image:
+      linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: grid-drift-kf 8s linear infinite;
+  }
+
+  .spin-slow {
+    animation: spin-slow-kf 12s linear infinite;
+  }
+
+  .spin-slow-rev {
+    animation: spin-slow-rev-kf 18s linear infinite;
+  }
+
+  .battle-float {
+    animation: battle-float-kf 2s ease-in-out infinite;
+  }
+
+  .battle-shake {
+    animation: battle-shake-kf 0.4s ease-in-out;
+  }
+
+  .defeat-left {
+    animation: defeat-left-kf 0.6s ease-in forwards;
+  }
+
+  .defeat-right {
+    animation: defeat-right-kf 0.6s ease-in forwards;
+  }
+
+  .victory-pop {
+    animation: victory-pop-kf 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .arena-enter {
+    animation: arena-enter-kf 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .lift:hover {
+    transform: translateY(-3px);
+    transition: transform 0.15s ease-out;
+  }
+
+  .glow-pulse {
+    animation: glow-pulse-kf 3s ease-in-out infinite;
+  }
+
+  .glitch-hover:hover {
+    animation: glitch-hover-kf 0.3s steps(1) infinite;
+  }
+
+  .animate-check-pop {
+    animation: check-pop-kf 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .animate-fade-slide-in {
+    animation: fade-slide-in-kf 0.2s ease-out both;
+  }
+
+  .animate-slide-in-down {
+    animation: slide-in-down-kf 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #2563eb 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .impact-ring-expand {
+    animation: impact-ring-expand-kf 0.6s ease-out forwards;
+  }
+}

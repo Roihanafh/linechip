@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./animations.css";
 
 @theme {
   --font-heading: "Baloo 2", system-ui, sans-serif;

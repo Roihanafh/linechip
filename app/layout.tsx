@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Baloo_2, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import AppShell from "@/components/AppShell";
 
 const baloo2 = Baloo_2({
   variable: "--font-baloo2",
@@ -45,15 +44,20 @@ export default function RootLayout({
       lang="id"
       className={`${baloo2.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} h-full`}
     >
+      <head>
+        {/* Google Material Symbols Outlined */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+        />
+      </head>
       <body
         className="min-h-full flex flex-col"
         style={{
           fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
         }}
       >
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
