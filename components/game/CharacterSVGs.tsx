@@ -309,18 +309,21 @@ interface CharacterChipsProps {
   type: "ab" | "ku";   // antibody or virus
   dimmed?: boolean;     // grayed out (for neutralized pairs)
   phase?: "idle" | "charging" | "exploding" | "settled";
-  maxPerTier?: number;  // cap characters per tier (default 6)
+  maxPerTier?: number;  // cap characters per tier (default 9)
+  rowSize?: number;     // characters per row before wrapping (default 9)
   size?: "xs" | "sm" | "md"; // xs=w-6h-6, sm=w-8h-8 (default), md=w-10h-10
   uidPrefix?: string;   // prefix for gradient uid deduplication
 }
 
-/** Decomposes a number into tiers and renders SVG characters instead of chip circles. */
+/** Decomposes a number into tiers and renders SVG characters instead of chip circles.
+ *  Each tier renders in rows of `rowSize` characters (default 9). */
 export function CharacterChips({
   value,
   type,
   dimmed = false,
   phase = "idle",
-  maxPerTier = 6,
+  maxPerTier = 9,
+  rowSize = 9,
   size = "sm",
   uidPrefix = "cc",
 }: CharacterChipsProps) {
@@ -338,33 +341,46 @@ export function CharacterChips({
   const isCharging = phase === "charging";
   const isExploding = phase === "exploding";
 
+  // Split an array into chunks of `n`
+  function chunks<T>(arr: T[], n: number): T[][] {
+    const result: T[][] = [];
+    for (let i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n));
+    return result;
+  }
+
   return (
     <div className="space-y-1.5">
       {groups.map(({ tier, count }) => {
         const shown = Math.min(count, maxPerTier);
         const place = TIER_TO_PLACE[tier];
+        const indices = Array.from({ length: shown }, (_, i) => i);
+        const rows = chunks(indices, rowSize);
         return (
-          <div key={tier} className="flex flex-wrap gap-1 items-center">
-            {Array.from({ length: shown }, (_, i) => (
-              <div
-                key={`${tier}-${i}`}
-                className={`${sizeClass} transition-all duration-500 shrink-0 ${
-                  dimmed ? "opacity-30 grayscale scale-90" : ""
-                } ${isCharging ? "animate-pulse" : ""} ${
-                  isExploding ? "scale-0 opacity-0" : ""
-                }`}
-              >
-                {type === "ab"
-                  ? <AntibodyCharacter type={place} uid={`${uidPrefix}-ab-${tier}-${i}`} />
-                  : <VirusCharacter type={place} uid={`${uidPrefix}-ku-${tier}-${i}`} />
-                }
+          <div key={tier} className="space-y-0.5">
+            {rows.map((row, rowIdx) => (
+              <div key={rowIdx} className="flex gap-1 items-center justify-center">
+                {row.map((i) => (
+                  <div
+                    key={`${tier}-${i}`}
+                    className={`${sizeClass} transition-all duration-1000 shrink-0 ${
+                      dimmed ? "opacity-30 grayscale scale-90" : ""
+                    } ${isCharging ? "animate-pulse" : ""} ${
+                      isExploding ? "scale-0 opacity-0 transition-all duration-1000" : ""
+                    }`}
+                  >
+                    {type === "ab"
+                      ? <AntibodyCharacter type={place} uid={`${uidPrefix}-ab-${tier}-${i}`} />
+                      : <VirusCharacter type={place} uid={`${uidPrefix}-ku-${tier}-${i}`} />
+                    }
+                  </div>
+                ))}
               </div>
             ))}
             {count > maxPerTier && (
-              <span className={`text-xs font-mono font-bold ml-1 ${
+              <span className={`text-xs font-mono font-bold ${
                 type === "ab" ? "text-blue-500" : "text-rose-500"
               }`}>
-                ×{count}
+                +{(count - maxPerTier).toLocaleString("id-ID")} lagi
               </span>
             )}
           </div>
