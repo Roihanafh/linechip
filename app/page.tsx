@@ -336,7 +336,7 @@ const FEATURE_CARDS = [
     ),
     tag: "Game",
     title: "Game Garis Bilangan",
-    desc: "Lari di atas garis bilangan! Jawab soal dengan tepat untuk maju.",
+    desc: "Atur dua panah pada garis bilangan dan jawab soal operasi bilangan bulat.",
     cta: "Main Sekarang",
   },
 ];
@@ -347,3 +347,4 @@ const LEARN_STEPS = [
   { step: "03", emoji: "🎮", title: "Mainkan Game", desc: "Terapkan pemahamanmu di game Antibodi vs Kuman atau Garis Bilangan", blue: true, href: "/game-virus" },
   { step: "04", emoji: "🏆", title: "Raih Peringkat", desc: "Lihat posisimu di leaderboard dan kalahkan teman-teman!", blue: false, href: "/leaderboard" },
 ];
+
