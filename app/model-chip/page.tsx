@@ -80,9 +80,19 @@ export default function ModelChipPage() {
       return;
     }
 
+    // Dissolve duration: 120ms per paired char (staggered) + 800ms for last char's transition
+    // Decompose pairs into digit count to estimate char count
+    const pairCount = Math.min(tp, tn);
+    const digitGroups =
+      Math.floor(pairCount / 1000) +
+      Math.floor((pairCount % 1000) / 100) +
+      Math.floor((pairCount % 100) / 10) +
+      (pairCount % 10);
+    const dissolveDuration = Math.min(digitGroups * 120 + 800, 6000); // cap at 6s
+
     setVizPhase("shake");
     const t1 = setTimeout(() => setVizPhase("dissolve"), 1200);
-    const t2 = setTimeout(() => setVizPhase("done"), 2200);
+    const t2 = setTimeout(() => setVizPhase("done"), 1200 + dissolveDuration + 200);
     timers.current = [t1, t2];
   };
 
