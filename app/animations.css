@@ -218,3 +218,66 @@
     animation: impact-ring-expand-kf 0.6s ease-out forwards;
   }
 }
+
+/* ── Model Chip: Centered reaction stage ──────────────────────── */
+
+@keyframes reaction-center-in-kf {
+  0%   { opacity: 0; transform: scale(0.82) translateY(10px); }
+  60%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes reaction-center-out-kf {
+  0%   { opacity: 1; transform: scale(1); }
+  40%  { opacity: 0.7; transform: scale(1.06); }
+  100% { opacity: 0; transform: scale(0.9) translateY(-6px); }
+}
+
+@keyframes chip-fly-left-kf {
+  0%   { opacity: 1; transform: translateX(0) scale(1); }
+  50%  { opacity: 0.6; transform: translateX(-18px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(-6px) scale(1); }
+}
+
+@keyframes chip-fly-right-kf {
+  0%   { opacity: 1; transform: translateX(0) scale(1); }
+  50%  { opacity: 0.6; transform: translateX(18px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(6px) scale(1); }
+}
+
+@keyframes reaction-burst-kf {
+  0%   { transform: scale(0); opacity: 1; }
+  50%  { transform: scale(1.4); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes arena-expand-kf {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@layer utilities {
+  .reaction-center-in {
+    animation: reaction-center-in-kf 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .reaction-center-out {
+    animation: reaction-center-out-kf 0.5s ease-in forwards;
+  }
+
+  .chip-fly-left {
+    animation: chip-fly-left-kf 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .chip-fly-right {
+    animation: chip-fly-right-kf 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .reaction-burst {
+    animation: reaction-burst-kf 1.2s ease-out infinite;
+  }
+
+  .arena-expand {
+    animation: arena-expand-kf 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
