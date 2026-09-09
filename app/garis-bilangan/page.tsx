@@ -19,6 +19,9 @@ import NumberLineCanvas from "../../components/NumberLineCanvas";
 export default function GarisBilanganPage() {
   const [a, setA] = useState(3);
   const [b, setB] = useState(4);
+  // Raw string values driving the text inputs (allows transient "-" while typing)
+  const [aStr, setAStr] = useState("3");
+  const [bStr, setBStr] = useState("4");
   const [op, setOp] = useState<"+" | "-">("+");
   const [runKey, setRunKey] = useState(0);
   const [result, setResult] = useState<number | null>(null);
@@ -39,16 +42,63 @@ export default function GarisBilanganPage() {
     // NOT incrementing runKey — canvas stays in idle state
   };
 
+  // Stepper: delta-based
   const changeA = (delta: number) => {
-    setA((v) => Math.max(-99, Math.min(99, v + delta)));
+    setA((v) => {
+      const next = Math.max(-99, Math.min(99, v + delta));
+      setAStr(String(next));
+      return next;
+    });
     setResult(null);
     setIsDone(false);
   };
 
+  // Typed input: raw string → parse → clamp
+  const handleAInput = (raw: string) => {
+    setAStr(raw);
+    // Allow transient "-" while user is still typing
+    if (raw === "-" || raw === "") { setResult(null); setIsDone(false); return; }
+    const n = parseInt(raw, 10);
+    if (!Number.isNaN(n)) {
+      setA(Math.max(-99, Math.min(99, n)));
+      setResult(null);
+      setIsDone(false);
+    }
+  };
+
+  const commitA = () => {
+    const n = parseInt(aStr, 10);
+    const clamped = Number.isNaN(n) ? 0 : Math.max(-99, Math.min(99, n));
+    setA(clamped);
+    setAStr(String(clamped));
+  };
+
   const changeB = (delta: number) => {
-    setB((v) => Math.max(-99, Math.min(99, v + delta)));
+    setB((v) => {
+      const next = Math.max(-99, Math.min(99, v + delta));
+      setBStr(String(next));
+      return next;
+    });
     setResult(null);
     setIsDone(false);
+  };
+
+  const handleBInput = (raw: string) => {
+    setBStr(raw);
+    if (raw === "-" || raw === "") { setResult(null); setIsDone(false); return; }
+    const n = parseInt(raw, 10);
+    if (!Number.isNaN(n)) {
+      setB(Math.max(-99, Math.min(99, n)));
+      setResult(null);
+      setIsDone(false);
+    }
+  };
+
+  const commitB = () => {
+    const n = parseInt(bStr, 10);
+    const clamped = Number.isNaN(n) ? 0 : Math.max(-99, Math.min(99, n));
+    setB(clamped);
+    setBStr(String(clamped));
   };
 
   const changeOp = (o: "+" | "-") => {
@@ -145,15 +195,28 @@ export default function GarisBilanganPage() {
                 >
                   −
                 </button>
-                <div
-                  className={`w-16 h-12 rounded-xl flex items-center justify-center font-mono font-bold text-xl border-2 select-none ${
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={aStr}
+                  onChange={(e) => handleAInput(e.target.value)}
+                  onBlur={commitA}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { commitA(); handleHitung(); }
+                    // Allow: digits, minus, backspace, delete, arrows, tab
+                    if (!/^[0-9\-]$/.test(e.key) &&
+                        !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
                     a >= 0
-                      ? "border-intblue bg-intblue-light text-intblue"
-                      : "border-intpink bg-intpink-light text-intpink"
+                      ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
+                      : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
                   }`}
-                >
-                  {a > 0 ? `+${a}` : a}
-                </div>
+                  aria-label="Bilangan 1"
+                  maxLength={4}
+                />
                 <button
                   onClick={() => changeA(1)}
                   className="w-8 h-8 bg-intblue-light text-intblue rounded-lg font-bold hover:bg-intblue hover:text-white transition-colors text-sm"
@@ -196,15 +259,27 @@ export default function GarisBilanganPage() {
                 >
                   −
                 </button>
-                <div
-                  className={`w-16 h-12 rounded-xl flex items-center justify-center font-mono font-bold text-xl border-2 select-none ${
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={bStr}
+                  onChange={(e) => handleBInput(e.target.value)}
+                  onBlur={commitB}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { commitB(); handleHitung(); }
+                    if (!/^[0-9\-]$/.test(e.key) &&
+                        !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
                     b >= 0
-                      ? "border-intblue bg-intblue-light text-intblue"
-                      : "border-intpink bg-intpink-light text-intpink"
+                      ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
+                      : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
                   }`}
-                >
-                  {b > 0 ? `+${b}` : b}
-                </div>
+                  aria-label="Bilangan 2"
+                  maxLength={4}
+                />
                 <button
                   onClick={() => changeB(1)}
                   className="w-8 h-8 bg-intblue-light text-intblue rounded-lg font-bold hover:bg-intblue hover:text-white transition-colors text-sm"

@@ -160,7 +160,12 @@ export default function NumberLineCanvas({
       );
     }
 
-    // Result dot
+    // Car parked at result position — stays visible after animation ends.
+    // Direction = whichever way phase 2 moved (or phase 1 if result === n1).
+    const resultDir = resultX >= num1X ? "right" : "left";
+    drawCar(ctx, resultX, CAR_Y, resultDir);
+
+    // Result dot drawn on the line beneath the car
     drawResultDot(ctx, resultX, LINE_Y);
   }
 
