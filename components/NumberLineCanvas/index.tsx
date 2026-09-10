@@ -135,14 +135,6 @@ export default function NumberLineCanvas({
     drawCarTrail(ctx, startX, num1X, LINE_Y, phase1Color);
     if (n1 !== 0) {
       drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
-      const pill1Text = n1 >= 0 ? `+${n1}` : `${n1}`;
-      drawSegmentPill(
-        ctx,
-        (startX + num1X) / 2,
-        CAR_Y - 30,
-        pill1Text,
-        phase1Color,
-      );
     }
 
     // Full phase 2 trail
@@ -242,14 +234,6 @@ export default function NumberLineCanvas({
     drawCarTrail(ctx, originX, num1X, LINE_Y, phase1Color);
     if (n1 !== 0) {
       drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
-      const pill1Text = n1 >= 0 ? `+${n1}` : `${n1}`;
-      drawSegmentPill(
-        ctx,
-        (originX + num1X) / 2,
-        CAR_Y - 30,
-        pill1Text,
-        phase1Color,
-      );
     }
 
     // Phase 2 trail (growing)
