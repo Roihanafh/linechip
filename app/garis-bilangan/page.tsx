@@ -330,16 +330,16 @@ export default function GarisBilanganPage() {
               className="text-3xl font-bold"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              <span className={a >= 0 ? "text-intblue" : "text-intpink"}>{a > 0 ? `+${a}` : a}</span>
+              <span className={a >= 0 ? "text-intblue" : "text-intpink"}>{a < 0 ? `(${a})` : a}</span>
               {" "}{op}{" "}
-              <span className={b >= 0 ? "text-intblue" : "text-intpink"}>{b > 0 ? `+${b}` : b}</span>
+              <span className={b >= 0 ? "text-intblue" : "text-intpink"}>{b < 0 ? `(${b})` : b}</span>
               {" "}={" "}
               <span
                 className={
                   result > 0 ? "text-intblue" : result < 0 ? "text-intpink" : "text-success"
                 }
               >
-                {result > 0 ? `+${result}` : result}
+                {result < 0 ? `(${result})` : result}
               </span>
             </p>
             {result === 0 && (
