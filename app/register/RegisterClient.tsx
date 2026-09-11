@@ -163,12 +163,12 @@ export function RegisterClient() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FloatingInput
                 id="reg-email"
-                label="Email atau NISN"
-                type="text"
-                placeholder="NISN atau email aktif"
+                label="Alamat Email"
+                type="email"
+                placeholder="nama@email.com"
                 value={email}
                 onChange={(v) => { setEmail(v); clearErr("email"); }}
-                icon={<span className="material-symbols-outlined text-[18px]" aria-hidden="true">badge</span>}
+                icon={<span className="material-symbols-outlined text-[18px]" aria-hidden="true">mail</span>}
                 error={errors.email}
                 valid={email.trim().length > 0 && !errors.email}
                 autoComplete="email"
@@ -181,7 +181,8 @@ export function RegisterClient() {
                 value={school}
                 onChange={setSchool}
                 icon={<span className="material-symbols-outlined text-[18px]" aria-hidden="true">school</span>}
-                valid={school.trim().length > 0}
+                error={errors.school}
+                valid={school.trim().length > 0 && !errors.school}
                 autoComplete="organization"
               />
             </div>

@@ -6,6 +6,8 @@ import {
   type Auth,
 } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import type { FirebaseStorage } from 'firebase/storage';
 
 export const REQUIRED_ENV_VARS = [
   'NEXT_PUBLIC_FIREBASE_API_KEY',
@@ -40,10 +42,11 @@ export function validateClientEnv(): void {
 let cachedApp: FirebaseApp | null = null;
 let cachedAuth: Auth | null = null;
 let cachedDb: Firestore | null = null;
+let cachedStorage: FirebaseStorage | null = null;
 
-export function getFirebaseClient(): { app: FirebaseApp; auth: Auth; db: Firestore } {
-  if (cachedApp && cachedAuth && cachedDb) {
-    return { app: cachedApp, auth: cachedAuth, db: cachedDb };
+export function getFirebaseClient(): { app: FirebaseApp; auth: Auth; db: Firestore; storage: FirebaseStorage } {
+  if (cachedApp && cachedAuth && cachedDb && cachedStorage) {
+    return { app: cachedApp, auth: cachedAuth, db: cachedDb, storage: cachedStorage };
   }
 
   validateClientEnv();
@@ -66,10 +69,12 @@ export function getFirebaseClient(): { app: FirebaseApp; auth: Auth; db: Firesto
     // Silently ignore: may fail in non-browser environments
   });
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   cachedApp = app;
   cachedAuth = auth;
   cachedDb = db;
+  cachedStorage = storage;
 
-  return { app, auth, db };
+  return { app, auth, db, storage };
 }

@@ -15,6 +15,7 @@ const MAIN_ROUTES = new Set([
   "/leaderboard",
   "/materi",
   "/model-chip",
+  "/profile",
   "/tentang",
 ]);
 

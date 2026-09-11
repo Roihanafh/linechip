@@ -7,6 +7,7 @@ export interface UserProfile {
   name: string;
   email: string;
   school: string;
+  photoURL?: string;
   role: 'user' | 'admin';
   createdAt: Timestamp;
   updatedAt: Timestamp;
@@ -70,4 +71,4 @@ export interface DecodedSessionClaims {
 }
 
 /** Partial profile yang boleh diupdate via updateUserProfile */
-export type UpdatableUserProfile = Partial<Pick<UserProfile, 'name' | 'email' | 'school'>>;
+export type UpdatableUserProfile = Partial<Pick<UserProfile, 'name' | 'email' | 'school' | 'photoURL'>>;

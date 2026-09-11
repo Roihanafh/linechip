@@ -20,6 +20,9 @@ jest.mock('firebase/auth', () => ({
   browserLocalPersistence: {},
   setPersistence: jest.fn(() => Promise.resolve()),
 }));
+jest.mock('firebase/storage', () => ({
+  getStorage: jest.fn(() => ({})),
+}));
 jest.mock('firebase/firestore', () => ({
   getFirestore: jest.fn(() => ({})),
   doc: mockDoc,

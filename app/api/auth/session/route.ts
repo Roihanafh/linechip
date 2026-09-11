@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
     // Verify the ID token first
     await adminAuth.verifyIdToken(idToken);
 
-    // Create session cookie
+    // Create session cookie (Firebase Admin limit is 5 mins to 14 days max)
     const expiresIn = rememberMe
-      ? 30 * 24 * 60 * 60 * 1000 // 30 days in ms
+      ? 14 * 24 * 60 * 60 * 1000 // 14 days in ms (Firebase Admin maximum)
       : 5 * 24 * 60 * 60 * 1000; // 5 days in ms
 
     const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });

@@ -104,7 +104,7 @@ describe('POST /api/auth/session', () => {
     expect(setCookie).toMatch(/SameSite=lax/i);
   });
 
-  it('body valid dengan rememberMe=true → cookie maxAge 30 hari', async () => {
+  it('body valid dengan rememberMe=true → cookie maxAge 14 hari', async () => {
     mockVerifyIdToken.mockResolvedValue({ uid: 'user-123' });
     mockCreateSessionCookie.mockResolvedValue('mock-session-cookie-long');
 
@@ -116,10 +116,10 @@ describe('POST /api/auth/session', () => {
     const res = await sessionPost(req);
     expect(res.status).toBe(200);
 
-    // createSessionCookie should be called with 30-day expiresIn
+    // createSessionCookie should be called with 14-day expiresIn (Firebase max)
     expect(mockCreateSessionCookie).toHaveBeenCalledWith(
       'valid-id-token',
-      { expiresIn: 30 * 24 * 60 * 60 * 1000 }
+      { expiresIn: 14 * 24 * 60 * 60 * 1000 }
     );
   });
 

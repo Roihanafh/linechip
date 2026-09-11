@@ -26,7 +26,7 @@ export const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
   'auth/weak-password':
     'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.',
   'auth/operation-not-allowed':
-    'Metode login ini tidak diizinkan. Hubungi administrator.',
+    'Email atau kata sandi salah. Periksa kembali dan coba lagi.',
   'auth/configuration-not-found':
     'Metode login Google belum diaktifkan di Firebase Console. Silakan aktifkan provider Google di Authentication > Sign-in method.',
   'auth/session-cookie-expired':

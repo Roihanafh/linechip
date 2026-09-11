@@ -3,6 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/features/auth";
+import { useAccountDropdown } from "@/features/profile";
+import Avatar from "@/components/profile/Avatar";
+import AccountDropdown from "@/components/profile/AccountDropdown";
 
 const LINKS = [
   { label: "Beranda", href: "/" },
@@ -14,6 +18,17 @@ const LINKS = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  const { user, profile, loading } = useAuth();
+  const {
+    isOpen,
+    toggle,
+    triggerRef,
+    dropdownRef,
+    isLoggingOut,
+    handleLogout,
+    close,
+  } = useAccountDropdown();
 
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
@@ -53,12 +68,48 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/materi"
-              className="hidden md:flex items-center gap-2 bg-intblue hover:bg-intblue-dark text-white text-sm font-bold px-5 py-2 rounded-full transition-all duration-200 shadow-sm"
-            >
-              Mulai Belajar
-            </Link>
+            {/* Desktop: auth-aware CTA */}
+            {loading ? (
+              // Skeleton while auth state resolves
+              <div
+                className="hidden md:block w-8 h-8 rounded-full bg-slate-200 animate-pulse"
+                aria-hidden="true"
+              />
+            ) : user && profile ? (
+              // Logged in: Avatar button + dropdown
+              <div className="hidden md:block relative">
+                <button
+                  ref={triggerRef}
+                  type="button"
+                  onClick={toggle}
+                  aria-label={`Menu akun ${profile.name}`}
+                  aria-expanded={isOpen}
+                  aria-haspopup="menu"
+                  className="flex items-center gap-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-intblue"
+                >
+                  <Avatar photoURL={profile.photoURL} name={profile.name} size="sm" />
+                </button>
+                {isOpen && (
+                  <div ref={dropdownRef} className="absolute right-0 top-full mt-2 z-50">
+                    <AccountDropdown
+                      user={profile}
+                      onClose={close}
+                      onLogout={handleLogout}
+                      isLoggingOut={isLoggingOut}
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Not logged in: Masuk button
+              <Link
+                href="/login"
+                className="hidden md:flex items-center gap-2 bg-intblue hover:bg-intblue-dark text-white text-sm font-bold px-5 py-2 rounded-full transition-all duration-200 shadow-sm"
+              >
+                Masuk
+              </Link>
+            )}
+
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
@@ -99,13 +150,42 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/materi"
-              onClick={() => setMenuOpen(false)}
-              className="block w-full mt-2 bg-intblue text-white text-sm font-bold py-2.5 rounded-full text-center"
-            >
-              Mulai Belajar
-            </Link>
+
+            {/* Mobile: account section */}
+            {!loading && user && profile ? (
+              <div className="mt-2 pt-2 border-t border-border space-y-1">
+                <div className="flex items-center gap-3 px-4 py-2">
+                  <Avatar photoURL={profile.photoURL} name={profile.name} size="sm" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 truncate">{profile.name}</p>
+                    <p className="text-xs text-slate-500 truncate">{profile.email}</p>
+                  </div>
+                </div>
+                <Link
+                  href="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  Profil Saya
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-error hover:bg-red-50 transition-colors disabled:opacity-50"
+                >
+                  {isLoggingOut ? "Keluar..." : "Keluar"}
+                </button>
+              </div>
+            ) : !loading && !user ? (
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="block w-full mt-2 bg-intblue text-white text-sm font-bold py-2.5 rounded-full text-center"
+              >
+                Masuk
+              </Link>
+            ) : null}
           </div>
         )}
       </div>

@@ -150,17 +150,18 @@ export async function registerWithEmail(
       console.warn('[AuthService] Email verification send failed');
     }
   } catch (err) {
-    // Re-throw if already our AuthError shape (e.g. rollback error above)
-    if (err && typeof err === 'object' && 'code' in err && 'message' in err) {
+    // Re-throw if already our normalized AuthError shape (e.g. rollback error above)
+    if (
+      err &&
+      typeof err === 'object' &&
+      'code' in err &&
+      'message' in err &&
+      // Pastikan message bukan raw Firebase message
+      !(err as { message: string }).message.startsWith('Firebase:')
+    ) {
       throw err;
     }
-    // Map Firebase Auth error to AuthError
-    const firebaseCode = (err as { code?: string }).code ?? 'unknown';
-    throw {
-      code: firebaseCode,
-      message: getErrorMessage(firebaseCode),
-      field: getErrorField(firebaseCode),
-    } satisfies AuthError;
+    throw normalizeAuthError(err);
   }
 }
 
@@ -170,6 +171,19 @@ const SILENT_ERRORS = new Set([
   'auth/popup-closed-by-user',
   'auth/cancelled-popup-request',
 ]);
+
+/**
+ * Menormalisasi semua error (Firebase SDK, AuthError, atau unknown) ke AuthError
+ * dengan pesan Bahasa Indonesia yang ramah pengguna.
+ */
+function normalizeAuthError(err: unknown): AuthError {
+  const code = (err as { code?: string }).code ?? 'unknown';
+  return {
+    code,
+    message: getErrorMessage(code),
+    field: getErrorField(code),
+  };
+}
 
 // ─── Login with Email ─────────────────────────────────────────────────────────
 
@@ -196,16 +210,10 @@ export async function loginWithEmail(
       } satisfies AuthError;
     }
   } catch (err) {
-    // Re-throw if already our AuthError shape
-    if (err && typeof err === 'object' && 'code' in err && 'message' in err) {
-      throw err;
-    }
-    const code = (err as { code?: string }).code ?? 'unknown';
-    throw {
-      code,
-      message: getErrorMessage(code),
-      field: getErrorField(code),
-    } satisfies AuthError;
+    // Selalu normalisasi — Firebase SDK error juga memiliki 'code' & 'message'
+    // tapi message-nya adalah string raw seperti "Firebase: Error (auth/invalid-credential)."
+    // yang tidak boleh ditampilkan langsung ke user.
+    throw normalizeAuthError(err);
   }
 }
 
@@ -228,6 +236,7 @@ export async function loginWithGoogle(): Promise<void> {
         uid: user.uid,
         name: user.displayName ?? '',
         email: user.email ?? '',
+        photoURL: user.photoURL ?? '',
         school: '',
         role: 'user' as const,
         createdAt: serverTimestamp(),
@@ -246,13 +255,7 @@ export async function loginWithGoogle(): Promise<void> {
     const code = (err as { code?: string }).code ?? 'unknown';
     // Silent — user intentionally dismissed the popup
     if (SILENT_ERRORS.has(code)) return;
-    if (err && typeof err === 'object' && 'code' in err && 'message' in err) {
-      throw err;
-    }
-    throw {
-      code,
-      message: getErrorMessage(code),
-    } satisfies AuthError;
+    throw normalizeAuthError(err);
   }
 }
 

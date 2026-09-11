@@ -3,7 +3,7 @@ import { decodeJwt } from 'jose';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function getSessionCookieExpiry(rememberMe: boolean): number {
-  return rememberMe ? 30 * DAY_MS : 5 * DAY_MS;
+  return rememberMe ? 14 * DAY_MS : 5 * DAY_MS;
 }
 
 export function decodeSessionCookieOptimistic(
