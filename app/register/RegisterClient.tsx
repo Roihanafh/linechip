@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Toast, FloatingInput } from "@/components/auth/AuthShared";
 import { RegisterRightPanel } from "@/components/auth/RegisterRightPanel";
+import { useRegisterForm } from "@/features/auth";
 
 function getPasswordStrength(pw: string): { score: number; label: string; color: string } {
   if (!pw) return { score: 0, label: "", color: "" };
@@ -31,34 +32,15 @@ export function RegisterClient() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [toast, setToast] = useState<string | null>(null);
+  const { onSubmit, loading, errors, toast, clearToast } = useRegisterForm();
 
   const strength = getPasswordStrength(password);
-  const clearErr = (key: string) =>
-    setErrors((p) => { const n = { ...p }; delete n[key]; return n; });
-
-  const validate = () => {
-    const e: Record<string, string> = {};
-    if (!name.trim()) e.name = "Nama lengkap wajib diisi.";
-    if (!email.trim()) e.email = "Email atau NISN wajib diisi.";
-    if (!password) e.password = "Kata sandi wajib diisi.";
-    else if (password.length < 8) e.password = "Minimal 8 karakter.";
-    if (confirmPassword !== password) e.confirm = "Kata sandi tidak cocok.";
-    if (!agreed) e.agreed = "Kamu harus menyetujui syarat & ketentuan.";
-    return e;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const clearErr = (_key: string) => { /* errors are managed by useRegisterForm */ };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
-    setErrors({});
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    setToast("Akun berhasil dibuat! Selamat datang di LineChip.");
+    await onSubmit(name, email, password, school);
   };
 
   const isValid =
@@ -78,7 +60,7 @@ export function RegisterClient() {
 
   return (
     <div className="flex-1 min-h-screen flex flex-col lg:flex-row bg-[#f8fafc] overflow-auto lg:overflow-hidden lg:h-screen">
-      {toast && <Toast type="success" msg={toast} onDismiss={() => setToast(null)} />}
+      {toast && <Toast type={toast.type} msg={toast.message} onDismiss={clearToast} />}
 
       {/* LEFT: form */}
       <div className="flex-1 flex flex-col px-5 py-8 sm:px-8 lg:px-12 overflow-y-auto lg:h-full">

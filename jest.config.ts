@@ -11,11 +11,13 @@ const config: Config = {
       tsconfig: {
         module: "commonjs",
         moduleResolution: "node",
-        jsx: "react",
+        jsx: "react-jsx",
       },
     }],
   },
   testMatch: ["**/__tests__/**/*.test.ts", "**/__tests__/**/*.test.tsx"],
+  // Shared setup for all auth tests: mocks server-only and Firebase client SDK
+  setupFilesAfterEnv: ["<rootDir>/__tests__/auth/setup.ts"],
 };
 
 export default config;

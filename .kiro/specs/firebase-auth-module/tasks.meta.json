@@ -1,0 +1,756 @@
+{
+  "pbtResults": {
+    "2.3 Tulis property test untuk Property 2 (error message mapping)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090098641
+    },
+    "3.2 Tulis property test untuk Property 1 (env var validation)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090102937
+    },
+    "4.2 Tulis property test untuk Property 4 (input sanitization)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090107412
+    },
+    "4.3 Tulis property test untuk Property 6 (updateUserProfile field restriction)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090111396
+    },
+    "6.3 Tulis property test untuk Property 5 (auth state transitions)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090115253
+    },
+    "7.4 Tulis property test untuk Property 3 (form validation)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789090119412
+    }
+  },
+  "executionHistory": {
+    "1.1 Install Firebase SDK, Firebase Admin, dan jose": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014989778
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015001883
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015122972
+      }
+    ],
+    "1.2 Buat file `.env.local` template dengan semua env var yang dibutuhkan": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014989873
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015006033
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015127601
+      }
+    ],
+    "2.1 Buat `features/auth/types/index.ts` dengan semua type definitions": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014989963
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015131514
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015244932
+      }
+    ],
+    "2.2 Buat `features/auth/utils/errorMessages.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990056
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015136330
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015249521
+      }
+    ],
+    "2.3 Tulis property test untuk Property 2 (error message mapping)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990240
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015258508
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015670958
+      }
+    ],
+    "2.4 Buat `features/auth/utils/tokenHelpers.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990333
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015140091
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015253578
+      }
+    ],
+    "3.1 Buat `features/auth/services/firebase.client.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990417
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015263419
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015677179
+      }
+    ],
+    "3.2 Tulis property test untuk Property 1 (env var validation)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990547
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015688560
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015813889
+      }
+    ],
+    "3.3 Buat `features/auth/services/firebase.admin.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990652
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015268119
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015682780
+      }
+    ],
+    "4.1 Buat `features/auth/services/authService.ts` — utility dan fungsi dasar": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990737
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015694325
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015818463
+      }
+    ],
+    "4.2 Tulis property test untuk Property 4 (input sanitization)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990816
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015823446
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789016256394
+      }
+    ],
+    "4.3 Tulis property test untuk Property 6 (updateUserProfile field restriction)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990907
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015827828
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789016261140
+      }
+    ],
+    "4.4 Implementasikan `registerWithEmail` di `authService.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014990987
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015832042
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789016265420
+      }
+    ],
+    "4.5 Implementasikan `loginWithEmail`, `loginWithGoogle`, `logout`, dan `sendPasswordReset` di `authService.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991074
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789016269973
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087134602
+      }
+    ],
+    "5. Checkpoint — Verifikasi layer services": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991248
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089103522
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089157432
+      }
+    ],
+    "6.1 Buat `features/auth/context/AuthContext.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991388
+      },
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789016275606
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087467162
+      }
+    ],
+    "6.2 Buat `features/auth/context/AuthProvider.tsx`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991471
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087139698
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087467625
+      }
+    ],
+    "6.3 Tulis property test untuk Property 5 (auth state transitions)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991575
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087474837
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087960578
+      }
+    ],
+    "7.1 Buat `features/auth/hooks/useAuth.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991663
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087140468
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087468383
+      }
+    ],
+    "7.2 Buat `features/auth/hooks/useLoginForm.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991753
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087475457
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087961017
+      }
+    ],
+    "7.3 Buat `features/auth/hooks/useRegisterForm.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991840
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087968537
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088410054
+      }
+    ],
+    "7.4 Tulis property test untuk Property 3 (form validation)": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014991927
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087968990
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088411252
+      }
+    ],
+    "7.5 Tulis unit tests untuk `useLoginForm` dan `useRegisterForm`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992024
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088419067
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089089769
+      }
+    ],
+    "8.1 Implementasikan `verifySessionCookie`, `withAuth`, dan `withAdminAuth` di `firebase.admin.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992158
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087140785
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087469025
+      }
+    ],
+    "8.2 Buat `app/api/auth/session/route.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992268
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087476049
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087961441
+      }
+    ],
+    "8.3 Buat `app/api/auth/logout/route.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992372
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087476354
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087961798
+      }
+    ],
+    "8.4 Buat `app/api/auth/set-role/route.ts`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992462
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087969580
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088411911
+      }
+    ],
+    "8.5 Tulis unit tests untuk API Routes": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992552
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088419376
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089089292
+      }
+    ],
+    "9.1 Buat `proxy.ts` di root proyek": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992640
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087970050
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088412207
+      }
+    ],
+    "10.1 Buat `features/auth/index.ts` barrel file": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992726
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088420036
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089090383
+      }
+    ],
+    "10.2 Pasang `AuthProvider` di `components/AppShell.tsx`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992816
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089098864
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089157007
+      }
+    ],
+    "11.1 Modifikasi `app/login/LoginClient.tsx` untuk menggunakan `useLoginForm()`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992900
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089162287
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090938732
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090944540
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789091370266
+      }
+    ],
+    "11.2 Modifikasi `app/register/RegisterClient.tsx` untuk menggunakan `useRegisterForm()`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014992986
+      },
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089163639
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090939161
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090945088
+      },
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789091370634
+      }
+    ],
+    "12. Checkpoint — Verifikasi integrasi end-to-end": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014993088
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090452405
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090778419
+      }
+    ],
+    "13.1 Setup test infrastructure di `__tests__/auth/`": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014993181
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089842329
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090025500
+      }
+    ],
+    "13.2 Jalankan semua property-based tests": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014993344
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090033438
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090441852
+      }
+    ],
+    "14. Final checkpoint — Build verification": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789014993514
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090785645
+      },
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090846438
+      }
+    ],
+    "1. Install dependencies dan setup environment": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015127638
+      }
+    ],
+    "2. Definisikan TypeScript types dan utilities dasar": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015671021
+      }
+    ],
+    "3. Inisialisasi Firebase client SDK": [
+      {
+        "executionId": "c26c7d72-cf11-45e6-a4b4-16ff43872ad9",
+        "chatSessionId": "sess_5de8212b-4867-446f-a401-95d7f26e88b5",
+        "timestamp": 1789015813985
+      }
+    ],
+    "4. Implementasikan AuthService": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087134771
+      }
+    ],
+    "6. Implementasikan AuthContext dan AuthProvider": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789087961199
+      }
+    ],
+    "9. Buat `proxy.ts` untuk proteksi route": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789088412363
+      }
+    ],
+    "8. Implementasikan Firebase Admin SDK dan API Routes": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089089345
+      }
+    ],
+    "7. Implementasikan custom hooks": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089089824
+      }
+    ],
+    "10. Buat barrel file dan integrasikan AuthProvider ke AppShell": [
+      {
+        "executionId": "f3c8654d-c26a-4468-bc59-ceca8894dc1a",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789089157058
+      }
+    ],
+    "13. Tulis semua property-based tests (jika belum)": [
+      {
+        "executionId": "781c4e12-ac1f-4c45-9b27-33e9e72d906d",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789090441964
+      }
+    ],
+    "11. Sambungkan LoginClient dan RegisterClient ke hooks": [
+      {
+        "executionId": "c175ea3b-41be-44d4-b52d-ec419cbfe55e",
+        "chatSessionId": "sess_8bbea4ad-6e7b-4d34-9641-34cbe890ed13",
+        "timestamp": 1789091370835
+      }
+    ]
+  }
+}

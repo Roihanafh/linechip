@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/features/auth";
 
 // Daftar route yang menampilkan Navbar dan Footer
 const MAIN_ROUTES = new Set([
@@ -45,10 +46,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const showNavAndFooter = isMainRoute && !isNotFound;
 
   return (
-    <ShellContext.Provider value={{ isNotFound, setIsNotFound }}>
-      {showNavAndFooter && <Navbar />}
-      <main className="flex-1 flex flex-col">{children}</main>
-      {showNavAndFooter && <Footer />}
-    </ShellContext.Provider>
+    <AuthProvider>
+      <ShellContext.Provider value={{ isNotFound, setIsNotFound }}>
+        {showNavAndFooter && <Navbar />}
+        <main className="flex-1 flex flex-col">{children}</main>
+        {showNavAndFooter && <Footer />}
+      </ShellContext.Provider>
+    </AuthProvider>
   );
 }

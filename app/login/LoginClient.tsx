@@ -5,38 +5,28 @@ import { useState } from "react";
 import Link from "next/link";
 import { Toast, FloatingInput } from "@/components/auth/AuthShared";
 import { LoginRightPanel } from "@/components/auth/LoginRightPanel";
+import { useLoginForm } from "@/features/auth";
+import * as AuthService from "@/features/auth/services/authService";
 
 export function LoginClient() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
+  const { onSubmit, onGoogleSubmit, loading, errors, toast, clearToast } = useLoginForm();
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const passwordValid = password.length >= 6;
   const isReady = emailValid && passwordValid;
 
-  const validate = () => {
-    const e: typeof errors = {};
-    if (!email) e.email = "Alamat email wajib diisi.";
-    else if (!emailValid) e.email = "Format email tidak valid.";
-    if (!password) e.password = "Kata sandi wajib diisi.";
-    else if (!passwordValid) e.password = "Kata sandi minimal 6 karakter.";
-    return e;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
-    setErrors({});
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    setToast({ type: "success", msg: "Login berhasil! Selamat datang kembali." });
+    await onSubmit(email, password, rememberMe);
+  };
+
+  const handleGoogleSignIn = async () => {
+    await onGoogleSubmit();
   };
 
   const btnClass = (isReady && !loading)
@@ -45,7 +35,7 @@ export function LoginClient() {
 
   return (
     <div className="flex-1 min-h-screen flex flex-col lg:flex-row bg-[#f8fafc] overflow-auto lg:overflow-hidden lg:h-screen">
-      {toast && <Toast type={toast.type} msg={toast.msg} onDismiss={() => setToast(null)} />}
+      {toast && <Toast type={toast.type} msg={toast.message} onDismiss={clearToast} />}
 
       {/* LEFT: form */}
       <div className="flex flex-col items-center justify-center px-5 py-10 sm:px-8 lg:px-12 w-full lg:w-[460px] xl:w-[500px] shrink-0 lg:overflow-y-auto lg:h-full">
@@ -88,7 +78,7 @@ export function LoginClient() {
               type="email"
               placeholder="nama@sekolah.sch.id"
               value={email}
-              onChange={(v) => { setEmail(v); setErrors((p) => ({ ...p, email: undefined })); }}
+              onChange={(v) => { setEmail(v); }}
               icon={<span className="material-symbols-outlined text-[18px]" aria-hidden="true">mail</span>}
               error={errors.email}
               valid={emailValid && !errors.email}
@@ -101,7 +91,7 @@ export function LoginClient() {
               type={showPassword ? "text" : "password"}
               placeholder="••••••••••••"
               value={password}
-              onChange={(v) => { setPassword(v); setErrors((p) => ({ ...p, password: undefined })); }}
+              onChange={(v) => { setPassword(v); }}
               icon={<span className="material-symbols-outlined text-[18px]" aria-hidden="true">lock</span>}
               error={errors.password}
               autoComplete="current-password"
@@ -196,7 +186,9 @@ export function LoginClient() {
           {/* Google */}
           <button
             type="button"
-            className="w-full border border-[#e2e8f0] hover:border-[#2563eb] bg-white hover:bg-[#eff6ff] rounded-xl py-3 flex items-center justify-center gap-3 transition-all duration-200 shadow-sm active:scale-[0.98] group"
+            disabled={loading}
+            onClick={handleGoogleSignIn}
+            className="w-full border border-[#e2e8f0] hover:border-[#2563eb] bg-white hover:bg-[#eff6ff] rounded-xl py-3 flex items-center justify-center gap-3 transition-all duration-200 shadow-sm active:scale-[0.98] group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
               <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2v6h7.8c4.5-4.2 7.1-10.3 7.1-17.2z" />
