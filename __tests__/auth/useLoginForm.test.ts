@@ -62,7 +62,12 @@ async function runLoginSubmit(
     await AuthService.loginWithEmail(email, password, rememberMe);
     state.toast = { message: 'Login berhasil! Selamat datang kembali.', type: 'success' };
     const redirect = searchParams.get('redirect');
-    router.replace(redirect ? decodeURIComponent(redirect) : '/');
+    const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+    if (typeof window !== 'undefined' && window.location) {
+      window.location.href = targetUrl;
+    } else {
+      router.replace(targetUrl);
+    }
   } catch (err) {
     const authErr = err as AuthError;
     if (authErr.field) {
@@ -91,7 +96,12 @@ async function runGoogleSubmit(
     await AuthService.loginWithGoogle();
     state.toast = { message: 'Login Google berhasil! Selamat datang kembali.', type: 'success' };
     const redirect = searchParams.get('redirect');
-    router.replace(redirect ? decodeURIComponent(redirect) : '/');
+    const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+    if (typeof window !== 'undefined' && window.location) {
+      window.location.href = targetUrl;
+    } else {
+      router.replace(targetUrl);
+    }
   } catch (err) {
     const authErr = err as AuthError;
     if (authErr.message) {

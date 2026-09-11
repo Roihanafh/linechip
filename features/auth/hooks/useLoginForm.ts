@@ -23,7 +23,12 @@ export function useLoginForm(): UseLoginFormReturn {
       await AuthService.loginWithEmail(email, password, rememberMe);
       setToast({ message: 'Login berhasil! Selamat datang kembali.', type: 'success' });
       const redirect = searchParams.get('redirect');
-      router.replace(redirect ? decodeURIComponent(redirect) : '/');
+      const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+      if (typeof window !== 'undefined') {
+        window.location.href = targetUrl;
+      } else {
+        router.replace(targetUrl);
+      }
     } catch (err) {
       const authErr = err as AuthError;
       if (authErr.field) {
@@ -47,7 +52,12 @@ export function useLoginForm(): UseLoginFormReturn {
       await AuthService.loginWithGoogle();
       setToast({ message: 'Login Google berhasil! Selamat datang kembali.', type: 'success' });
       const redirect = searchParams.get('redirect');
-      router.replace(redirect ? decodeURIComponent(redirect) : '/');
+      const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+      if (typeof window !== 'undefined') {
+        window.location.href = targetUrl;
+      } else {
+        router.replace(targetUrl);
+      }
     } catch (err) {
       const authErr = err as AuthError;
       if (authErr.message) {

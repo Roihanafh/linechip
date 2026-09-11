@@ -29,6 +29,8 @@ export const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
     'Email atau kata sandi salah. Periksa kembali dan coba lagi.',
   'auth/configuration-not-found':
     'Metode login Google belum diaktifkan di Firebase Console. Silakan aktifkan provider Google di Authentication > Sign-in method.',
+  'auth/unauthorized-domain':
+    'Domain ini belum diizinkan di Firebase Console. Tambahkan domain Vercel Anda di Firebase Console > Authentication > Settings > Authorized domains.',
   'auth/session-cookie-expired':
     'Sesi Anda telah berakhir. Silakan masuk kembali.',
   'auth/session-cookie-revoked':
