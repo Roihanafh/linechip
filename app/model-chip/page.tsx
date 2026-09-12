@@ -611,17 +611,17 @@ export default function ModelChipPage() {
                     {/* Walking characters */}
                     {curGroup && (
                       <div
-                        className="relative flex items-center justify-center"
-                        style={{ width: 112, height: 64 }}
+                        className="relative flex items-center justify-center w-full"
+                        style={{ height: 64 }}
                       >
-                        {/* Left walker */}
+                        {/* Left walker — starts at left edge, walks to centre */}
                         <div
                           key={`wl-${tierIdx}-${pairInTier}-${stepPhase}`}
                           className={`absolute w-10 h-10 ${
                             isClash    ? "pair-clash-left"    :
                             isApproach ? "pair-approach-left" : "opacity-0"
                           }`}
-                          style={{ left: 4 }}
+                          style={{ left: 0 }}
                         >
                           {s1Type === "ab"
                             ? <AntibodyCharacter type={place} uid={`wl-${tierIdx}-${pairInTier}`} />
@@ -644,14 +644,14 @@ export default function ModelChipPage() {
                           </div>
                         )}
 
-                        {/* Right walker */}
+                        {/* Right walker — starts at right edge, walks to centre */}
                         <div
                           key={`wr-${tierIdx}-${pairInTier}-${stepPhase}`}
                           className={`absolute w-10 h-10 ${
                             isClash    ? "pair-clash-right"    :
                             isApproach ? "pair-approach-right" : "opacity-0"
                           }`}
-                          style={{ right: 4 }}
+                          style={{ right: 0 }}
                         >
                           {s2Type === "ab"
                             ? <AntibodyCharacter type={place} uid={`wr-${tierIdx}-${pairInTier}`} />

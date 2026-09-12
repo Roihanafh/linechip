@@ -244,38 +244,41 @@
 }
 
 /*
- * Concrete fallback keyframes (fixed pixel values used by utility classes).
- * JS override via inline style animation is preferred when distance is known.
+ * Walker bergerak dari ujung kiri/kanan arena ke titik tengah (50% container).
+ * Arena container lebar 120px, walker w-10 (40px).
+ * Walker kiri: left:0  → centre = translateX(+40px)  (kiri menjangkau tengah)
+ * Walker kanan: right:0 → centre = translateX(-40px)
+ * Easing: pelan di awal (ease-in) → cepat di tengah → decelerates & overshoot kecil.
  */
 @keyframes walk-left-kf {
   0%   { transform: translateX(0)     scale(1);    opacity: 1; }
-  12%  { transform: translateX(8px)   scale(1.01); opacity: 1; }
-  50%  { transform: translateX(54px)  scale(1.1);  opacity: 1; }
-  78%  { transform: translateX(46px)  scale(1.07); opacity: 1; }
-  100% { transform: translateX(50px)  scale(1.08); opacity: 1; }
+  10%  { transform: translateX(5px)   scale(1.02); opacity: 1; }
+  55%  { transform: translateX(44px)  scale(1.12); opacity: 1; }
+  80%  { transform: translateX(38px)  scale(1.08); opacity: 1; }
+  100% { transform: translateX(40px)  scale(1.08); opacity: 1; }
 }
 
 @keyframes walk-right-kf {
   0%   { transform: translateX(0)      scale(1);    opacity: 1; }
-  12%  { transform: translateX(-8px)   scale(1.01); opacity: 1; }
-  50%  { transform: translateX(-54px)  scale(1.1);  opacity: 1; }
-  78%  { transform: translateX(-46px)  scale(1.07); opacity: 1; }
-  100% { transform: translateX(-50px)  scale(1.08); opacity: 1; }
+  10%  { transform: translateX(-5px)   scale(1.02); opacity: 1; }
+  55%  { transform: translateX(-44px)  scale(1.12); opacity: 1; }
+  80%  { transform: translateX(-38px)  scale(1.08); opacity: 1; }
+  100% { transform: translateX(-40px)  scale(1.08); opacity: 1; }
 }
 
-/* Setelah bertemu: keduanya luruh ke tengah dengan ledakan */
+/* Setelah bertemu: luruh dari posisi tengah ke titik tumbukan */
 @keyframes pair-clash-left-kf {
-  0%   { transform: translateX(50px) scale(1.08); opacity: 1; }
-  25%  { transform: translateX(56px) scale(1.22); opacity: 1; }
-  60%  { transform: translateX(53px) scale(0.5);  opacity: 0.5; }
-  100% { transform: translateX(52px) scale(0);    opacity: 0; }
+  0%   { transform: translateX(40px) scale(1.08); opacity: 1; }
+  25%  { transform: translateX(46px) scale(1.22); opacity: 1; }
+  60%  { transform: translateX(43px) scale(0.5);  opacity: 0.5; }
+  100% { transform: translateX(42px) scale(0);    opacity: 0; }
 }
 
 @keyframes pair-clash-right-kf {
-  0%   { transform: translateX(-50px) scale(1.08); opacity: 1; }
-  25%  { transform: translateX(-56px) scale(1.22); opacity: 1; }
-  60%  { transform: translateX(-53px) scale(0.5);  opacity: 0.5; }
-  100% { transform: translateX(-52px) scale(0);    opacity: 0; }
+  0%   { transform: translateX(-40px) scale(1.08); opacity: 1; }
+  25%  { transform: translateX(-46px) scale(1.22); opacity: 1; }
+  60%  { transform: translateX(-43px) scale(0.5);  opacity: 0.5; }
+  100% { transform: translateX(-42px) scale(0);    opacity: 0; }
 }
 
 /* Lingkaran ledakan di titik tumbukan */
