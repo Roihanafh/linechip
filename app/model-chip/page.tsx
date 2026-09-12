@@ -529,12 +529,19 @@ export default function ModelChipPage() {
           }
 
           return (
-            <div className={`bg-slate-50 rounded-2xl border border-slate-200 p-4 mb-4 overflow-hidden relative ${
+            <div className={`bg-white rounded-2xl border-2 border-slate-200 shadow-md p-4 mb-4 overflow-hidden relative ${
               isDone ? "arena-expand" : "arena-enter"
             }`}>
 
+              {/* Top accent bar */}
+              <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${
+                isDone ? "bg-emerald-400" :
+                vizPhase === "center" ? "bg-gradient-to-r from-intblue to-intpink" :
+                "bg-gradient-to-r from-intblue via-amber-400 to-intpink animate-pulse"
+              }`} />
+
               {/* Header */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 pt-2">
                 <span className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
                   {vizPhase === "battle" ? "⚔️ Pertarungan!" :
                    vizPhase === "center" ? "⚡ Reaksi Netralisasi" :
