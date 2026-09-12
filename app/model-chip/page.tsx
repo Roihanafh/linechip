@@ -454,7 +454,7 @@ export default function ModelChipPage() {
               rows.push(
                 <div key={t} className="mb-2">
                   {/* Tier label */}
-                  <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex items-center justify-center gap-1.5 mb-1">
                     <span className={`font-mono text-[8px] font-bold uppercase tracking-wide ${
                       tierDone ? "text-slate-400" : tierActive ? "text-amber-500" : "text-slate-500"
                     }`}>
@@ -468,7 +468,7 @@ export default function ModelChipPage() {
 
                   {/* Paired characters — shown with individual react state */}
                   {pCount > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-0.5">
+                    <div className="flex flex-wrap justify-center gap-1 mb-0.5">
                       {Array.from({ length: Math.min(pCount, 9) }, (_, i) => {
                         // i-th character state:
                         //   < doneInTier          → already reacted → hidden
@@ -506,7 +506,7 @@ export default function ModelChipPage() {
 
                   {/* Remaining characters — always full opacity */}
                   {rCount > 0 && (
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap justify-center gap-1">
                       {Array.from({ length: Math.min(rCount, 9) }, (_, i) => (
                         <div key={`${prefix}-r-${t}-${i}`} className="w-8 h-8 shrink-0">
                           {sType === "ab"
@@ -560,18 +560,18 @@ export default function ModelChipPage() {
 
               {/* ── BATTLE ──────────────────────────────────────────────────── */}
               {vizPhase === "battle" && (
-                <div className="flex gap-3 items-start">
+                <div className="grid grid-cols-[1fr_120px_1fr] gap-3 items-start">
 
                   {/* Kolom kiri — Bil.1 */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 mb-2 justify-center">
                       <div className={`w-2 h-2 rounded-full ${s1Dot}`} />
                       <span className={`font-mono text-[9px] ${s1Color} uppercase tracking-wide font-bold`}>
                         Bil.1 {s1 !== 0 ? `${s1Sign}${s1.toLocaleString("id-ID")}` : ""}
                       </span>
                     </div>
                     {s1 === 0
-                      ? <p className="text-[9px] text-slate-400 font-mono italic">tidak ada</p>
+                      ? <p className="text-[9px] text-slate-400 font-mono italic text-center">tidak ada</p>
                       : renderColumn(s1Abs, s1Paired, s1Remaining, s1Type, s1Color, s1Sign, "b1")
                     }
                   </div>
@@ -677,15 +677,15 @@ export default function ModelChipPage() {
                   </div>
 
                   {/* Kolom kanan — Bil.2 */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-2 justify-end">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 mb-2 justify-center">
+                      <div className={`w-2 h-2 rounded-full ${s2Dot}`} />
                       <span className={`font-mono text-[9px] ${s2Color} uppercase tracking-wide font-bold`}>
                         {s2 !== 0 ? `${s2Sign}${s2.toLocaleString("id-ID")}` : ""} Bil.2
                       </span>
-                      <div className={`w-2 h-2 rounded-full ${s2Dot}`} />
                     </div>
                     {s2 === 0
-                      ? <p className="text-[9px] text-slate-400 font-mono italic text-right">tidak ada</p>
+                      ? <p className="text-[9px] text-slate-400 font-mono italic text-center">tidak ada</p>
                       : renderColumn(s2Abs, s2Paired, s2Remaining, s2Type, s2Color, s2Sign, "b2")
                     }
                   </div>
