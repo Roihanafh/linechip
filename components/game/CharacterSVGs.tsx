@@ -35,146 +35,159 @@ function polar(cx: number, cy: number, r: number, deg: number) {
 
 export function VirusSatuan({ uid = "" }: { uid?: string }) {
   const id = `vs1${uid}`;
-  const spikes = [0, 60, 120, 180, 240, 300].map((deg) => {
-    const p1 = polar(50, 50, 21, deg);
-    const p2 = polar(50, 50, 33, deg);
-    return <line key={deg} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#FFB6C1" strokeWidth="3.5" strokeLinecap="round" />;
-  });
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <radialGradient id={id} cx="38%" cy="33%" r="66%">
-          <stop offset="0%" stopColor="#FFD6DC" />
-          <stop offset="100%" stopColor="#FFB6C1" />
+        <radialGradient id={id} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFE4EA" />
+          <stop offset="100%" stopColor="#FFAEC0" />
         </radialGradient>
       </defs>
-      {spikes}
-      <circle cx="50" cy="50" r="20" fill={`url(#${id})`} />
-      <circle cx="50" cy="50" r="7" fill="#C2185B" opacity="0.5" />
-      <circle cx="44" cy="44" r="2.5" fill="white" opacity="0.4" />
+      <g fill="#FFAEC0" stroke="#E8899E" strokeWidth="1">
+        <circle cx="50" cy="20" r="6" />
+        <circle cx="76" cy="35" r="6" />
+        <circle cx="76" cy="65" r="6" />
+        <circle cx="50" cy="80" r="6" />
+        <circle cx="24" cy="65" r="6" />
+        <circle cx="24" cy="35" r="6" />
+      </g>
+      <circle cx="50" cy="50" r="26" fill={`url(#${id})`} stroke="#E8899E" strokeWidth="1.5" />
+      <circle cx="41" cy="47" r="4" fill="#5B2333" />
+      <circle cx="59" cy="47" r="4" fill="#5B2333" />
+      <circle cx="42.5" cy="45.5" r="1.2" fill="white" />
+      <circle cx="60.5" cy="45.5" r="1.2" fill="white" />
+      <path d="M43 58 Q50 64 57 58" stroke="#5B2333" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <circle cx="34" cy="55" r="4" fill="#FF87A0" opacity="0.5" />
+      <circle cx="66" cy="55" r="4" fill="#FF87A0" opacity="0.5" />
     </svg>
   );
 }
 
 export function VirusPuluhan({ uid = "" }: { uid?: string }) {
   const id = `vs2${uid}`;
-  const angles = [0, 45, 90, 135, 180, 225, 270, 315];
-  const spikes = angles.map((deg) => {
-    const p1 = polar(50, 50, 22, deg);
-    const p2 = polar(50, 50, 33, deg);
-    const pt = polar(50, 50, 39, deg);
-    return (
-      <g key={deg}>
-        <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#FF85C2" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx={pt.x} cy={pt.y} r="4.5" fill="#FFB3D9" stroke="#FF69B4" strokeWidth="1" />
-      </g>
-    );
-  });
-  const innerDots = [45, 135, 225, 315].map((deg) => {
-    const p = polar(50, 50, 11, deg);
-    return <circle key={deg} cx={p.x} cy={p.y} r="2" fill="#AD1457" opacity="0.45" />;
-  });
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <radialGradient id={id} cx="37%" cy="33%" r="65%">
-          <stop offset="0%" stopColor="#FFB3D9" />
-          <stop offset="100%" stopColor="#FF69B4" />
+        <radialGradient id={id} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFB8D6" />
+          <stop offset="100%" stopColor="#FF5FA0" />
         </radialGradient>
       </defs>
-      <circle cx="50" cy="50" r="44" stroke="#FFD6E8" strokeWidth="1.2" strokeDasharray="3.5 3.5" fill="none" />
-      {spikes}
-      <circle cx="50" cy="50" r="22" fill={`url(#${id})`} />
-      {innerDots}
-      <circle cx="50" cy="50" r="5" fill="#AD1457" opacity="0.6" />
-      <circle cx="44" cy="45" r="2.5" fill="white" opacity="0.35" />
+      <g stroke="#E23C82" strokeWidth="3" strokeLinecap="round">
+        <line x1="50" y1="24" x2="50" y2="14" />
+        <line x1="70.6" y1="29.4" x2="77.6" y2="22.4" />
+        <line x1="76" y1="50" x2="86" y2="50" />
+        <line x1="70.6" y1="70.6" x2="77.6" y2="77.6" />
+        <line x1="50" y1="76" x2="50" y2="86" />
+        <line x1="29.4" y1="70.6" x2="22.4" y2="77.6" />
+        <line x1="24" y1="50" x2="14" y2="50" />
+        <line x1="29.4" y1="29.4" x2="22.4" y2="22.4" />
+      </g>
+      <g fill="#FF8FC0" stroke="#E23C82" strokeWidth="1.2">
+        <circle cx="50" cy="12" r="4.5" />
+        <circle cx="79.5" cy="20.5" r="4.5" />
+        <circle cx="88" cy="50" r="4.5" />
+        <circle cx="79.5" cy="79.5" r="4.5" />
+        <circle cx="50" cy="88" r="4.5" />
+        <circle cx="20.5" cy="79.5" r="4.5" />
+        <circle cx="12" cy="50" r="4.5" />
+        <circle cx="20.5" cy="20.5" r="4.5" />
+      </g>
+      <circle cx="50" cy="50" r="26" fill={`url(#${id})`} stroke="#D6337A" strokeWidth="1.5" />
+      <path d="M37 42 Q41 38 45 42" stroke="#6B123F" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <circle cx="41" cy="48" r="3.6" fill="#6B123F" />
+      <circle cx="59" cy="47" r="3.8" fill="#6B123F" />
+      <circle cx="42.3" cy="46.5" r="1" fill="white" />
+      <circle cx="60.3" cy="45.5" r="1" fill="white" />
+      <path d="M42 60 Q50 55 58 61" stroke="#6B123F" strokeWidth="2.2" fill="none" strokeLinecap="round" />
     </svg>
   );
 }
 
 export function VirusRatusan({ uid = "" }: { uid?: string }) {
   const id = `vs3${uid}`;
-  const elements: React.ReactNode[] = [];
-  for (let i = 0; i < 10; i++) {
-    const deg = i * 36;
-    const isLong = i % 2 === 0;
-    if (isLong) {
-      const p1 = polar(50, 50, 23, deg);
-      const p2 = polar(50, 50, 40, deg);
-      const b1 = polar(p2.x, p2.y, 8, deg - 36);
-      const b2 = polar(p2.x, p2.y, 8, deg + 36);
-      elements.push(
-        <g key={`l${deg}`}>
-          <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#FFB3FF" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1={p2.x} y1={p2.y} x2={b1.x} y2={b1.y} stroke="#FFB3FF" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1={p2.x} y1={p2.y} x2={b2.x} y2={b2.y} stroke="#FFB3FF" strokeWidth="1.8" strokeLinecap="round" />
-        </g>
-      );
-    } else {
-      const p1 = polar(50, 50, 23, deg);
-      const p2 = polar(50, 50, 30, deg);
-      const pt = polar(50, 50, 35, deg);
-      elements.push(
-        <g key={`s${deg}`}>
-          <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#FF66FF" strokeWidth="2" strokeLinecap="round" />
-          <circle cx={pt.x} cy={pt.y} r="3.5" fill="#FFB3FF" stroke="#CC00CC" strokeWidth="0.8" />
-        </g>
-      );
-    }
-  }
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <radialGradient id={id} cx="37%" cy="32%" r="65%">
-          <stop offset="0%" stopColor="#FFB3FF" />
-          <stop offset="100%" stopColor="#FF00FF" />
+        <radialGradient id={id} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#F0AEFF" />
+          <stop offset="100%" stopColor="#B23BDB" />
         </radialGradient>
       </defs>
-      <path d="M46,72 Q38,81 42,89 Q45,95 40,100" stroke="#FFB3FF" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M54,72 Q62,81 58,89 Q55,95 60,100" stroke="#FFB3FF" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      {elements}
-      <circle cx="50" cy="50" r="22" fill={`url(#${id})`} />
-      <circle cx="50" cy="50" r="10" fill="none" stroke="#990099" strokeWidth="1.5" strokeDasharray="2.5 2.5" opacity="0.55" />
-      <circle cx="50" cy="50" r="5" fill="#660066" opacity="0.7" />
-      <circle cx="43" cy="43" r="2" fill="white" opacity="0.3" />
+      <path d="M44 74 Q36 84 40 92 Q42 97 38 100" stroke="#D9A6F2" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <path d="M56 74 Q64 84 60 92 Q58 97 62 100" stroke="#D9A6F2" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <g stroke="#9B2FC4" strokeWidth="3" strokeLinecap="round" fill="none">
+        <path d="M50 26 L50 6 M50 6 L43 -2 M50 6 L57 -2" />
+        <path d="M72.8 42.6 L91.8 36.4 M91.8 36.4 L98 30 M91.8 36.4 L97 41" />
+        <path d="M64.1 69.4 L75.9 85.6 M75.9 85.6 L80 93 M75.9 85.6 L71 92" />
+        <path d="M35.9 69.4 L24.1 85.6 M24.1 85.6 L20 93 M24.1 85.6 L29 92" />
+        <path d="M27.2 42.6 L8.2 36.4 M8.2 36.4 L2 30 M8.2 36.4 L3 41" />
+      </g>
+      <g stroke="#C355E8" strokeWidth="2.5" strokeLinecap="round">
+        <line x1="64.1" y1="30.6" x2="70" y2="22.5" />
+        <line x1="72.8" y1="57.4" x2="82.3" y2="60.5" />
+        <line x1="50" y1="74" x2="50" y2="84" />
+        <line x1="27.2" y1="57.4" x2="17.7" y2="60.5" />
+        <line x1="35.9" y1="30.6" x2="30" y2="22.5" />
+      </g>
+      <g fill="#E7A6FA" stroke="#9B2FC4" strokeWidth="1">
+        <circle cx="70" cy="22.5" r="4" />
+        <circle cx="82.3" cy="60.5" r="4" />
+        <circle cx="50" cy="84" r="4" />
+        <circle cx="17.7" cy="60.5" r="4" />
+        <circle cx="30" cy="22.5" r="4" />
+      </g>
+      <circle cx="50" cy="50" r="24" fill={`url(#${id})`} stroke="#8B26AE" strokeWidth="1.8" />
+      <path d="M36 40 L44 44" stroke="#4A0A66" strokeWidth="2" strokeLinecap="round" />
+      <path d="M64 40 L56 44" stroke="#4A0A66" strokeWidth="2" strokeLinecap="round" />
+      <path d="M40 48 Q43 44 46 48" stroke="#4A0A66" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <path d="M54 48 Q57 44 60 48" stroke="#4A0A66" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <path d="M40 58 Q50 64 60 58 Q56 68 50 68 Q44 68 40 58" fill="#4A0A66" />
+      <path d="M45 60 L47 65 M55 60 L53 65" stroke="white" strokeWidth="1.3" />
     </svg>
   );
 }
 
 export function VirusRibuan({ uid = "" }: { uid?: string }) {
   const id = `vs4${uid}`;
-  const spikes = Array.from({ length: 12 }, (_, i) => {
-    const deg = i * 30;
-    const st1 = polar(50, 50, 33, deg);
-    const st2 = polar(50, 50, 42, deg);
-    const head = polar(50, 50, 48, deg);
-    return (
-      <g key={deg}>
-        <line x1={st1.x} y1={st1.y} x2={st2.x} y2={st2.y} stroke="#EDB3E8" strokeWidth="3" strokeLinecap="round" />
-        <circle cx={head.x} cy={head.y} r="6" fill="#EDB3E8" stroke="#C855C8" strokeWidth="1.2" />
-        <circle cx={head.x} cy={head.y} r="2.5" fill="#BA47BA" opacity="0.55" />
-      </g>
-    );
-  });
-  const rna = Array.from({ length: 6 }, (_, i) => {
-    const p = polar(50, 50, 12, i * 60);
-    return <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="#8B2588" opacity="0.5" />;
-  });
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <radialGradient id={id} cx="37%" cy="32%" r="65%">
-          <stop offset="0%" stopColor="#EDB3E8" />
-          <stop offset="100%" stopColor="#DA70D6" />
+        <radialGradient id={id} cx="35%" cy="28%" r="75%">
+          <stop offset="0%" stopColor="#B23A6B" />
+          <stop offset="55%" stopColor="#6B1547" />
+          <stop offset="100%" stopColor="#240A1F" />
         </radialGradient>
       </defs>
-      <circle cx="50" cy="50" r="44" fill="none" stroke="#E090DC" strokeWidth="1.5" opacity="0.5" />
-      {spikes}
-      <circle cx="50" cy="50" r="32" fill="#F5E0F5" stroke="#EDB3E8" strokeWidth="1" opacity="0.4" />
-      <circle cx="50" cy="50" r="22" fill={`url(#${id})`} />
-      {rna}
-      <circle cx="50" cy="50" r="5" fill="#5C1A5C" opacity="0.8" />
-      <circle cx="43" cy="43" r="2.5" fill="white" opacity="0.3" />
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#FF2440" strokeWidth="1" strokeDasharray="2 3" opacity="0.4" />
+      <g fill="#7A1550" stroke="#2B0620" strokeWidth="1">
+        <polygon points="45.86,22.4 54.14,22.4 50,4" />
+        <polygon points="67.39,28.17 60.21,24.03 73,10.12" />
+        <polygon points="75.97,39.81 71.83,32.61 89.84,27" />
+        <polygon points="77.6,54.14 77.6,45.86 96,50" />
+        <polygon points="71.83,67.39 75.97,60.21 89.84,73" />
+        <polygon points="60.21,75.97 67.39,71.83 73,89.84" />
+        <polygon points="45.86,77.6 54.14,77.6 50,96" />
+        <polygon points="32.61,71.83 39.79,75.97 27,89.84" />
+        <polygon points="24.03,60.21 28.17,67.39 10.16,73" />
+        <polygon points="22.4,45.86 22.4,54.14 4,50" />
+        <polygon points="28.17,32.61 24.03,39.79 10.16,27" />
+        <polygon points="39.79,24.03 32.61,28.17 27,10.16" />
+      </g>
+      <circle cx="50" cy="50" r="25" fill={`url(#${id})`} stroke="#150510" strokeWidth="2" />
+      <path d="M38 18 L42 4 L47 14 L50 2 L53 14 L58 4 L62 18 Z" fill="#1A0A14" stroke="#000000" strokeWidth="0.6" />
+      <circle cx="50" cy="8" r="2.2" fill="#FF2440" />
+      <path d="M33 40 L45 44" stroke="#1A0A14" strokeWidth="3" strokeLinecap="round" />
+      <path d="M67 40 L55 44" stroke="#1A0A14" strokeWidth="3" strokeLinecap="round" />
+      <ellipse cx="41" cy="49" rx="6" ry="3.4" fill="#FF2440" transform="rotate(-12 41 49)" />
+      <ellipse cx="41" cy="49" rx="1.3" ry="3" fill="#1A0A14" transform="rotate(-12 41 49)" />
+      <ellipse cx="59" cy="49" rx="6" ry="3.4" fill="#FF2440" transform="rotate(12 59 49)" />
+      <ellipse cx="59" cy="49" rx="1.3" ry="3" fill="#1A0A14" transform="rotate(12 59 49)" />
+      <path d="M36 60 Q50 68 64 60 Q58 76 50 76 Q42 76 36 60 Z" fill="#1A0A14" />
+      <polygon points="42,60 45,60 43.5,67" fill="white" />
+      <polygon points="55,60 58,60 56.5,67" fill="white" />
+      <polygon points="45,74 48,74 46.5,67" fill="white" />
+      <polygon points="52,74 55,74 53.5,67" fill="white" />
     </svg>
   );
 }
@@ -186,18 +199,20 @@ export function AntibodySatuan({ uid = "" }: { uid?: string }) {
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <linearGradient id={id} x1="28" y1="28" x2="50" y2="82" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#C8E8F5" />
-          <stop offset="1" stopColor="#ADD8E6" />
+        <linearGradient id={id} x1="30" y1="20" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#E3F3FC" />
+          <stop offset="1" stopColor="#9FD3EE" />
         </linearGradient>
       </defs>
-      <line x1="50" y1="58" x2="27" y2="29" stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="73" y2="29" stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="50" y2="82" stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round" />
-      <circle cx="27" cy="29" r="8.5" fill="#D6EEF7" stroke="#ADD8E6" strokeWidth="1.5" />
-      <circle cx="73" cy="29" r="8.5" fill="#D6EEF7" stroke="#ADD8E6" strokeWidth="1.5" />
-      <line x1="22" y1="28" x2="32" y2="28" stroke="#5B9EC9" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="68" y1="28" x2="78" y2="28" stroke="#5B9EC9" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="50" y1="55" x2="28" y2="26" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <line x1="50" y1="55" x2="72" y2="26" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <line x1="50" y1="55" x2="50" y2="84" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <circle cx="28" cy="24" r="8" fill="#EAF6FC" stroke="#6FB8DE" strokeWidth="1.5" />
+      <circle cx="72" cy="24" r="8" fill="#EAF6FC" stroke="#6FB8DE" strokeWidth="1.5" />
+      <circle cx="50" cy="55" r="11" fill="#EAF6FC" stroke="#6FB8DE" strokeWidth="1.5" />
+      <circle cx="46" cy="53" r="1.6" fill="#1B4F72" />
+      <circle cx="54" cy="53" r="1.6" fill="#1B4F72" />
+      <path d="M46 58 Q50 61 54 58" stroke="#1B4F72" strokeWidth="1.5" fill="none" strokeLinecap="round" />
     </svg>
   );
 }
@@ -207,19 +222,25 @@ export function AntibodyPuluhan({ uid = "" }: { uid?: string }) {
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <linearGradient id={id} x1="24" y1="27" x2="50" y2="84" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6B9AC4" />
-          <stop offset="1" stopColor="#4682B4" />
+        <linearGradient id={id} x1="27" y1="27" x2="73" y2="73" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#8AC0E8" />
+          <stop offset="1" stopColor="#4A90C2" />
         </linearGradient>
       </defs>
-      <line x1="50" y1="58" x2="24" y2="27" stroke={`url(#${id})`} strokeWidth="6" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="76" y2="27" stroke={`url(#${id})`} strokeWidth="6" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="50" y2="84" stroke={`url(#${id})`} strokeWidth="6" strokeLinecap="round" />
-      <circle cx="50" cy="58" r="5.5" fill="#4682B4" stroke="#4682B4" strokeWidth="1" />
-      <ellipse cx="24" cy="27" rx="10" ry="10" fill="#C5D9EC" stroke="#4682B4" strokeWidth="1.5" />
-      <ellipse cx="76" cy="27" rx="10" ry="10" fill="#C5D9EC" stroke="#4682B4" strokeWidth="1.5" />
-      <path d="M19 23 L24 30 L29 23" stroke="#4682B4" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M71 23 L76 30 L81 23" stroke="#4682B4" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="50" y1="50" x2="72.6" y2="27.4" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <line x1="50" y1="50" x2="72.6" y2="72.6" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <line x1="50" y1="50" x2="27.4" y2="72.6" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <line x1="50" y1="50" x2="27.4" y2="27.4" stroke={`url(#${id})`} strokeWidth="7" strokeLinecap="round" />
+      <g fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="1.5">
+        <circle cx="72.6" cy="27.4" r="8.5" />
+        <circle cx="72.6" cy="72.6" r="8.5" />
+        <circle cx="27.4" cy="72.6" r="8.5" />
+        <circle cx="27.4" cy="27.4" r="8.5" />
+      </g>
+      <circle cx="50" cy="50" r="13" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="1.6" />
+      <circle cx="46" cy="48" r="1.8" fill="#1B4F72" />
+      <circle cx="54" cy="48" r="1.8" fill="#1B4F72" />
+      <path d="M45 54 Q50 57 55 54" stroke="#1B4F72" strokeWidth="1.8" fill="none" strokeLinecap="round" />
     </svg>
   );
 }
@@ -229,55 +250,91 @@ export function AntibodyRatusan({ uid = "" }: { uid?: string }) {
   return (
     <svg viewBox="0 0 100 100" fill="none">
       <defs>
-        <linearGradient id={id} x1="24" y1="26" x2="50" y2="86" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#003399" />
-          <stop offset="1" stopColor="#00008B" />
+        <linearGradient id={id} x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#2255AA" />
+          <stop offset="1" stopColor="#0D2E66" />
         </linearGradient>
       </defs>
-      <line x1="52" y1="56" x2="27" y2="25" stroke="#6699CC" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="48" y1="56" x2="73" y2="25" stroke="#6699CC" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="23" y2="28" stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="77" y2="28" stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round" />
-      <line x1="46" y1="58" x2="46" y2="84" stroke={`url(#${id})`} strokeWidth="4" strokeLinecap="round" />
-      <line x1="54" y1="58" x2="54" y2="84" stroke={`url(#${id})`} strokeWidth="4" strokeLinecap="round" />
-      <line x1="44" y1="63" x2="56" y2="63" stroke="#4477AA" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="44" y1="68" x2="56" y2="68" stroke="#4477AA" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="50" cy="58" r="5" fill="#00008B" />
-      <ellipse cx="23" cy="28" rx="10" ry="10" fill="#99BBDD" stroke="#0000CD" strokeWidth="1.5" />
-      <ellipse cx="77" cy="28" rx="10" ry="10" fill="#99BBDD" stroke="#0000CD" strokeWidth="1.5" />
-      <path d="M17 26 L23 33 L29 26" stroke="#00008B" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M71 26 L77 33 L83 26" stroke="#00008B" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <polygon points="50,85 44,89 44,95 50,98 56,95 56,89" fill="#AACCEE" stroke="#0000CD" strokeWidth="1.2" />
+      <g stroke="#7FA8D6" strokeWidth="8" strokeLinecap="round">
+        <line x1="50" y1="50" x2="50" y2="16" />
+        <line x1="50" y1="50" x2="79.4" y2="33" />
+        <line x1="50" y1="50" x2="79.4" y2="67" />
+        <line x1="50" y1="50" x2="50" y2="84" />
+        <line x1="50" y1="50" x2="20.6" y2="67" />
+        <line x1="50" y1="50" x2="20.6" y2="33" />
+      </g>
+      <g stroke={`url(#${id})`} strokeWidth="5.5" strokeLinecap="round">
+        <line x1="50" y1="50" x2="50" y2="16" />
+        <line x1="50" y1="50" x2="79.4" y2="33" />
+        <line x1="50" y1="50" x2="79.4" y2="67" />
+        <line x1="50" y1="50" x2="50" y2="84" />
+        <line x1="50" y1="50" x2="20.6" y2="67" />
+        <line x1="50" y1="50" x2="20.6" y2="33" />
+      </g>
+      <g fill="#B9D3EE" stroke="#1B4F91" strokeWidth="1.6">
+        <circle cx="50" cy="16" r="7" />
+        <circle cx="79.4" cy="33" r="7" />
+        <circle cx="79.4" cy="67" r="7" />
+        <circle cx="50" cy="84" r="7" />
+        <circle cx="20.6" cy="67" r="7" />
+        <circle cx="20.6" cy="33" r="7" />
+      </g>
+      <polygon points="50,35 62,42.5 62,57.5 50,65 38,57.5 38,42.5" fill={`url(#${id})`} stroke="#0D2E66" strokeWidth="1.8" />
+      <circle cx="50" cy="50" r="10" fill="#B9D3EE" stroke="#1B4F91" strokeWidth="1.4" />
+      <circle cx="46.5" cy="48" r="1.7" fill="#0D2E66" />
+      <circle cx="53.5" cy="48" r="1.7" fill="#0D2E66" />
+      <path d="M45 54 Q50 57.5 55 54" stroke="#0D2E66" strokeWidth="1.7" fill="none" strokeLinecap="round" />
+      <path d="M50 33 L50 38" stroke="#FFD34D" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
 
 export function AntibodyRibuan({ uid = "" }: { uid?: string }) {
-  const units = Array.from({ length: 5 }, (_, i) => {
-    const baseAngle = i * 72;
-    const hRad = ((baseAngle - 90) * Math.PI) / 180;
-    const hx = 50 + 19 * Math.cos(hRad);
-    const hy = 50 + 19 * Math.sin(hRad);
-    const a1 = polar(hx, hy, 17, baseAngle - 36);
-    const a2 = polar(hx, hy, 17, baseAngle + 36);
-    const st = { x: hx + 8 * Math.cos(hRad + Math.PI), y: hy + 8 * Math.sin(hRad + Math.PI) };
-    return (
-      <g key={i}>
-        <line x1={hx} y1={hy} x2={a1.x} y2={a1.y} stroke="#3355AA" strokeWidth="3" strokeLinecap="round" />
-        <line x1={hx} y1={hy} x2={a2.x} y2={a2.y} stroke="#3355AA" strokeWidth="3" strokeLinecap="round" />
-        <line x1={hx} y1={hy} x2={st.x} y2={st.y} stroke="#1A3A8A" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx={a1.x} cy={a1.y} r="5" fill="#8899BB" stroke="#000099" strokeWidth="1" />
-        <circle cx={a2.x} cy={a2.y} r="5" fill="#8899BB" stroke="#000099" strokeWidth="1" />
-        <circle cx={hx} cy={hy} r="3" fill="#000080" />
-      </g>
-    );
-  });
+  const id = `ab4${uid}`;
   return (
     <svg viewBox="0 0 100 100" fill="none">
-      <circle cx="50" cy="50" r="19" stroke="#7799CC" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-      {units}
-      <circle cx="50" cy="50" r="7" fill="#000066" stroke="#000080" strokeWidth="1.5" />
-      <circle cx="50" cy="50" r="3" fill="#8899BB" opacity="0.8" />
+      <defs>
+        <radialGradient id={id} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#BFE0FF" />
+          <stop offset="100%" stopColor="#2E6DA4" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#8FC1E8" strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+      <g transform="translate(50,20) scale(0.34)">
+        <line x1="0" y1="20" x2="-22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <line x1="0" y1="20" x2="22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="-22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+        <circle cx="22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+      </g>
+      <g transform="translate(78,38) rotate(72) scale(0.34)">
+        <line x1="0" y1="20" x2="-22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <line x1="0" y1="20" x2="22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="-22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+        <circle cx="22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+      </g>
+      <g transform="translate(67,76) rotate(144) scale(0.34)">
+        <line x1="0" y1="20" x2="-22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <line x1="0" y1="20" x2="22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="-22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+        <circle cx="22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+      </g>
+      <g transform="translate(33,76) rotate(216) scale(0.34)">
+        <line x1="0" y1="20" x2="-22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <line x1="0" y1="20" x2="22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="-22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+        <circle cx="22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+      </g>
+      <g transform="translate(22,38) rotate(288) scale(0.34)">
+        <line x1="0" y1="20" x2="-22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <line x1="0" y1="20" x2="22" y2="-8" stroke="#4A90C2" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="-22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+        <circle cx="22" cy="-10" r="9" fill="#D6EAF8" stroke="#3E7CAE" strokeWidth="2" />
+      </g>
+      <circle cx="50" cy="50" r="17" fill={`url(#${id})`} stroke="#1B4F72" strokeWidth="2" />
+      <path d="M40 36 L44 26 L50 34 L56 26 L60 36 Z" fill="#FFD34D" stroke="#B8860B" strokeWidth="1" />
+      <circle cx="46" cy="49" r="2" fill="#0B3355" />
+      <circle cx="54" cy="49" r="2" fill="#0B3355" />
+      <path d="M45 55 Q50 59 55 55" stroke="#0B3355" strokeWidth="2" fill="none" strokeLinecap="round" />
     </svg>
   );
 }

@@ -1,0 +1,703 @@
+{
+  "pbtResults": {
+    "1.3 Tulis property test untuk uid suffix mencegah konflik id SVG": {
+      "status": "passed",
+      "lastRunTimestamp": 1789203900567
+    },
+    "4.2 Tulis property test jumlah elemen partikel DOM tidak melebihi 30": {
+      "status": "passed",
+      "lastRunTimestamp": 1789200431691
+    },
+    "8.5 Tulis property test perfect neutralization terdeteksi untuk semua pasangan zero-sum": {
+      "status": "passed",
+      "lastRunTimestamp": 1789204290899
+    },
+    "8.4 Tulis property test klasifikasi Alliance-ku untuk semua pasangan negatif": {
+      "status": "passed",
+      "lastRunTimestamp": 1789204317062
+    },
+    "8.6 Tulis property test error untuk semua input dengan salah satu nilai nol": {
+      "status": "passed",
+      "lastRunTimestamp": 1789204317940
+    },
+    "8.3 Tulis property test klasifikasi Alliance-ab untuk semua pasangan positif": {
+      "status": "passed",
+      "lastRunTimestamp": 1789204324133
+    },
+    "8.2 Tulis property test klasifikasi Battle untuk semua pasangan tanda berbeda": {
+      "status": "passed",
+      "lastRunTimestamp": 1789204644249
+    }
+  },
+  "executionHistory": {
+    "1.1 Ganti implementasi SVG AntibodySatuan, AntibodyPuluhan, AntibodyRatusan, AntibodyRibuan": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198781081
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198797921
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199324814
+      }
+    ],
+    "1.2 Ganti implementasi SVG VirusSatuan, VirusPuluhan, VirusRatusan, VirusRibuan": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198781983
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198802362
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199329073
+      }
+    ],
+    "1.3 Tulis property test untuk uid suffix mencegah konflik id SVG": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198782240
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199333359
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203858847
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203928170
+      }
+    ],
+    "1.4 Tulis unit test CharacterChips tetap berfungsi normal": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198782423
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199337185
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203859201
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203926520
+      }
+    ],
+    "2.1 Tambah keyframes Battle (approach, recoil, dissolve, flash, stage-shake)": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198782683
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199341250
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203859850
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203928868
+      }
+    ],
+    "2.2 Tambah keyframes Alliance (approach, bounce, settled-glow)": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198783372
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199345083
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203860454
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203927222
+      }
+    ],
+    "2.3 Tambah keyframes efek bersama (particle-fly, shockwave, popup, idle-hover-pop, bar-drain)": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198783901
+      },
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199349615
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203861110
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203929559
+      }
+    ],
+    "3. Checkpoint — Fondasi siap": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198784445
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204992502
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789206018269
+      }
+    ],
+    "4.1 Implementasi hook useParticles dan komponen Burst": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198784594
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199881639
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200000152
+      }
+    ],
+    "4.2 Tulis property test jumlah elemen partikel DOM tidak melebihi 30": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198784798
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200005267
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200446042
+      }
+    ],
+    "4.3 Implementasi komponen Shockwave dan Popup": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198784880
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789199882042
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200000453
+      }
+    ],
+    "5.1 Implementasi state management dan timer lifecycle BattleStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785067
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200005887
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200446695
+      }
+    ],
+    "5.2 Implementasi posisi dan animasi karakter BattleStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785145
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200452362
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200948761
+      }
+    ],
+    "5.3 Implementasi efek impact dan \"NETRAL ✓\" popup BattleStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785282
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200452913
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200949313
+      }
+    ],
+    "5.4 Implementasi SpeedControl, LoopToggle, dan prop hideControls BattleStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785431
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200453524
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200949915
+      }
+    ],
+    "5.5 Tulis component test BattleStage memanggil onComplete tepat 1x": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785540
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200959356
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203840836
+      }
+    ],
+    "5.6 Tulis property test speed multiplier proporsional terhadap semua durasi setTimeout": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785695
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200959956
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203841498
+      }
+    ],
+    "6.1 Implementasi state management dan timer lifecycle AllianceStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198785844
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200006353
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200447268
+      }
+    ],
+    "6.2 Implementasi posisi dan animasi karakter AllianceStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786095
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200454166
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200950607
+      }
+    ],
+    "6.3 Implementasi efek burst dan settled-glow AllianceStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786221
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200454584
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200951149
+      }
+    ],
+    "6.4 Implementasi SpeedControl, LoopToggle, dan prop hideControls AllianceStage": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786354
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200458594
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200951807
+      }
+    ],
+    "6.5 Tulis component test AllianceStage memanggil onComplete tepat 1x": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786492
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200960609
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203846061
+      }
+    ],
+    "7. Checkpoint — Stages siap": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786678
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789206027238
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789206051237
+      }
+    ],
+    "8.1 Implementasi fungsi classifyInteraction": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786761
+      },
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200961020
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203842964
+      }
+    ],
+    "8.2 Tulis property test klasifikasi Battle untuk semua pasangan tanda berbeda": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198786874
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203934884
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204702512
+      }
+    ],
+    "8.3 Tulis property test klasifikasi Alliance-ab untuk semua pasangan positif": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787098
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203935192
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204703138
+      }
+    ],
+    "8.4 Tulis property test klasifikasi Alliance-ku untuk semua pasangan negatif": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787220
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203935769
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204703815
+      }
+    ],
+    "8.5 Tulis property test perfect neutralization terdeteksi untuk semua pasangan zero-sum": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787449
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203936416
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204704396
+      }
+    ],
+    "8.6 Tulis property test error untuk semua input dengan salah satu nilai nol": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787609
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203937024
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204705017
+      }
+    ],
+    "8.7 Implementasi komponen InteractionAnimation": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787711
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203937629
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204705619
+      }
+    ],
+    "8.8 Tulis component test InteractionAnimation dengan prefers-reduced-motion": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787812
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204711851
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204815531
+      }
+    ],
+    "9.1 Tambah state animating dan ref handleComputeResult": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198787972
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204712186
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204816252
+      }
+    ],
+    "9.2 Update handleCompute dan poolDisabled": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198788070
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204821149
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204873781
+      }
+    ],
+    "9.3 Mount InteractionAnimation dan sembunyikan BilanganZone saat animating": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198788248
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204880497
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204978324
+      }
+    ],
+    "10. Final checkpoint — Integrasi lengkap": [
+      {
+        "executionId": "b3c23f11-45d4-439e-9dbd-bf784f8e5fd4",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789198788381
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789206056951
+      },
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789206074664
+      }
+    ],
+    "4. Buat AnimationEffects.tsx": [
+      {
+        "executionId": "d7f4457a-e395-4fb5-b78b-e1cde5c5189c",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789200446130
+      }
+    ],
+    "5. Buat BattleStage.tsx": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203841533
+      }
+    ],
+    "6. Buat AllianceStage.tsx": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203846935
+      }
+    ],
+    "1. Ganti implementasi SVG karakter di CharacterSVGs.tsx": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203928204
+      }
+    ],
+    "2. Tambah CSS keyframes baru ke animations.css": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789203929591
+      }
+    ],
+    "8. Buat InteractionAnimation.tsx": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204815601
+      }
+    ],
+    "9. Update game-virus/page.tsx": [
+      {
+        "executionId": "b13d4c1c-213d-4b7c-962b-41ec6597c381",
+        "chatSessionId": "sess_849a0b99-712f-4043-b152-91e1f26b83f9",
+        "timestamp": 1789204978392
+      }
+    ]
+  }
+}

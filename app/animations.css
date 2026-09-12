@@ -55,11 +55,14 @@
 }
 
 @keyframes battle-shake-kf {
-  0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-6px); }
-  40%       { transform: translateX(6px); }
-  60%       { transform: translateX(-4px); }
-  80%       { transform: translateX(4px); }
+  0%,100% { transform: translateX(0)     rotate(0deg)     scale(1);    }
+  13%     { transform: translateX(-10px) rotate(-4.5deg)  scale(1.07); }
+  26%     { transform: translateX(9px)   rotate(4deg)     scale(1.09); }
+  38%     { transform: translateX(-8px)  rotate(-3.5deg)  scale(1.05); }
+  51%     { transform: translateX(7px)   rotate(3deg)     scale(1.08); }
+  63%     { transform: translateX(-5px)  rotate(-2deg)    scale(1.04); }
+  76%     { transform: translateX(4px)   rotate(2deg)     scale(1.05); }
+  88%     { transform: translateX(-2px)  rotate(-1deg)    scale(1.01); }
 }
 
 @keyframes defeat-left-kf {
@@ -380,4 +383,421 @@
   .clash-flash {
     animation: clash-flash-kf 0.4s ease-out forwards;
   }
+}
+
+/* ── SVG Animation Integration: Alliance keyframes ──────────────── */
+
+@keyframes alliance-approach-left-kf {
+  from { transform: translateX(-225px) translateY(-40px); }
+  to   { transform: translateX(-85px)  translateY(-40px); }
+}
+
+@keyframes alliance-approach-right-kf {
+  from { transform: translateX(145px) translateY(-40px); }
+  to   { transform: translateX(5px)   translateY(-40px); }
+}
+
+@keyframes bounce-merge-kf {
+  0%   { transform: scale(1);    }
+  28%  { transform: scale(1.22); }
+  50%  { transform: scale(0.91); }
+  70%  { transform: scale(1.12); }
+  86%  { transform: scale(0.97); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes settled-glow-blue-kf {
+  0%,100% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(96,165,250,0.55)) drop-shadow(0 0 12px rgba(59,130,246,0.2));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 18px rgba(96,165,250,1)) drop-shadow(0 0 36px rgba(59,130,246,0.4));
+  }
+}
+
+@keyframes settled-glow-red-kf {
+  0%,100% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(248,113,113,0.55)) drop-shadow(0 0 12px rgba(239,68,68,0.2));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 18px rgba(248,113,113,1)) drop-shadow(0 0 36px rgba(239,68,68,0.4));
+  }
+}
+
+@layer utilities {
+  .alliance-approach-left {
+    animation: alliance-approach-left-kf 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .alliance-approach-right {
+    animation: alliance-approach-right-kf 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .bounce-merge {
+    animation: bounce-merge-kf 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .settled-glow-blue {
+    animation: settled-glow-blue-kf 1.8s ease-in-out infinite;
+  }
+
+  .settled-glow-red {
+    animation: settled-glow-red-kf 1.8s ease-in-out infinite;
+  }
+}
+
+/* ── Shared effects: particle burst, shockwave, popup, idle hover, bar drain ── */
+
+/*
+ * particle-fly-kf
+ * Requirement 6.8 — uses CSS custom properties --tx, --ty, --r
+ * so each particle element can be individually controlled from JS.
+ */
+@keyframes particle-fly-kf {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)))
+      rotate(var(--r)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/*
+ * shockwave-kf
+ * Requirement 6.9 — expanding ring at the impact / meeting point.
+ */
+@keyframes shockwave-kf {
+  0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.85; }
+  70%  { opacity: 0.35; }
+  100% { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
+}
+
+/*
+ * popup-rise-kf
+ * Requirement 6.10 — text popup (e.g. "NETRAL ✓", "+ KUAT!") rises and fades.
+ */
+@keyframes popup-rise-kf {
+  0%   { transform: translate(-50%, 0)     scale(0.4); opacity: 0; }
+  25%  { transform: translate(-50%, -14px) scale(1.1); opacity: 1; }
+  75%  { transform: translate(-50%, -28px) scale(1);   opacity: 1; }
+  100% { transform: translate(-50%, -44px) scale(0.9); opacity: 0; }
+}
+
+/*
+ * idle-hover-pop-kf
+ * Requirement 6.11 — subtle scale-up on hover for idle characters.
+ */
+@keyframes idle-hover-pop-kf {
+  from { transform: scale(1);    }
+  to   { transform: scale(1.14); }
+}
+
+/*
+ * idle-float-kf
+ * Requirement 6.11 — gentle floating bob for idle state characters.
+ * (idle-float-kf reuses the concept from battle-float-kf but with slight rotation
+ *  to match the reference; kept separate to avoid altering existing battle-float.)
+ */
+@keyframes idle-float-kf {
+  0%,100% { transform: translateY(0)    rotate(0deg);   }
+  50%     { transform: translateY(-6px) rotate(2.5deg); }
+}
+
+/*
+ * bar-drain-kf
+ * Drains a progress/health bar from full to zero (width 100% → 0%).
+ */
+@keyframes bar-drain-kf {
+  from { width: 100%; }
+  to   { width: 0%;   }
+}
+
+@layer utilities {
+  /* Particle burst — apply to each <span> particle; set --tx, --ty, --r via style */
+  .particle-fly {
+    animation: particle-fly-kf 0.6s ease-out forwards;
+  }
+
+  /* Shockwave ring — position absolute at impact centre */
+  .shockwave {
+    animation: shockwave-kf 0.5s ease-out forwards;
+  }
+
+  /* Rising popup text */
+  .popup-rise {
+    animation: popup-rise-kf 1s ease-out forwards;
+  }
+
+  /* Idle hover pop — triggered on :hover or toggled via JS */
+  .idle-hover-pop {
+    animation: idle-hover-pop-kf 0.15s ease-out forwards;
+  }
+
+  /* Idle float loop for characters in resting state */
+  .idle-float {
+    animation: idle-float-kf 2.8s ease-in-out infinite;
+  }
+
+  /* Bar drain — apply duration inline (e.g. style="animation-duration: 2s") */
+  .bar-drain {
+    animation: bar-drain-kf linear forwards;
+  }
+}
+
+/* ── Battle animation: approach, recoil, dissolve, flash, stage-shake ─ */
+
+/*
+ * Outer-div positioning keyframes.
+ * translateY(-40px) bawaan referensi dipertahankan agar karakter
+ * sejajar dengan titik benturan di tengah stage.
+ */
+@keyframes battle-approach-left-kf {
+  from { transform: translateX(-225px) translateY(-40px); }
+  to   { transform: translateX(-78px)  translateY(-40px); }
+}
+
+@keyframes battle-approach-right-kf {
+  from { transform: translateX(145px) translateY(-40px); }
+  to   { transform: translateX(-2px)  translateY(-40px); }
+}
+
+@keyframes battle-recoil-left-kf {
+  from { transform: translateX(-78px) translateY(-40px); }
+  to   { transform: translateX(-95px) translateY(-40px); }
+}
+
+@keyframes battle-recoil-right-kf {
+  from { transform: translateX(-2px) translateY(-40px); }
+  to   { transform: translateX(15px)  translateY(-40px); }
+}
+
+/*
+ * Inner-div dissolve: scale → 0 dengan rotasi berlawanan arah (ccw)
+ * atau searah (cw) jarum jam.
+ */
+@keyframes dissolve-ccw-kf {
+  0%   { transform: scale(1)    rotate(0deg)    translateY(0px);   opacity: 1; }
+  22%  { transform: scale(0.84) rotate(-12deg)  translateY(-9px);  opacity: 0.8; }
+  50%  { transform: scale(0.52) rotate(-30deg)  translateY(-6px);  opacity: 0.45; }
+  78%  { transform: scale(0.2)  rotate(-48deg)  translateY(2px);   opacity: 0.15; }
+  100% { transform: scale(0)    rotate(-65deg)  translateY(8px);   opacity: 0; }
+}
+
+@keyframes dissolve-cw-kf {
+  0%   { transform: scale(1)    rotate(0deg)   translateY(0px);   opacity: 1; }
+  22%  { transform: scale(0.84) rotate(12deg)  translateY(-9px);  opacity: 0.8; }
+  50%  { transform: scale(0.52) rotate(30deg)  translateY(-6px);  opacity: 0.45; }
+  78%  { transform: scale(0.2)  rotate(48deg)  translateY(2px);   opacity: 0.15; }
+  100% { transform: scale(0)    rotate(65deg)  translateY(8px);   opacity: 0; }
+}
+
+/* Flash kilat putih di titik benturan */
+@keyframes flash-impact-kf {
+  0%   { opacity: 0;    transform: scale(0.7); }
+  18%  { opacity: 1;    transform: scale(1);   }
+  65%  { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+/* Guncangan seluruh stage saat impact */
+@keyframes stage-shake-kf {
+  0%,100% { transform: translate(0, 0);      }
+  15%     { transform: translate(-5px, 3px); }
+  30%     { transform: translate(5px, -3px); }
+  45%     { transform: translate(-4px, 2px); }
+  60%     { transform: translate(4px, -2px); }
+  80%     { transform: translate(-2px, 1px); }
+}
+
+@layer utilities {
+  /* Outer-div: karakter mendekati titik benturan */
+  .animate-battle-approach-left {
+    animation: battle-approach-left-kf 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-battle-approach-right {
+    animation: battle-approach-right-kf 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Outer-div: karakter mundur setelah benturan */
+  .animate-battle-recoil-left {
+    animation: battle-recoil-left-kf 0.25s ease-out forwards;
+  }
+
+  .animate-battle-recoil-right {
+    animation: battle-recoil-right-kf 0.25s ease-out forwards;
+  }
+
+  /* Inner-div: luruh dengan rotasi */
+  .animate-dissolve-ccw {
+    animation: dissolve-ccw-kf 0.55s ease-in forwards;
+  }
+
+  .animate-dissolve-cw {
+    animation: dissolve-cw-kf 0.55s ease-in forwards;
+  }
+
+  /* Flash dan guncangan stage */
+  .animate-flash-impact {
+    animation: flash-impact-kf 0.45s ease-out forwards;
+  }
+
+  .animate-stage-shake {
+    animation: stage-shake-kf 0.45s ease-in-out forwards;
+  }
+}
+
+/* ── Keyframe aliases (no -kf suffix) ─────────────────────────── */
+/* Each alias mirrors its -kf counterpart exactly so inline animation
+   strings from the reference component work without modification.    */
+
+@keyframes battle-shake {
+  0%,100% { transform: translateX(0)     rotate(0deg)     scale(1);    }
+  13%     { transform: translateX(-10px) rotate(-4.5deg)  scale(1.07); }
+  26%     { transform: translateX(9px)   rotate(4deg)     scale(1.09); }
+  38%     { transform: translateX(-8px)  rotate(-3.5deg)  scale(1.05); }
+  51%     { transform: translateX(7px)   rotate(3deg)     scale(1.08); }
+  63%     { transform: translateX(-5px)  rotate(-2deg)    scale(1.04); }
+  76%     { transform: translateX(4px)   rotate(2deg)     scale(1.05); }
+  88%     { transform: translateX(-2px)  rotate(-1deg)    scale(1.01); }
+}
+
+@keyframes particle-fly {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)))
+      rotate(var(--r)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+@keyframes shockwave {
+  0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.85; }
+  70%  { opacity: 0.35; }
+  100% { transform: translate(-50%, -50%) scale(1);    opacity: 0; }
+}
+
+@keyframes popup-rise {
+  0%   { transform: translate(-50%, 0)     scale(0.4); opacity: 0; }
+  25%  { transform: translate(-50%, -14px) scale(1.1); opacity: 1; }
+  75%  { transform: translate(-50%, -28px) scale(1);   opacity: 1; }
+  100% { transform: translate(-50%, -44px) scale(0.9); opacity: 0; }
+}
+
+@keyframes idle-float {
+  0%,100% { transform: translateY(0)    rotate(0deg);   }
+  50%     { transform: translateY(-6px) rotate(2.5deg); }
+}
+
+@keyframes idle-hover-pop {
+  from { transform: scale(1);    }
+  to   { transform: scale(1.14); }
+}
+
+@keyframes bar-drain {
+  from { width: 100%; }
+  to   { width: 0%;   }
+}
+
+@keyframes alliance-approach-left {
+  from { transform: translateX(-225px) translateY(-40px); }
+  to   { transform: translateX(-85px)  translateY(-40px); }
+}
+
+@keyframes alliance-approach-right {
+  from { transform: translateX(145px) translateY(-40px); }
+  to   { transform: translateX(5px)   translateY(-40px); }
+}
+
+@keyframes bounce-merge {
+  0%   { transform: scale(1);    }
+  28%  { transform: scale(1.22); }
+  50%  { transform: scale(0.91); }
+  70%  { transform: scale(1.12); }
+  86%  { transform: scale(0.97); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes settled-glow-blue {
+  0%,100% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(96,165,250,0.55)) drop-shadow(0 0 12px rgba(59,130,246,0.2));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 18px rgba(96,165,250,1)) drop-shadow(0 0 36px rgba(59,130,246,0.4));
+  }
+}
+
+@keyframes settled-glow-red {
+  0%,100% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px rgba(248,113,113,0.55)) drop-shadow(0 0 12px rgba(239,68,68,0.2));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 18px rgba(248,113,113,1)) drop-shadow(0 0 36px rgba(239,68,68,0.4));
+  }
+}
+
+@keyframes battle-approach-left {
+  from { transform: translateX(-225px) translateY(-40px); }
+  to   { transform: translateX(-78px)  translateY(-40px); }
+}
+
+@keyframes battle-approach-right {
+  from { transform: translateX(145px) translateY(-40px); }
+  to   { transform: translateX(-2px)  translateY(-40px); }
+}
+
+@keyframes battle-recoil-left {
+  from { transform: translateX(-78px) translateY(-40px); }
+  to   { transform: translateX(-95px) translateY(-40px); }
+}
+
+@keyframes battle-recoil-right {
+  from { transform: translateX(-2px) translateY(-40px); }
+  to   { transform: translateX(15px)  translateY(-40px); }
+}
+
+@keyframes dissolve-ccw {
+  0%   { transform: scale(1)    rotate(0deg)    translateY(0px);   opacity: 1; }
+  22%  { transform: scale(0.84) rotate(-12deg)  translateY(-9px);  opacity: 0.8; }
+  50%  { transform: scale(0.52) rotate(-30deg)  translateY(-6px);  opacity: 0.45; }
+  78%  { transform: scale(0.2)  rotate(-48deg)  translateY(2px);   opacity: 0.15; }
+  100% { transform: scale(0)    rotate(-65deg)  translateY(8px);   opacity: 0; }
+}
+
+@keyframes dissolve-cw {
+  0%   { transform: scale(1)    rotate(0deg)   translateY(0px);   opacity: 1; }
+  22%  { transform: scale(0.84) rotate(12deg)  translateY(-9px);  opacity: 0.8; }
+  50%  { transform: scale(0.52) rotate(30deg)  translateY(-6px);  opacity: 0.45; }
+  78%  { transform: scale(0.2)  rotate(48deg)  translateY(2px);   opacity: 0.15; }
+  100% { transform: scale(0)    rotate(65deg)  translateY(8px);   opacity: 0; }
+}
+
+@keyframes flash-impact {
+  0%   { opacity: 0;    transform: scale(0.7); }
+  18%  { opacity: 1;    transform: scale(1);   }
+  65%  { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+@keyframes stage-shake {
+  0%,100% { transform: translate(0, 0);      }
+  15%     { transform: translate(-5px, 3px); }
+  30%     { transform: translate(5px, -3px); }
+  45%     { transform: translate(-4px, 2px); }
+  60%     { transform: translate(4px, -2px); }
+  80%     { transform: translate(-2px, 1px); }
 }

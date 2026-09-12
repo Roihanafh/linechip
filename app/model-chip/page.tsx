@@ -1,4 +1,4 @@
-// app/model-chip/page.tsx
+﻿// app/model-chip/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -13,6 +13,8 @@ import {
   dominantPlace,
   type PlaceValue,
 } from "@/components/game/CharacterSVGs";
+import { PairReactionStage, pairCycleDuration } from "@/components/game/PairReactionStage";
+import { useSound } from "@/hooks/useSound";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -64,9 +66,12 @@ export default function ModelChipPage() {
   const [stepPhase, setStepPhase] = useState<StepPhase>("approach");
   // neutralised[tier] = how many pairs of this tier have already reacted
   const [neutralised, setNeutralised] = useState<Map<1 | 10 | 100 | 1000, number>>(new Map());
+  const [animSpeed, setAnimSpeed] = useState(1);
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
+  const animSpeedRef = useRef(1); // always reflects current animSpeed, avoids stale closure
+  const playLaunch = useSound("/luncurkan.mp3");
 
   // ── Derived values ─────────────────────────────────────────────────────────
 
@@ -131,26 +136,18 @@ export default function ModelChipPage() {
     setStepPhase("approach");
 
     // approach → clash
+    // Wait for full PairReactionStage cycle, scaled to current animSpeed
+    const cycleDur = pairCycleDuration(animSpeedRef.current);
     const tApp = setTimeout(() => {
-      setStepPhase("clash");
-
-      // clash → clear
-      const tClash = setTimeout(() => {
-        setStepPhase("clear");
-
-        // Mark this pair as neutralised
-        const next = new Map(neu);
-        next.set(group.tier, (next.get(group.tier) ?? 0) + 1);
-        setNeutralised(next);
-
-        // clear → next pair
-        const tClear = setTimeout(() => {
-          runPair(groups, tIdx, pIdx + 1, next);
-        }, 220);
-        timers.current.push(tClear);
-      }, 600);
-      timers.current.push(tClash);
-    }, 1100);
+      setStepPhase("clear");
+      const next = new Map(neu);
+      next.set(group.tier, (next.get(group.tier) ?? 0) + 1);
+      setNeutralised(next);
+      const tClear = setTimeout(() => {
+        runPair(groups, tIdx, pIdx + 1, next);
+      }, 100);
+      timers.current.push(tClear);
+    }, cycleDur);
     timers.current.push(tApp);
   };
 
@@ -175,7 +172,7 @@ export default function ModelChipPage() {
     const pairCount = Math.min(tp, tn);
     const groups = buildTierGroups(pairCount);
     setTierGroups(groups);
-    setVizPhase("battle");
+    playLaunch(); setVizPhase("battle");
     runPair(groups, 0, 0, new Map());
   };
 
@@ -283,60 +280,63 @@ export default function ModelChipPage() {
           </div>
         </div>
 
-        {/* ── Input row: bil1 + bil2 (mobile-style, satu baris) ─── */}
-        <div className={`mb-4 transition-opacity duration-300 ${isAnimating ? "opacity-50 pointer-events-none" : ""}`}>
+        {/* -- Input row: bil1 + bil2 (mobile-style, satu baris) --- */}
+        <div className="mb-4">
           <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
 
-            {/* Baris nama/jenis — di atas input */}
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2">
-              <div className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full shrink-0 ${p1.isPos ? "bg-intblue" : p1.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
-                <span className={`font-bold text-sm truncate ${p1.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
-                  {p1.troopName ?? "Bilangan 1"}
-                </span>
+            {/* Input fields � disabled during animation so user cannot change values */}
+            <div className={`transition-opacity duration-300 ${isAnimating ? "opacity-50 pointer-events-none" : ""}`}>
+              {/* Baris nama/jenis � di atas input */}
+              <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2">
+                <div className="flex items-center gap-1.5">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${p1.isPos ? "bg-intblue" : p1.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
+                  <span className={`font-bold text-sm truncate ${p1.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
+                    {p1.troopName ?? "Bilangan 1"}
+                  </span>
+                </div>
+                <div />
+                <div className="flex items-center gap-1.5 justify-end">
+                  <span className={`font-bold text-sm truncate ${p2.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
+                    {p2.troopName ?? "Bilangan 2"}
+                  </span>
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${p2.isPos ? "bg-intblue" : p2.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
+                </div>
               </div>
-              <div />
-              <div className="flex items-center gap-1.5 justify-end">
-                <span className={`font-bold text-sm truncate ${p2.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
-                  {p2.troopName ?? "Bilangan 2"}
-                </span>
-                <div className={`w-2 h-2 rounded-full shrink-0 ${p2.isPos ? "bg-intblue" : p2.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
+
+              {/* Baris input + operator */}
+              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <input
+                  type="number" min={-9999} max={9999}
+                  value={bil1 === 0 ? "" : bil1} placeholder="0"
+                  onChange={(e) => handleBil1Change(e.target.value)}
+                  readOnly={vizPhase !== "idle"}
+                  className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
+                />
+                <div className="flex items-center justify-center w-8 shrink-0">
+                  <span className="text-slate-300 font-bold text-2xl select-none">+</span>
+                </div>
+                <input
+                  type="number" min={-9999} max={9999}
+                  value={bil2 === 0 ? "" : bil2} placeholder="0"
+                  onChange={(e) => handleBil2Change(e.target.value)}
+                  readOnly={vizPhase !== "idle"}
+                  className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
+                />
               </div>
-            </div>
 
-            {/* Baris input + operator */}
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-              <input
-                type="number" min={-9999} max={9999}
-                value={bil1 === 0 ? "" : bil1} placeholder="0"
-                onChange={(e) => handleBil1Change(e.target.value)}
-                readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
-              />
-              <div className="flex items-center justify-center w-8 shrink-0">
-                <span className="text-slate-300 font-bold text-2xl select-none">+</span>
+              {/* Baris subtitle */}
+              <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mt-1.5">
+                <p className={`text-[10px] ${p1.isPos ? "text-intblue/70" : p1.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
+                  {p1.absVal > 0 ? p1.subtitle : "-9.999 s/d +9.999"}
+                </p>
+                <div />
+                <p className={`text-[10px] ${p2.isPos ? "text-intblue/70" : p2.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
+                  {p2.absVal > 0 ? p2.subtitle : "-9.999 s/d +9.999"}
+                </p>
               </div>
-              <input
-                type="number" min={-9999} max={9999}
-                value={bil2 === 0 ? "" : bil2} placeholder="0"
-                onChange={(e) => handleBil2Change(e.target.value)}
-                readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
-              />
-            </div>
+            </div>{/* end: input fields */}
 
-            {/* Baris subtitle */}
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mt-1.5">
-              <p className={`text-[10px] ${p1.isPos ? "text-intblue/70" : p1.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
-                {p1.absVal > 0 ? p1.subtitle : "−9.999 s/d +9.999"}
-              </p>
-              <div />
-              <p className={`text-[10px] ${p2.isPos ? "text-intblue/70" : p2.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
-                {p2.absVal > 0 ? p2.subtitle : "−9.999 s/d +9.999"}
-              </p>
-            </div>
-
-            {/* Tombol Pasangkan */}
+            {/* Tombol Pasangkan � always interactive, speed control lives here */}
             <div className="mt-4 flex justify-center">
               {vizPhase === "idle" && (
                 <button
@@ -348,9 +348,19 @@ export default function ModelChipPage() {
                 </button>
               )}
               {isAnimating && (
-                <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
-                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-                  Animasi berjalan...
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
+                    <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+                    Animasi berjalan...
+                  </div>
+                  <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
+                    {([0.5, 1, 2] as const).map((spd) => (
+                      <button key={spd} onClick={() => { animSpeedRef.current = spd; setAnimSpeed(spd); }}
+                        className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${animSpeed === spd ? "bg-intblue text-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}>
+                        {spd}×
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
@@ -560,8 +570,49 @@ export default function ModelChipPage() {
 
               {/* ── BATTLE ──────────────────────────────────────────────────── */}
               {vizPhase === "battle" && (
-                <div className="grid grid-cols-[1fr_120px_1fr] gap-3 items-start">
+                <div className="flex flex-col gap-4">
+                  {/* PairReactionStage — wide, centred */}
+                  {curGroup && (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-3 flex-wrap justify-center">
+                        <p className="font-mono text-[10px] text-slate-500 uppercase tracking-wide">
+                          {TIER_TO_PLACE[curGroup.tier]} &middot; {pairInTier + 1}/{curGroup.count}
+                        </p>
+                        <div className="flex gap-1.5">
+                          {tierGroups.map((tg, i) => {
+                            const done = isTierDone(tg.tier);
+                            const active = i === tierIdx;
+                            return (
+                              <div key={i}
+                                title={`${TIER_TO_PLACE[tg.tier]}`}
+                                className={`transition-all duration-300 rounded-full ${done ? "w-2 h-2 bg-emerald-500" : active ? "w-2.5 h-2.5 bg-yellow-400 ring-2 ring-yellow-400/30" : "w-2 h-2 bg-slate-300"}`}
+                              />
+                            );
+                          })}
+                        </div>
+                        {totalNeutralised > 0 && (
+                          <span className="font-mono text-[8px] text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
+                            −{totalNeutralised.toLocaleString("id-ID")} luruh
+                          </span>
+                        )}
+                      </div>
+                      <PairReactionStage
+                        key={`pr-${tierIdx}-${pairInTier}-${animSpeed}`}
+                        runKey={tierIdx * 1000 + pairInTier}
+                        leftType={place}
+                        rightType={place}
+                        leftFaction={s1Type}
+                        isPerfect={pairs === 1 && snapTotalPos === snapTotalNeg}
+                        onDone={() => {}}
+                        speed={animSpeed}
+                        width={520}
+                        height={200}
+                      />
+                    </div>
+                  )}
 
+                  {/* Side columns — character chips from each bilangan */}
+                  <div className="grid grid-cols-2 gap-3">
                   {/* Kolom kiri — Bil.1 */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 mb-2 justify-center">
@@ -576,106 +627,6 @@ export default function ModelChipPage() {
                     }
                   </div>
 
-                  {/* ── Arena tengah ── */}
-                  <div className="shrink-0 flex flex-col items-center gap-2" style={{ width: 112 }}>
-
-                    {/* Tier progress indicators */}
-                    <div className="flex gap-1.5 flex-wrap justify-center">
-                      {tierGroups.map((tg, i) => {
-                        const done = isTierDone(tg.tier);
-                        const active = i === tierIdx;
-                        return (
-                          <div key={i} title={`${TIER_TO_PLACE[tg.tier]} ×${tg.count}`}
-                            className={`transition-all duration-300 rounded-full ${
-                              done   ? "w-2 h-2 bg-emerald-500" :
-                              active ? "w-2.5 h-2.5 bg-yellow-400 ring-2 ring-yellow-400/30" :
-                                       "w-2 h-2 bg-slate-300"
-                            }`}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {/* Current tier + pair label */}
-                    {curGroup && (
-                      <div className="text-center">
-                        <p className="font-mono text-[9px] text-slate-500 uppercase tracking-wide">
-                          {TIER_TO_PLACE[curGroup.tier]}
-                        </p>
-                        <p className="font-mono text-[8px] text-amber-500">
-                          {pairInTier + 1} / {curGroup.count}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Walking characters */}
-                    {curGroup && (
-                      <div
-                        className="relative flex items-center justify-center w-full"
-                        style={{ height: 64 }}
-                      >
-                        {/* Left walker — starts at left edge, walks to centre */}
-                        <div
-                          key={`wl-${tierIdx}-${pairInTier}-${stepPhase}`}
-                          className={`absolute w-10 h-10 ${
-                            isClash    ? "pair-clash-left"    :
-                            isApproach ? "pair-approach-left" : "opacity-0"
-                          }`}
-                          style={{ left: 0 }}
-                        >
-                          {s1Type === "ab"
-                            ? <AntibodyCharacter type={place} uid={`wl-${tierIdx}-${pairInTier}`} />
-                            : <VirusCharacter    type={place} uid={`wl-${tierIdx}-${pairInTier}`} />
-                          }
-                        </div>
-
-                        {/* Burst at centre — only during clash */}
-                        {isClash && (
-                          <div
-                            key={`burst-${tierIdx}-${pairInTier}`}
-                            className="absolute flex items-center justify-center"
-                            style={{ left: "50%", transform: "translateX(-50%)", width: 42, height: 42 }}
-                          >
-                            <div className="absolute inset-0 rounded-full border-2 border-slate-400/70 clash-burst" />
-                            <div className="absolute inset-0 rounded-full border-2 border-intblue/50 clash-burst" style={{ animationDelay: "100ms" }} />
-                            <div className="absolute inset-0 rounded-full border-2 border-intpink/40 clash-burst" style={{ animationDelay: "200ms" }} />
-                            <div className="absolute inset-0 rounded-full bg-white clash-flash" />
-                            <span className="relative z-10 font-black text-slate-700 text-base select-none drop-shadow">✕</span>
-                          </div>
-                        )}
-
-                        {/* Right walker — starts at right edge, walks to centre */}
-                        <div
-                          key={`wr-${tierIdx}-${pairInTier}-${stepPhase}`}
-                          className={`absolute w-10 h-10 ${
-                            isClash    ? "pair-clash-right"    :
-                            isApproach ? "pair-approach-right" : "opacity-0"
-                          }`}
-                          style={{ right: 0 }}
-                        >
-                          {s2Type === "ab"
-                            ? <AntibodyCharacter type={place} uid={`wr-${tierIdx}-${pairInTier}`} />
-                            : <VirusCharacter    type={place} uid={`wr-${tierIdx}-${pairInTier}`} />
-                          }
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Status */}
-                    <p className="font-mono text-[8px] text-slate-500 text-center leading-tight">
-                      {isClash ? "💥 luruh!" : "→ bertemu ←"}
-                    </p>
-
-                    {/* Running total */}
-                    {totalNeutralised > 0 && (
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
-                        <span className="font-mono text-[8px] text-emerald-600">
-                          −{totalNeutralised.toLocaleString("id-ID")} luruh
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
                   {/* Kolom kanan — Bil.2 */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 mb-2 justify-center">
@@ -688,6 +639,7 @@ export default function ModelChipPage() {
                       ? <p className="text-[9px] text-slate-400 font-mono italic text-center">tidak ada</p>
                       : renderColumn(s2Abs, s2Paired, s2Remaining, s2Type, s2Color, s2Sign, "b2")
                     }
+                  </div>
                   </div>
                 </div>
               )}

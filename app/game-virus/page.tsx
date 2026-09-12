@@ -1,7 +1,7 @@
-// app/game-virus/page.tsx
+﻿// app/game-virus/page.tsx
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   TIERS,
@@ -17,6 +17,8 @@ import {
   dominantPlace,
   type PlaceValue,
 } from "@/components/game/CharacterSVGs";
+import { InteractionAnimation } from "@/components/game/InteractionAnimation";
+import { useSound } from "@/hooks/useSound";
 
 interface HistoryEntry {
   type: "ab" | "ku";
@@ -39,10 +41,14 @@ export default function GameVirusPage() {
   const [abTarget, setAbTarget] = useState<1 | 2>(1);
   const [kuTarget, setKuTarget] = useState<1 | 2>(2);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [animating, setAnimating] = useState(false);
+  const handleComputeResult = useRef<() => void>(() => {});
+  const playLaunch = useSound("/luncurkan.mp3");
+
 
   const hasChips = bil1Value !== 0 || bil2Value !== 0;
-  const canCompute = hasChips && phase === "idle" && resultValue === null;
-  const poolDisabled = phase !== "idle" || resultValue !== null;
+  const canCompute = hasChips && phase === "idle" && resultValue === null && !animating;
+  const poolDisabled = phase !== "idle" || resultValue !== null || animating;
   const darkArena = hasChips && resultValue === null;
 
   const addToBilangan = useCallback(
@@ -84,17 +90,16 @@ export default function GameVirusPage() {
   const handleCompute = () => {
     if (!canCompute) return;
     const r = bil1Value + bil2Value;
-    setPhase("charging");
-    setTimeout(() => {
-      setPhase("exploding");
-      setTimeout(() => {
-        setResultValue(r);
-        setBil1Value(0);
-        setBil2Value(0);
-        setPhase("settled");
-        setTimeout(() => setPhase("idle"), 1400);
-      }, 700);
-    }, 650);
+    // Store the result callback — InteractionAnimation will call this via onComplete
+    handleComputeResult.current = () => {
+      setResultValue(r);
+      setBil1Value(0);
+      setBil2Value(0);
+      setPhase("settled");
+      setAnimating(false);
+      setTimeout(() => setPhase("idle"), 1400);
+    };
+    playLaunch(); setAnimating(true);
   };
 
   const reset = () => {
@@ -497,6 +502,15 @@ export default function GameVirusPage() {
               </div>
             ) : (
               <>
+                {animating ? (
+                <div className="flex-1 flex items-center justify-center py-4">
+                  <InteractionAnimation
+                    bil1Value={bil1Value}
+                    bil2Value={bil2Value}
+                    onComplete={() => handleComputeResult.current()}
+                  />
+                </div>
+              ) : (
                 <div className="flex-1 flex flex-col gap-2 mb-3">
                   <BilanganZone bil={1} value={bil1Value} />
                   <div className="flex items-center justify-center gap-2">
@@ -506,6 +520,7 @@ export default function GameVirusPage() {
                   </div>
                   <BilanganZone bil={2} value={bil2Value} />
                 </div>
+              )}
                 {hasChips && (
                   <div className={`rounded-xl px-3 py-2 mb-3 text-center font-mono text-sm ${darkArena ? "bg-white/5 border border-white/10" : "bg-surface"}`}>
                     <span className={bil1Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>

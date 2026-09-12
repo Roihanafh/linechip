@@ -14,6 +14,7 @@ import { useGameLineState } from "../../components/game-line/useGameLineState";
 import GameLineCanvas from "../../components/game-line/GameLineCanvas";
 import GameLineArrowControls from "../../components/game-line/GameLineArrowControls";
 import GameLineKeypad from "../../components/game-line/GameLineKeypad";
+import { useSound } from "../../hooks/useSound";
 
 export default function IntLineRunPage() {
   const {
@@ -34,6 +35,8 @@ export default function IntLineRunPage() {
     offsetX,
     handleCanvasDrag,
   } = useGameLineState();
+
+  const playLaunch = useSound("/luncurkan.mp3");
 
   // Auto-advance after correct answer (2000 ms delay)
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -133,7 +136,7 @@ export default function IntLineRunPage() {
 
             {/* Cek Posisi button */}
             <button
-              onClick={playArrows}
+              onClick={() => { playLaunch(); playArrows(); }}
               disabled={isAnimating}
               className="w-full py-3 rounded-xl bg-intblue-light text-intblue font-bold border border-intblue/20 hover:bg-intblue/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
@@ -177,7 +180,7 @@ export default function IntLineRunPage() {
             {/* Periksa + Soal Baru */}
             <div className="flex gap-2">
               <button
-                onClick={handleCheckAnswer}
+                onClick={() => { playLaunch(); handleCheckAnswer(); }}
                 disabled={isAnimating}
                 className="flex-1 py-3 rounded-xl bg-intblue text-white font-bold hover:bg-intblue-dark disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
               >
