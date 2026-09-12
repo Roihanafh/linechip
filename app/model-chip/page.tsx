@@ -378,8 +378,8 @@ export default function ModelChipPage() {
           const s2Paired     = hasBattle ? Math.min(s2Abs, pairs) : 0;
           const s1Remaining  = s1Abs - s1Paired;
           const s2Remaining  = s2Abs - s2Paired;
-          const s1Color = s1 > 0 ? "text-blue-400" : "text-rose-400";
-          const s2Color = s2 > 0 ? "text-blue-400" : "text-rose-400";
+          const s1Color = s1 > 0 ? "text-intblue" : "text-intpink";
+          const s2Color = s2 > 0 ? "text-intblue" : "text-intpink";
           const s1Dot   = s1 > 0 ? "bg-intblue" : "bg-intpink";
           const s2Dot   = s2 > 0 ? "bg-intblue" : "bg-intpink";
           const s1Sign  = s1 > 0 ? "+" : "";
@@ -456,13 +456,13 @@ export default function ModelChipPage() {
                   {/* Tier label */}
                   <div className="flex items-center gap-1.5 mb-1">
                     <span className={`font-mono text-[8px] font-bold uppercase tracking-wide ${
-                      tierDone ? "text-slate-700" : tierActive ? "text-yellow-400" : "text-slate-500"
+                      tierDone ? "text-slate-400" : tierActive ? "text-amber-500" : "text-slate-500"
                     }`}>
                       ×{tierVal}
                     </span>
                     {tierDone && <span className="font-mono text-[7px] text-emerald-600">✓ luruh</span>}
                     {tierActive && !tierDone && (
-                      <span className="font-mono text-[7px] text-yellow-500 animate-pulse">bereaksi</span>
+                      <span className="font-mono text-[7px] text-amber-500 animate-pulse">bereaksi</span>
                     )}
                   </div>
 
@@ -529,20 +529,20 @@ export default function ModelChipPage() {
           }
 
           return (
-            <div className={`bg-[#0f172a] rounded-2xl border border-[#1e293b] p-4 mb-4 overflow-hidden relative ${
+            <div className={`bg-slate-50 rounded-2xl border border-slate-200 p-4 mb-4 overflow-hidden relative ${
               isDone ? "arena-expand" : "arena-enter"
             }`}>
 
               {/* Header */}
               <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-[11px] tracking-[0.8px] text-[#64748b] uppercase font-bold">
+                <span className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
                   {vizPhase === "battle" ? "⚔️ Pertarungan!" :
                    vizPhase === "center" ? "⚡ Reaksi Netralisasi" :
                    isDone ? "✓ Selesai" : "Arena"}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <div className={`w-1.5 h-1.5 rounded-full ${isDone ? "bg-[#10b981]" : "bg-yellow-400 animate-pulse"}`} />
-                  <span className="font-mono text-[10px] text-[#475569]">
+                  <div className={`w-1.5 h-1.5 rounded-full ${isDone ? "bg-emerald-500" : "bg-yellow-400 animate-pulse"}`} />
+                  <span className="font-mono text-[10px] text-slate-500">
                     {vizPhase === "battle" && curGroup
                       ? `${TIER_TO_PLACE[curGroup.tier]} ${pairInTier + 1}/${curGroup.count}`
                       : vizPhase === "center" ? "Bereaksi"
@@ -564,7 +564,7 @@ export default function ModelChipPage() {
                       </span>
                     </div>
                     {s1 === 0
-                      ? <p className="text-[9px] text-slate-600 font-mono italic">tidak ada</p>
+                      ? <p className="text-[9px] text-slate-400 font-mono italic">tidak ada</p>
                       : renderColumn(s1Abs, s1Paired, s1Remaining, s1Type, s1Color, s1Sign, "b1")
                     }
                   </div>
@@ -582,7 +582,7 @@ export default function ModelChipPage() {
                             className={`transition-all duration-300 rounded-full ${
                               done   ? "w-2 h-2 bg-emerald-500" :
                               active ? "w-2.5 h-2.5 bg-yellow-400 ring-2 ring-yellow-400/30" :
-                                       "w-2 h-2 bg-slate-700"
+                                       "w-2 h-2 bg-slate-300"
                             }`}
                           />
                         );
@@ -592,10 +592,10 @@ export default function ModelChipPage() {
                     {/* Current tier + pair label */}
                     {curGroup && (
                       <div className="text-center">
-                        <p className="font-mono text-[9px] text-slate-400 uppercase tracking-wide">
+                        <p className="font-mono text-[9px] text-slate-500 uppercase tracking-wide">
                           {TIER_TO_PLACE[curGroup.tier]}
                         </p>
-                        <p className="font-mono text-[8px] text-yellow-400">
+                        <p className="font-mono text-[8px] text-amber-500">
                           {pairInTier + 1} / {curGroup.count}
                         </p>
                       </div>
@@ -629,11 +629,11 @@ export default function ModelChipPage() {
                             className="absolute flex items-center justify-center"
                             style={{ left: "50%", transform: "translateX(-50%)", width: 42, height: 42 }}
                           >
-                            <div className="absolute inset-0 rounded-full border-2 border-white/70 clash-burst" />
+                            <div className="absolute inset-0 rounded-full border-2 border-slate-400/70 clash-burst" />
                             <div className="absolute inset-0 rounded-full border-2 border-intblue/50 clash-burst" style={{ animationDelay: "100ms" }} />
                             <div className="absolute inset-0 rounded-full border-2 border-intpink/40 clash-burst" style={{ animationDelay: "200ms" }} />
                             <div className="absolute inset-0 rounded-full bg-white clash-flash" />
-                            <span className="relative z-10 font-black text-white text-base select-none drop-shadow-lg">✕</span>
+                            <span className="relative z-10 font-black text-slate-700 text-base select-none drop-shadow">✕</span>
                           </div>
                         )}
 
@@ -655,14 +655,14 @@ export default function ModelChipPage() {
                     )}
 
                     {/* Status */}
-                    <p className="font-mono text-[8px] text-slate-600 text-center leading-tight">
+                    <p className="font-mono text-[8px] text-slate-500 text-center leading-tight">
                       {isClash ? "💥 luruh!" : "→ bertemu ←"}
                     </p>
 
                     {/* Running total */}
                     {totalNeutralised > 0 && (
-                      <div className="bg-emerald-900/40 border border-emerald-700/40 rounded-full px-2 py-0.5">
-                        <span className="font-mono text-[8px] text-emerald-400">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
+                        <span className="font-mono text-[8px] text-emerald-600">
                           −{totalNeutralised.toLocaleString("id-ID")} luruh
                         </span>
                       </div>
@@ -678,7 +678,7 @@ export default function ModelChipPage() {
                       <div className={`w-2 h-2 rounded-full ${s2Dot}`} />
                     </div>
                     {s2 === 0
-                      ? <p className="text-[9px] text-slate-600 font-mono italic text-right">tidak ada</p>
+                      ? <p className="text-[9px] text-slate-400 font-mono italic text-right">tidak ada</p>
                       : renderColumn(s2Abs, s2Paired, s2Remaining, s2Type, s2Color, s2Sign, "b2")
                     }
                   </div>
@@ -689,7 +689,7 @@ export default function ModelChipPage() {
               {vizPhase === "center" && (
                 <div className={`${centerExiting ? "reaction-center-out" : "reaction-center-in"}`}>
                   <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-white/5 blur-2xl" />
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-intblue/5 blur-2xl" />
                   </div>
                   <div className="flex items-center justify-center gap-6">
                     <div className={`flex flex-col items-center gap-2 ${centerExiting ? "chip-fly-left" : ""}`}>
@@ -704,17 +704,17 @@ export default function ModelChipPage() {
                         ))}
                       </div>
                       {pairs > pairsDisplay && (
-                        <span className={`font-mono text-[10px] font-bold ${s1 >= 0 ? "text-blue-400" : "text-rose-400"}`}>
+                        <span className={`font-mono text-[10px] font-bold ${s1 >= 0 ? "text-intblue" : "text-intpink"}`}>
                           ×{pairs.toLocaleString("id-ID")}
                         </span>
                       )}
                     </div>
                     <div className="relative flex items-center justify-center w-16 h-16 shrink-0">
-                      <div className="absolute inset-0 rounded-full border-2 border-white/20 reaction-burst" style={{ animationDelay: "0ms" }} />
-                      <div className="absolute inset-0 rounded-full border-2 border-white/15 reaction-burst" style={{ animationDelay: "400ms" }} />
-                      <div className="absolute inset-0 rounded-full border-2 border-white/10 reaction-burst" style={{ animationDelay: "800ms" }} />
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-intblue via-white to-intpink opacity-80 blur-[2px]" />
-                      <span className="absolute font-bold text-xl text-white drop-shadow-lg select-none">✕</span>
+                      <div className="absolute inset-0 rounded-full border-2 border-slate-300/60 reaction-burst" style={{ animationDelay: "0ms" }} />
+                      <div className="absolute inset-0 rounded-full border-2 border-intblue/30 reaction-burst" style={{ animationDelay: "400ms" }} />
+                      <div className="absolute inset-0 rounded-full border-2 border-intpink/25 reaction-burst" style={{ animationDelay: "800ms" }} />
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-intblue via-white to-intpink opacity-70 blur-[2px]" />
+                      <span className="absolute font-bold text-xl text-slate-700 drop-shadow select-none">✕</span>
                     </div>
                     <div className={`flex flex-col items-center gap-2 ${centerExiting ? "chip-fly-right" : ""}`}>
                       <div className="flex gap-1 justify-center flex-wrap max-w-[140px]">
@@ -728,16 +728,16 @@ export default function ModelChipPage() {
                         ))}
                       </div>
                       {pairs > pairsDisplay && (
-                        <span className={`font-mono text-[10px] font-bold ${s2 >= 0 ? "text-blue-400" : "text-rose-400"}`}>
+                        <span className={`font-mono text-[10px] font-bold ${s2 >= 0 ? "text-intblue" : "text-intpink"}`}>
                           ×{pairs.toLocaleString("id-ID")}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="flex justify-center mt-5">
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
+                    <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-full px-4 py-1.5">
                       <div className="w-2 h-2 rounded-full bg-intblue" />
-                      <span className="font-mono text-[11px] text-slate-300">
+                      <span className="font-mono text-[11px] text-slate-600">
                         {pairs.toLocaleString("id-ID")} zero-pair dinetralkan
                       </span>
                       <div className="w-2 h-2 rounded-full bg-intpink" />
@@ -745,11 +745,11 @@ export default function ModelChipPage() {
                   </div>
                   {remaining !== 0
                     ? <div className="flex justify-center mt-3">
-                        <span className={`font-mono text-sm font-bold ${remaining > 0 ? "text-blue-400" : "text-rose-400"}`}>
+                        <span className={`font-mono text-sm font-bold ${remaining > 0 ? "text-intblue" : "text-intpink"}`}>
                           Sisa: {remaining > 0 ? `+${remaining.toLocaleString("id-ID")}` : remaining.toLocaleString("id-ID")}
                         </span>
                       </div>
-                    : <p className="text-center font-mono text-sm font-bold text-emerald-400 mt-3">= 0 · Tepat Netral!</p>
+                    : <p className="text-center font-mono text-sm font-bold text-emerald-600 mt-3">= 0 · Tepat Netral!</p>
                   }
                 </div>
               )}
@@ -789,7 +789,7 @@ export default function ModelChipPage() {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-4 pt-4 border-t border-[#1e293b] flex items-center justify-center gap-4 animate-fade-slide-in">
+                  <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-center gap-4 animate-fade-slide-in">
                     {remaining !== 0 ? (
                       <>
                         <div className="w-12 h-12 victory-pop">
