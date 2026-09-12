@@ -236,8 +236,9 @@ export default function ModelChipPage() {
         {/* Info banner */}
         <div className="bg-intblue-light border border-intblue/20 rounded-2xl p-4 mb-4">
           <p className="text-sm text-intblue">
-            <strong>Cara kerja:</strong> Masukkan nilai pada <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong>.
-            Positif = Antibodi 🔵, Negatif = Kuman 🔴. Klik <strong>Pasangkan</strong> untuk melihat animasi netralisasi!
+            Masukkan nilai pada <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong>. 
+            Bilangan positif mewakili <strong>Antibodi 🔵</strong>, sedangkan bilangan negatif mewakili{" "}
+            <strong>Kuman 🔴</strong>. Klik <strong>Pasangkan</strong> untuk melihat animasi netralisasi.
           </p>
         </div>
 
