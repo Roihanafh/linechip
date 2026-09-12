@@ -241,96 +241,6 @@ export default function ModelChipPage() {
           </p>
         </div>
 
-        {/* ── Input row: bil1 + bil2 (mobile-style, satu baris) ─── */}
-        <div className={`mb-4 transition-opacity duration-300 ${isAnimating ? "opacity-50 pointer-events-none" : ""}`}>
-          <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
-
-            {/* Baris nama/jenis — di atas input */}
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2">
-              {/* Label Bil.1 */}
-              <div className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full shrink-0 ${p1.isPos ? "bg-intblue" : p1.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
-                <span className={`font-bold text-sm truncate ${p1.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
-                  {p1.troopName ?? "Bilangan 1"}
-                </span>
-              </div>
-              {/* spacer tengah */}
-              <div />
-              {/* Label Bil.2 */}
-              <div className="flex items-center gap-1.5 justify-end">
-                <span className={`font-bold text-sm truncate ${p2.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
-                  {p2.troopName ?? "Bilangan 2"}
-                </span>
-                <div className={`w-2 h-2 rounded-full shrink-0 ${p2.isPos ? "bg-intblue" : p2.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
-              </div>
-            </div>
-
-            {/* Baris input + operator */}
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-              {/* Input Bil.1 */}
-              <input
-                type="number" min={-9999} max={9999}
-                value={bil1 === 0 ? "" : bil1} placeholder="0"
-                onChange={(e) => handleBil1Change(e.target.value)}
-                readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
-              />
-
-              {/* Operator + */}
-              <div className="flex items-center justify-center w-8 shrink-0">
-                <span className="text-slate-300 font-bold text-2xl select-none">+</span>
-              </div>
-
-              {/* Input Bil.2 */}
-              <input
-                type="number" min={-9999} max={9999}
-                value={bil2 === 0 ? "" : bil2} placeholder="0"
-                onChange={(e) => handleBil2Change(e.target.value)}
-                readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
-              />
-            </div>
-
-            {/* Baris subtitle (tipe + nilai) */}
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mt-1.5">
-              <p className={`text-[10px] ${p1.isPos ? "text-intblue/70" : p1.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
-                {p1.absVal > 0 ? p1.subtitle : "−9.999 s/d +9.999"}
-              </p>
-              <div />
-              <p className={`text-[10px] ${p2.isPos ? "text-intblue/70" : p2.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
-                {p2.absVal > 0 ? p2.subtitle : "−9.999 s/d +9.999"}
-              </p>
-            </div>
-
-            {/* Tombol Pasangkan */}
-            <div className="mt-4 flex justify-center">
-              {vizPhase === "idle" && (
-                <button
-                  onClick={handlePair}
-                  disabled={bil1 === 0 && bil2 === 0}
-                  className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  Pasangkan ⚡
-                </button>
-              )}
-              {isAnimating && (
-                <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
-                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-                  Animasi berjalan...
-                </div>
-              )}
-              {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
-                <button
-                  onClick={reset}
-                  className="px-8 py-2.5 bg-white border-2 border-border text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
-                >
-                  Ulangi 🔄
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* Tier legend */}
         <div className="bg-white rounded-2xl border border-border p-4 mb-4">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3">Tingkatan Karakter:</p>
@@ -368,6 +278,88 @@ export default function ModelChipPage() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Input row: bil1 + bil2 (mobile-style, satu baris) ─── */}
+        <div className={`mb-4 transition-opacity duration-300 ${isAnimating ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
+
+            {/* Baris nama/jenis — di atas input */}
+            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2">
+              <div className="flex items-center gap-1.5">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${p1.isPos ? "bg-intblue" : p1.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
+                <span className={`font-bold text-sm truncate ${p1.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
+                  {p1.troopName ?? "Bilangan 1"}
+                </span>
+              </div>
+              <div />
+              <div className="flex items-center gap-1.5 justify-end">
+                <span className={`font-bold text-sm truncate ${p2.titleColor}`} style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>
+                  {p2.troopName ?? "Bilangan 2"}
+                </span>
+                <div className={`w-2 h-2 rounded-full shrink-0 ${p2.isPos ? "bg-intblue" : p2.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
+              </div>
+            </div>
+
+            {/* Baris input + operator */}
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+              <input
+                type="number" min={-9999} max={9999}
+                value={bil1 === 0 ? "" : bil1} placeholder="0"
+                onChange={(e) => handleBil1Change(e.target.value)}
+                readOnly={vizPhase !== "idle"}
+                className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
+              />
+              <div className="flex items-center justify-center w-8 shrink-0">
+                <span className="text-slate-300 font-bold text-2xl select-none">+</span>
+              </div>
+              <input
+                type="number" min={-9999} max={9999}
+                value={bil2 === 0 ? "" : bil2} placeholder="0"
+                onChange={(e) => handleBil2Change(e.target.value)}
+                readOnly={vizPhase !== "idle"}
+                className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
+              />
+            </div>
+
+            {/* Baris subtitle */}
+            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mt-1.5">
+              <p className={`text-[10px] ${p1.isPos ? "text-intblue/70" : p1.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
+                {p1.absVal > 0 ? p1.subtitle : "−9.999 s/d +9.999"}
+              </p>
+              <div />
+              <p className={`text-[10px] ${p2.isPos ? "text-intblue/70" : p2.isNeg ? "text-intpink/70" : "text-slate-400"} text-center`}>
+                {p2.absVal > 0 ? p2.subtitle : "−9.999 s/d +9.999"}
+              </p>
+            </div>
+
+            {/* Tombol Pasangkan */}
+            <div className="mt-4 flex justify-center">
+              {vizPhase === "idle" && (
+                <button
+                  onClick={handlePair}
+                  disabled={bil1 === 0 && bil2 === 0}
+                  className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  Pasangkan ⚡
+                </button>
+              )}
+              {isAnimating && (
+                <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+                  Animasi berjalan...
+                </div>
+              )}
+              {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
+                <button
+                  onClick={reset}
+                  className="px-8 py-2.5 bg-white border-2 border-border text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
+                >
+                  Ulangi 🔄
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -143,33 +143,28 @@ export default function GameVirusPage() {
     const isAb = type === "ab";
     const target = isAb ? abTarget : kuTarget;
     const place = TIER_TO_PLACE[tier];
-    const charName = CHAR_NAMES[type][place];
     const valueLabel = tier >= 1000 ? "1.000" : String(tier);
     return (
       <div
         draggable={!poolDisabled}
         onClick={() => addToBilangan(target, type, tier)}
         onDragStart={handleDragStart(type, tier)}
-        className={`flex items-center gap-2 p-2 rounded-xl border cursor-grab active:cursor-grabbing transition-all duration-150 select-none ${
+        className={`flex flex-col items-center gap-1 p-2 rounded-xl border cursor-grab active:cursor-grabbing transition-all duration-150 select-none ${
           isAb
             ? "bg-intblue-light border-intblue/20 hover:border-intblue hover:shadow-sm"
             : "bg-intpink-light border-intpink/20 hover:border-intpink hover:shadow-sm"
-        } ${poolDisabled ? "opacity-40 pointer-events-none" : "hover:scale-[1.02] active:scale-[0.98]"}`}
+        } ${poolDisabled ? "opacity-40 pointer-events-none" : "hover:scale-[1.03] active:scale-[0.97]"}`}
       >
-        {/* SVG character — large and prominent */}
-        <div className="w-11 h-11 shrink-0">
+        <div className="w-9 h-9 shrink-0">
           {isAb
             ? <AntibodyCharacter type={place} uid={`pool-ab-${tier}`} />
             : <VirusCharacter type={place} uid={`pool-ku-${tier}`} />
           }
         </div>
-        <div className="flex-1 min-w-0">
-          <p className={`font-bold text-sm leading-tight ${isAb ? "text-intblue" : "text-intpink"}`}>
-            {isAb ? "+" : "−"}{valueLabel}
-          </p>
-          <p className="text-[9px] text-slate-500 truncate">{charName}</p>
-          <p className="text-[9px] text-slate-400">→ Bil.{target}</p>
-        </div>
+        <p className={`font-bold text-xs leading-none ${isAb ? "text-intblue" : "text-intpink"}`}>
+          {isAb ? "+" : "−"}{valueLabel}
+        </p>
+        <p className="text-[8px] text-slate-400">→ Bil.{target}</p>
       </div>
     );
   }
@@ -356,26 +351,47 @@ export default function GameVirusPage() {
         </div>
 
         {/* 3-col game layout */}
-        <div className="grid grid-cols-[200px_1fr_200px] gap-4 mb-5">
+        <div className="flex flex-col gap-4 mb-5">
 
-          {/* Kolam Antibodi */}
-          <div className="bg-white rounded-2xl border-2 border-intblue/25 p-4 flex flex-col">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 bg-intblue rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0">Ab</div>
-              <div>
-                <p className="font-heading font-bold text-intblue text-sm leading-tight">Kolam Antibodi</p>
-                <p className="text-[10px] text-slate-400">positif (+)</p>
+          {/* Baris atas: dua kolam sejajar */}
+          <div className="grid grid-cols-2 gap-3">
+
+            {/* Kolam Antibodi */}
+            <div className="bg-white rounded-2xl border-2 border-intblue/25 p-3 flex flex-col">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-intblue rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0">Ab</div>
+                <div>
+                  <p className="font-heading font-bold text-intblue text-xs leading-tight">Kolam Antibodi</p>
+                  <p className="text-[9px] text-slate-400">positif (+)</p>
+                </div>
+              </div>
+              <TargetToggle target={abTarget} setTarget={setAbTarget} color="intblue" />
+              <div className="grid grid-cols-2 gap-1.5">
+                {([1000, 100, 10, 1] as Tier[]).map((tier) => (
+                  <PoolButton key={tier} type="ab" tier={tier} />
+                ))}
               </div>
             </div>
-            <TargetToggle target={abTarget} setTarget={setAbTarget} color="intblue" />
-            <div className="flex-1 space-y-2">
-              {([1000, 100, 10, 1] as Tier[]).map((tier) => (
-                <PoolButton key={tier} type="ab" tier={tier} />
-              ))}
+
+            {/* Kolam Kuman */}
+            <div className="bg-white rounded-2xl border-2 border-intpink/25 p-3 flex flex-col">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-intpink rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0">Ku</div>
+                <div>
+                  <p className="font-heading font-bold text-intpink text-xs leading-tight">Kolam Kuman</p>
+                  <p className="text-[9px] text-slate-400">negatif (−)</p>
+                </div>
+              </div>
+              <TargetToggle target={kuTarget} setTarget={setKuTarget} color="intpink" />
+              <div className="grid grid-cols-2 gap-1.5">
+                {([1000, 100, 10, 1] as Tier[]).map((tier) => (
+                  <PoolButton key={tier} type="ku" tier={tier} />
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Reaktor Netral */}
+          {/* Reaktor Netral — lebar penuh di bawah */}
           <div className={`rounded-2xl border-2 p-4 flex flex-col transition-all duration-500 relative ${
             phase === "charging" ? "border-yellow-400 bg-yellow-50"
             : phase === "settled" ? "border-success/60 bg-success/5"
@@ -544,24 +560,6 @@ export default function GameVirusPage() {
             </div>
           </div>
 
-          {/* Kolam Kuman */}
-          <div className="bg-white rounded-2xl border-2 border-intpink/25 p-4 flex flex-col">
-            <div className="flex items-center gap-2 mb-1 flex-row-reverse">
-              <div className="w-8 h-8 bg-intpink rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0">Ku</div>
-              <div className="flex-1 text-right">
-                <p className="font-heading font-bold text-intpink text-sm leading-tight">Kolam Kuman</p>
-                <p className="text-[10px] text-slate-400">negatif (−)</p>
-              </div>
-            </div>
-            <div className="flex justify-end mb-1">
-              <TargetToggle target={kuTarget} setTarget={setKuTarget} color="intpink" />
-            </div>
-            <div className="flex-1 space-y-2">
-              {([1000, 100, 10, 1] as Tier[]).map((tier) => (
-                <PoolButton key={tier} type="ku" tier={tier} />
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Result equation */}
