@@ -112,9 +112,9 @@ export default function GarisBilanganPage() {
   const getExplanation = () => {
     if (!isDone || result === null) return null;
 
-    const aStr = a > 0 ? `+${a}` : `${a}`;
-    const bStr = b > 0 ? `+${b}` : `${b}`;
-    const resStr = result > 0 ? `+${result}` : `${result}`;
+    const aStr = a < 0 ? `(${a})` : `${a}`;
+    const bStr = b < 0 ? `(${b})` : `${b}`;
+    const resStr = result < 0 ? `(${result})` : `${result}`;
 
     const phase1Dir = a > 0 ? "kanan" : a < 0 ? "kiri" : "diam";
     const phase1Desc =
