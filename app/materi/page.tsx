@@ -66,7 +66,7 @@ export default function MateriPage() {
             <div className="space-y-3">
               {[
                 { label: "Garis Bilangan", desc: "Visualisasi arah pengurangan", href: "/garis-bilangan", num: "1" },
-                { label: "Model Chip", desc: "Hilangkan chip untuk kurangkan bilangan", href: "/model-chip", num: "2" },
+                { label: "Model Chip", desc: "Hilangkan chip untuk kurangkan bilangan", href: "/model-chip/pengurangan", num: "2" },
               ].map((item, i) => (
                 <Link
                   key={item.href + i}

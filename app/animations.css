@@ -1,17 +1,17 @@
-/* animations.css
+﻿/* animations.css
  * Custom animation utilities for LineChip.
  * Separated from globals.css for easier maintenance.
  * Each feature's animations are grouped by section comment.
  */
 
-/* ── Entrance & reveal ───────────────────────────────────────── */
+/* â”€â”€ Entrance & reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes rise-in-kf {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Ambient / decorative loops ─────────────────────────────── */
+/* â”€â”€ Ambient / decorative loops â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes soft-bob-kf {
   0%, 100% { transform: translateY(0); }
@@ -47,7 +47,7 @@
   to   { transform: rotate(-360deg); }
 }
 
-/* ── Battle Lab characters ───────────────────────────────────── */
+/* â”€â”€ Battle Lab characters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes battle-float-kf {
   0%, 100% { transform: translateY(0); }
@@ -92,7 +92,7 @@
   100% { transform: scale(3); opacity: 0; }
 }
 
-/* ── 404 page ────────────────────────────────────────────────── */
+/* â”€â”€ 404 page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes glow-pulse-kf {
   0%, 100% { text-shadow: 0 0 20px rgba(37,99,235,0.3); }
@@ -107,7 +107,7 @@
   100% { text-shadow: none; }
 }
 
-/* ── Auth pages ──────────────────────────────────────────────── */
+/* â”€â”€ Auth pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes check-pop-kf {
   0%   { transform: scale(0); opacity: 0; }
@@ -125,7 +125,7 @@
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* ── Utility classes ─────────────────────────────────────────── */
+/* â”€â”€ Utility classes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @layer utilities {
   .rise-in {
@@ -222,11 +222,11 @@
   }
 }
 
-/* ── Model Chip: Pair-meeting step animation ──────────────────── */
+/* â”€â”€ Model Chip: Pair-meeting step animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /*
  * Natural walk to centre:
- *  - slow start (ease-in feel) → accelerate mid → decelerate & settle
+ *  - slow start (ease-in feel) â†’ accelerate mid â†’ decelerate & settle
  *  - slight overshoot at end for "arriving" feel
  *  - translateX target is var(--tx) so JS can set per-character distance
  */
@@ -249,9 +249,9 @@
 /*
  * Walker bergerak dari ujung kiri/kanan arena ke titik tengah (50% container).
  * Arena container lebar 120px, walker w-10 (40px).
- * Walker kiri: left:0  → centre = translateX(+40px)  (kiri menjangkau tengah)
- * Walker kanan: right:0 → centre = translateX(-40px)
- * Easing: pelan di awal (ease-in) → cepat di tengah → decelerates & overshoot kecil.
+ * Walker kiri: left:0  â†’ centre = translateX(+40px)  (kiri menjangkau tengah)
+ * Walker kanan: right:0 â†’ centre = translateX(-40px)
+ * Easing: pelan di awal (ease-in) â†’ cepat di tengah â†’ decelerates & overshoot kecil.
  */
 @keyframes walk-left-kf {
   0%   { transform: translateX(0)     scale(1);    opacity: 1; }
@@ -298,7 +298,97 @@
   100% { opacity: 0; }
 }
 
-/* ── Model Chip: Centered reaction stage ──────────────────────── */
+/* â”€â”€ Model Chip: Transform phase (subtraction) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+/*
+ * chip-flip-kf
+ * 3D flip on the Y axis: 0Â° â†’ 90Â° (scale 0.9 at midpoint) â†’ 180Â°
+ * Used by TransformPanel to show a chip flipping from one polarity to its opposite.
+ */
+@keyframes chip-flip-kf {
+  0%   { transform: rotateY(0deg)   scale(1);   }
+  45%  { transform: rotateY(90deg)  scale(0.9); }
+  100% { transform: rotateY(180deg) scale(1);   }
+}
+
+/*
+ * chip-flip-exit-kf
+ * Fade + slide-up exit for the TransformPanel when it transitions out.
+ */
+@keyframes chip-flip-exit-kf {
+  0%   { opacity: 1; transform: translateY(0);    }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+@layer utilities {
+  .chip-flip {
+    animation: chip-flip-kf 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .chip-flip-exit {
+    animation: chip-flip-exit-kf 0.35s ease-in forwards;
+  }
+}
+
+/*
+ * input-flip-kf
+ * Digunakan oleh SubtractionInputPanel: wrapper input bil2 melakukan flip 3D
+ * pada sumbu Y, memberi kesan pengurang "berbalik jenis".
+ * Perubahan warna ditangani JS (kelas CSS berganti di titik tengah 50%).
+ */
+@keyframes input-flip-kf {
+  0%   { transform: perspective(500px) rotateY(0deg)  scaleX(1);    }
+  45%  { transform: perspective(500px) rotateY(90deg) scaleX(0.88); }
+  55%  { transform: perspective(500px) rotateY(90deg) scaleX(0.88); }
+  100% { transform: perspective(500px) rotateY(0deg)  scaleX(1);    }
+}
+
+/*
+ * value-pop-kf
+ * Pop scale saat nilai teks berubah ke nilai konversi setelah midpoint flip.
+ */
+@keyframes value-pop-kf {
+  0%   { transform: scale(0.6); opacity: 0; }
+  65%  { transform: scale(1.18); opacity: 1; }
+  82%  { transform: scale(0.96); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/*
+ * glow-ring-pink-kf / glow-ring-blue-kf
+ * Glow berdenyut di sekitar border input selama fase transform.
+ */
+@keyframes glow-ring-pink-kf {
+  0%, 100% { box-shadow: 0 0 0 0px rgba(236,72,153,0); }
+  50%       { box-shadow: 0 0 0 5px rgba(236,72,153,0.3), 0 0 16px rgba(236,72,153,0.15); }
+}
+
+@keyframes glow-ring-blue-kf {
+  0%, 100% { box-shadow: 0 0 0 0px rgba(47,111,237,0); }
+  50%       { box-shadow: 0 0 0 5px rgba(47,111,237,0.3), 0 0 16px rgba(47,111,237,0.15); }
+}
+
+@layer utilities {
+  .input-flip {
+    animation: input-flip-kf 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .value-pop {
+    /* Fires right after the flip midpoint */
+    animation: value-pop-kf 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: 0.36s;
+  }
+
+  .glow-ring-pink {
+    animation: glow-ring-pink-kf 1s ease-in-out infinite;
+  }
+
+  .glow-ring-blue {
+    animation: glow-ring-blue-kf 1s ease-in-out infinite;
+  }
+}
+
+/* â”€â”€ Model Chip: Centered reaction stage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes reaction-center-in-kf {
   0%   { opacity: 0; transform: scale(0.82) translateY(10px); }
@@ -385,7 +475,7 @@
   }
 }
 
-/* ── SVG Animation Integration: Alliance keyframes ──────────────── */
+/* â”€â”€ SVG Animation Integration: Alliance keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes alliance-approach-left-kf {
   from { transform: translateX(-225px) translateY(-40px); }
@@ -450,11 +540,11 @@
   }
 }
 
-/* ── Shared effects: particle burst, shockwave, popup, idle hover, bar drain ── */
+/* â”€â”€ Shared effects: particle burst, shockwave, popup, idle hover, bar drain â”€â”€ */
 
 /*
  * particle-fly-kf
- * Requirement 6.8 — uses CSS custom properties --tx, --ty, --r
+ * Requirement 6.8 â€” uses CSS custom properties --tx, --ty, --r
  * so each particle element can be individually controlled from JS.
  */
 @keyframes particle-fly-kf {
@@ -471,7 +561,7 @@
 
 /*
  * shockwave-kf
- * Requirement 6.9 — expanding ring at the impact / meeting point.
+ * Requirement 6.9 â€” expanding ring at the impact / meeting point.
  */
 @keyframes shockwave-kf {
   0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.85; }
@@ -481,7 +571,7 @@
 
 /*
  * popup-rise-kf
- * Requirement 6.10 — text popup (e.g. "NETRAL ✓", "+ KUAT!") rises and fades.
+ * Requirement 6.10 â€” text popup (e.g. "NETRAL âœ“", "+ KUAT!") rises and fades.
  */
 @keyframes popup-rise-kf {
   0%   { transform: translate(-50%, 0)     scale(0.4); opacity: 0; }
@@ -492,7 +582,7 @@
 
 /*
  * idle-hover-pop-kf
- * Requirement 6.11 — subtle scale-up on hover for idle characters.
+ * Requirement 6.11 â€” subtle scale-up on hover for idle characters.
  */
 @keyframes idle-hover-pop-kf {
   from { transform: scale(1);    }
@@ -501,7 +591,7 @@
 
 /*
  * idle-float-kf
- * Requirement 6.11 — gentle floating bob for idle state characters.
+ * Requirement 6.11 â€” gentle floating bob for idle state characters.
  * (idle-float-kf reuses the concept from battle-float-kf but with slight rotation
  *  to match the reference; kept separate to avoid altering existing battle-float.)
  */
@@ -512,7 +602,7 @@
 
 /*
  * bar-drain-kf
- * Drains a progress/health bar from full to zero (width 100% → 0%).
+ * Drains a progress/health bar from full to zero (width 100% â†’ 0%).
  */
 @keyframes bar-drain-kf {
   from { width: 100%; }
@@ -520,12 +610,12 @@
 }
 
 @layer utilities {
-  /* Particle burst — apply to each <span> particle; set --tx, --ty, --r via style */
+  /* Particle burst â€” apply to each <span> particle; set --tx, --ty, --r via style */
   .particle-fly {
     animation: particle-fly-kf 0.6s ease-out forwards;
   }
 
-  /* Shockwave ring — position absolute at impact centre */
+  /* Shockwave ring â€” position absolute at impact centre */
   .shockwave {
     animation: shockwave-kf 0.5s ease-out forwards;
   }
@@ -535,7 +625,7 @@
     animation: popup-rise-kf 1s ease-out forwards;
   }
 
-  /* Idle hover pop — triggered on :hover or toggled via JS */
+  /* Idle hover pop â€” triggered on :hover or toggled via JS */
   .idle-hover-pop {
     animation: idle-hover-pop-kf 0.15s ease-out forwards;
   }
@@ -545,13 +635,13 @@
     animation: idle-float-kf 2.8s ease-in-out infinite;
   }
 
-  /* Bar drain — apply duration inline (e.g. style="animation-duration: 2s") */
+  /* Bar drain â€” apply duration inline (e.g. style="animation-duration: 2s") */
   .bar-drain {
     animation: bar-drain-kf linear forwards;
   }
 }
 
-/* ── Battle animation: approach, recoil, dissolve, flash, stage-shake ─ */
+/* â”€â”€ Battle animation: approach, recoil, dissolve, flash, stage-shake â”€ */
 
 /*
  * Outer-div positioning keyframes.
@@ -579,7 +669,7 @@
 }
 
 /*
- * Inner-div dissolve: scale → 0 dengan rotasi berlawanan arah (ccw)
+ * Inner-div dissolve: scale â†’ 0 dengan rotasi berlawanan arah (ccw)
  * atau searah (cw) jarum jam.
  */
 @keyframes dissolve-ccw-kf {
@@ -654,7 +744,7 @@
   }
 }
 
-/* ── Keyframe aliases (no -kf suffix) ─────────────────────────── */
+/* â”€â”€ Keyframe aliases (no -kf suffix) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* Each alias mirrors its -kf counterpart exactly so inline animation
    strings from the reference component work without modification.    */
 

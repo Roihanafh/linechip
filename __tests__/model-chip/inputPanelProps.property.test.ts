@@ -46,3 +46,29 @@ test("inputPanelProps: sign flags and absVal are consistent", () => {
     { numRuns: 200 }
   );
 });
+
+// Feature: model-chip-subtraction, Property 9: Warna label mencerminkan tanda nilai
+// Validates: Requirements 1.7, 1.8
+describe("Property 9: titleColor mencerminkan tanda nilai", () => {
+  test("titleColor adalah 'text-intblue' untuk setiap v > 0", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 1, max: 9999 }), (v) => {
+        return inputPanelProps(v).titleColor === "text-intblue";
+      }),
+      { numRuns: 500 }
+    );
+  });
+
+  test("titleColor adalah 'text-intpink' untuk setiap v < 0", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: -9999, max: -1 }), (v) => {
+        return inputPanelProps(v).titleColor === "text-intpink";
+      }),
+      { numRuns: 500 }
+    );
+  });
+
+  test("titleColor adalah 'text-slate-400' untuk v === 0", () => {
+    expect(inputPanelProps(0).titleColor).toBe("text-slate-400");
+  });
+});
