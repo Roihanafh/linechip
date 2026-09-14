@@ -1,0 +1,349 @@
+{
+  "pbtResults": {
+    "3.2 Tulis property test untuk `onDone` di Mode_Klik (Property 6 & 7)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789374293921
+    },
+    "4.3 Tulis property test untuk `Tombol_Lanjut` (Property 2)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789374405015
+    },
+    "5.3 Tulis property test untuk `Speed_Control` (Property 3, 4, 5)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789385695598
+    }
+  },
+  "executionHistory": {
+    "1. Tambah state dan ref baru ke `page.tsx`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550149
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373559144
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373630174
+      }
+    ],
+    "2.1 Render `AnimationMode_Selector` — elemen `<div role=\"group\" aria-label=\"Pilih mode animasi\">` berisi dua tombol: \"Otomatis 🤖\" dan \"Klik ▶\"": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550209
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373634408
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373703999
+      }
+    ],
+    "2.2 Tulis unit test untuk `AnimationMode_Selector`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550252
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373708412
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373848001
+      }
+    ],
+    "2.3 Implementasi `handleNextClick`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550292
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373634969
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373704429
+      }
+    ],
+    "3.1 Ubah mekanisme `onDone` di dalam `runPair`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550320
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373709024
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373848466
+      }
+    ],
+    "3.2 Tulis property test untuk `onDone` di Mode_Klik (Property 6 & 7)": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550347
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373853004
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374310830
+      }
+    ],
+    "4.1 Render `Tombol_Lanjut` kondisional": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550374
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373853411
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374311193
+      }
+    ],
+    "4.2 Tulis unit test untuk `Tombol_Lanjut`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550402
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374315506
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374732314
+      }
+    ],
+    "4.3 Tulis property test untuk `Tombol_Lanjut` (Property 2)": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550429
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374316131
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374732777
+      }
+    ],
+    "5.1 Ubah kondisi tampil `Speed_Control`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550457
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374316576
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374733700
+      }
+    ],
+    "5.2 Tulis unit test untuk `Speed_Control`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550484
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374745227
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385715488
+      }
+    ],
+    "5.3 Tulis property test untuk `Speed_Control` (Property 3, 4, 5)": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550512
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374745850
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385722043
+      }
+    ],
+    "6.1 Update fungsi `reset`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550539
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374317146
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374734166
+      }
+    ],
+    "6.2 Tulis property test untuk sessionStorage round-trip (Property 1)": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550598
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374746459
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385722648
+      }
+    ],
+    "7. Checkpoint — Pastikan semua test lulus": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550624
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385728695
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789386304731
+      }
+    ],
+    "8.1 Tulis unit test state machine transitions": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550665
+      },
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374746954
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385723281
+      }
+    ],
+    "9. Final checkpoint — Pastikan semua test lulus": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373550722
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789386321418
+      },
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789386427520
+      }
+    ],
+    "2. Tambah `AnimationMode_Selector` dan `handleNextClick`": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789373848062
+      }
+    ],
+    "3. Refactor `runPair` untuk mendukung kedua mode": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374310893
+      }
+    ],
+    "4. Tambah `Tombol_Lanjut` ke render": [
+      {
+        "executionId": "28f07e89-7972-453f-a39b-e2052bb119fa",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789374732832
+      }
+    ],
+    "5. Refactor `Speed_Control` dan tambah property test": [
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385722084
+      }
+    ],
+    "6. Update `reset()` dan tambah property test sessionStorage": [
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385722689
+      }
+    ],
+    "8. Verifikasi state machine transitions": [
+      {
+        "executionId": "cf993f2f-d6f3-4a79-a1d7-da7416f88ed9",
+        "chatSessionId": "sess_8df039dd-e772-4a3d-90a4-29a95a59091a",
+        "timestamp": 1789385723321
+      }
+    ]
+  }
+}

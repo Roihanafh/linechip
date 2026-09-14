@@ -1,4 +1,4 @@
-﻿// app/model-chip/page.tsx
+// app/model-chip/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -13,16 +13,16 @@ import {
   dominantPlace,
   type PlaceValue,
 } from "@/components/game/CharacterSVGs";
-import { PairReactionStage, pairCycleDuration } from "@/components/game/PairReactionStage";
+import { PairReactionStage } from "@/components/game/PairReactionStage";
 import { useSound } from "@/hooks/useSound";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// -- Types ---------------------------------------------------------------------
 
 /**
- * idle   → user mengisi input
- * battle → arena: semua SVG ditampilkan; per tier, satu per satu pasangan bereaksi ke tengah
- * center → panel ringkasan reaksi
- * done   → tampilkan hasil akhir
+ * idle   ? user mengisi input
+ * battle ? arena: semua SVG ditampilkan; per tier, satu per satu pasangan bereaksi ke tengah
+ * center ? panel ringkasan reaksi
+ * done   ? tampilkan hasil akhir
  */
 type VizPhase = "idle" | "battle" | "center" | "done";
 
@@ -34,7 +34,7 @@ interface TierGroup {
 
 type StepPhase = "approach" | "clash" | "clear";
 
-// ── Helper ────────────────────────────────────────────────────────────────────
+// -- Helper --------------------------------------------------------------------
 
 /** Dekomposisi totalPairs ke tier groups besar-ke-kecil. */
 function buildTierGroups(totalPairs: number): TierGroup[] {
@@ -50,7 +50,7 @@ function buildTierGroups(totalPairs: number): TierGroup[] {
   return groups;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// -- Component -----------------------------------------------------------------
 
 export default function ModelChipPage() {
   const [bil1, setBil1] = useState(0);
@@ -68,12 +68,40 @@ export default function ModelChipPage() {
   const [neutralised, setNeutralised] = useState<Map<1 | 10 | 100 | 1000, number>>(new Map());
   const [animSpeed, setAnimSpeed] = useState(1);
 
+  // Animation mode — always starts "auto" (SSR-safe); client reads sessionStorage after mount
+  const [animMode, setAnimMode] = useState<"auto" | "click">("auto");
+
+
+  // Click mode: true = PairReactionStage done, waiting for user click
+  const [waitingForClick, setWaitingForClick] = useState(false);
+
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
   const animSpeedRef = useRef(1); // always reflects current animSpeed, avoids stale closure
+  const animModeRef = useRef<"auto" | "click">("auto"); // always reflects current animMode, avoids stale closure
+  animModeRef.current = animMode;
+  const pendingNextRef = useRef<{
+    groups: TierGroup[];
+    tIdx: number;
+    pIdx: number;
+    neu: Map<1 | 10 | 100 | 1000, number>;
+  } | null>(null);
   const playLaunch = useSound("/luncurkan.mp3");
 
-  // ── Derived values ─────────────────────────────────────────────────────────
+  // Read persisted animMode from sessionStorage after mount (avoids SSR/hydration mismatch)
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("modelChipAnimMode");
+      if (saved === "click") setAnimMode("click");
+    } catch {}
+  }, []);
+
+  // Persist animMode to sessionStorage whenever it changes
+  useEffect(() => {
+    try { sessionStorage.setItem("modelChipAnimMode", animMode); } catch {}
+  }, [animMode]);
+
+  // -- Derived values ---------------------------------------------------------
 
   const liveTotalPos = Math.max(0, bil1) + Math.max(0, bil2);
   const liveTotalNeg = Math.max(0, -bil1) + Math.max(0, -bil2);
@@ -88,7 +116,7 @@ export default function ModelChipPage() {
   const isDone      = vizPhase === "done";
   const isAnimating = vizPhase === "battle" || vizPhase === "center";
 
-  // ── Input handlers ─────────────────────────────────────────────────────────
+  // -- Input handlers ---------------------------------------------------------
 
   const handleBil1Change = (val: string) => {
     if (vizPhase !== "idle") return;
@@ -103,11 +131,13 @@ export default function ModelChipPage() {
     setSnapshot(null);
   };
 
-  // ── Step machine ───────────────────────────────────────────────────────────
+  // -- Step machine -----------------------------------------------------------
 
   /**
    * Run one pair within a tier.
-   * approach (1100ms) → clash (600ms) → clear (220ms) → next pair / next tier
+   * Starts PairReactionStage for the current pair; onDone advances to next pair.
+   * In Mode_Otomatis: auto-advances after 100ms delay.
+   * In Mode_Klik: stores next args to pendingNextRef and enables Tombol_Lanjut.
    */
   const runPair = (
     groups: TierGroup[],
@@ -116,7 +146,7 @@ export default function ModelChipPage() {
     neu: Map<1 | 10 | 100 | 1000, number>
   ) => {
     if (tIdx >= groups.length) {
-      // All tiers done → summary
+      // All tiers done ? summary
       setVizPhase("center");
       const t1 = setTimeout(() => setCenterExiting(true), 2000);
       const t2 = setTimeout(() => setVizPhase("done"), 2500);
@@ -134,24 +164,10 @@ export default function ModelChipPage() {
     setTierIdx(tIdx);
     setPairInTier(pIdx);
     setStepPhase("approach");
-
-    // approach → clash
-    // Wait for full PairReactionStage cycle, scaled to current animSpeed
-    const cycleDur = pairCycleDuration(animSpeedRef.current);
-    const tApp = setTimeout(() => {
-      setStepPhase("clear");
-      const next = new Map(neu);
-      next.set(group.tier, (next.get(group.tier) ?? 0) + 1);
-      setNeutralised(next);
-      const tClear = setTimeout(() => {
-        runPair(groups, tIdx, pIdx + 1, next);
-      }, 100);
-      timers.current.push(tClear);
-    }, cycleDur);
-    timers.current.push(tApp);
+    setWaitingForClick(false); // lock Tombol_Lanjut while animation runs
   };
 
-  // ── handlePair ─────────────────────────────────────────────────────────────
+  // -- handlePair -------------------------------------------------------------
 
   const handlePair = () => {
     if (bil1 === 0 && bil2 === 0) return;
@@ -182,11 +198,24 @@ export default function ModelChipPage() {
     setVizPhase("idle"); setSnapshot(null); setCenterExiting(false);
     setTierGroups([]); setTierIdx(0); setPairInTier(0);
     setStepPhase("approach"); setNeutralised(new Map());
+    setWaitingForClick(false);
+    pendingNextRef.current = null;
+  };
+
+  // -- handleNextClick --------------------------------------------------------
+
+  /** Mode Klik only: advance to the next pair after the user presses "Lanjut ▶". */
+  const handleNextClick = () => {
+    if (!waitingForClick || !pendingNextRef.current) return;
+    setWaitingForClick(false);
+    const { groups, tIdx, pIdx, neu } = pendingNextRef.current;
+    pendingNextRef.current = null;
+    runPair(groups, tIdx, pIdx, neu);
   };
 
   useEffect(() => () => clearTimers(), []);
 
-  // ── Input panel helper ─────────────────────────────────────────────────────
+  // -- Input panel helper -----------------------------------------------------
 
   function inputPanelProps(val: number) {
     const isPos = val > 0, isNeg = val < 0;
@@ -196,10 +225,10 @@ export default function ModelChipPage() {
       isPos, isNeg, absVal, type,
       cardBorder:  isPos ? "border-intblue/25" : isNeg ? "border-intpink/25" : "border-border",
       iconBg:      isPos ? "bg-intblue" : isNeg ? "bg-intpink" : "bg-slate-300",
-      iconLabel:   isPos ? "+" : isNeg ? "−" : "?",
+      iconLabel:   isPos ? "+" : isNeg ? "-" : "?",
       titleColor:  isPos ? "text-intblue" : isNeg ? "text-intpink" : "text-slate-400",
       troopName:   absVal > 0 ? (isPos ? CHAR_NAMES.ab[dominantPlace(absVal)] : CHAR_NAMES.ku[dominantPlace(absVal)]) : null,
-      subtitle:    absVal > 0 ? (isPos ? `Antibodi +${absVal.toLocaleString("id-ID")}` : `Kuman −${absVal.toLocaleString("id-ID")}`) : "−9.999 sampai +9.999",
+      subtitle:    absVal > 0 ? (isPos ? `Antibodi +${absVal.toLocaleString("id-ID")}` : `Kuman -${absVal.toLocaleString("id-ID")}`) : "-9.999 sampai +9.999",
       inputColor:  isPos ? "text-intblue" : isNeg ? "text-intpink" : "text-slate-400",
       inputBorder: isPos ? "border-intblue/30 focus:border-intblue bg-intblue-light/30" : isNeg ? "border-intpink/30 focus:border-intpink bg-intpink-light/30" : "border-border bg-surface",
       svgBg:       isPos ? "bg-intblue-light/40 border-intblue/10" : "bg-intpink-light/40 border-intpink/10",
@@ -209,7 +238,7 @@ export default function ModelChipPage() {
   const p1 = inputPanelProps(bil1);
   const p2 = inputPanelProps(bil2);
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // -- Render -----------------------------------------------------------------
 
   return (
     <div className="min-h-screen bg-surface py-10">
@@ -263,7 +292,7 @@ export default function ModelChipPage() {
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-intpink" />
-              <span className="text-[10px] font-semibold text-intpink uppercase tracking-wide">Kuman (negatif −)</span>
+              <span className="text-[10px] font-semibold text-intpink uppercase tracking-wide">Kuman (negatif -)</span>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {TIERS.map((t) => {
@@ -271,7 +300,7 @@ export default function ModelChipPage() {
                 return (
                   <div key={t} className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-intpink-light/40 border border-intpink/10">
                     <div className="w-12 h-12"><VirusCharacter type={place} uid={`mc-leg-ku-${t}`} /></div>
-                    <span className="text-[10px] font-bold text-intpink">−{t.toLocaleString("id-ID")}</span>
+                    <span className="text-[10px] font-bold text-intpink">-{t.toLocaleString("id-ID")}</span>
                     <span className="text-[8px] text-slate-500 text-center leading-tight">{CHAR_NAMES.ku[place]}</span>
                   </div>
                 );
@@ -284,9 +313,9 @@ export default function ModelChipPage() {
         <div className="mb-4">
           <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
 
-            {/* Input fields � disabled during animation so user cannot change values */}
+            {/* Input fields ? disabled during animation so user cannot change values */}
             <div className={`transition-opacity duration-300 ${isAnimating ? "opacity-50 pointer-events-none" : ""}`}>
-              {/* Baris nama/jenis � di atas input */}
+              {/* Baris nama/jenis ? di atas input */}
               <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-2">
                 <div className="flex items-center gap-1.5">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${p1.isPos ? "bg-intblue" : p1.isNeg ? "bg-intpink" : "bg-slate-300"}`} />
@@ -336,7 +365,32 @@ export default function ModelChipPage() {
               </div>
             </div>{/* end: input fields */}
 
-            {/* Tombol Pasangkan � always interactive, speed control lives here */}
+            {/* AnimationMode_Selector — aktif hanya saat idle */}
+            <div
+              role="group"
+              aria-label="Pilih mode animasi"
+              className={`mt-4 flex justify-center gap-1.5 p-1 rounded-xl bg-slate-100 w-fit mx-auto transition-opacity duration-200 ${vizPhase !== "idle" ? "pointer-events-none opacity-50" : ""}`}
+            >
+              {(["auto", "click"] as const).map((mode) => {
+                const isActive = animMode === mode;
+                return (
+                  <button
+                    key={mode}
+                    onClick={() => setAnimMode(mode)}
+                    aria-pressed={isActive}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all duration-150 border-2 ${
+                      isActive
+                        ? "bg-intblue text-white border-intblue shadow-sm"
+                        : "bg-transparent text-slate-400 border-transparent hover:text-slate-500"
+                    }`}
+                  >
+                    {mode === "auto" ? "Otomatis 🤖" : "Klik ▶"}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Tombol Pasangkan — always interactive, speed control lives here */}
             <div className="mt-4 flex justify-center">
               {vizPhase === "idle" && (
                 <button
@@ -348,11 +402,13 @@ export default function ModelChipPage() {
                 </button>
               )}
               {isAnimating && (
+                <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+                  Animasi berjalan...
+                </div>
+              )}
+              {vizPhase === "battle" && (
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
-                    <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-                    Animasi berjalan...
-                  </div>
                   <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
                     {([0.5, 1, 2] as const).map((spd) => (
                       <button key={spd} onClick={() => { animSpeedRef.current = spd; setAnimSpeed(spd); }}
@@ -361,6 +417,16 @@ export default function ModelChipPage() {
                       </button>
                     ))}
                   </div>
+                  {animMode === "click" && (
+                    <button
+                      onClick={handleNextClick}
+                      disabled={!waitingForClick}
+                      aria-label="Mulai animasi pasangan berikutnya"
+                      className="px-6 py-2 bg-intblue text-white rounded-xl font-bold text-sm transition-colors hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      Lanjut ▶
+                    </button>
+                  )}
                 </div>
               )}
               {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
@@ -375,7 +441,7 @@ export default function ModelChipPage() {
           </div>
         </div>
 
-        {/* ── Arena ─────────────────────────────────────────────────────────── */}
+        {/* -- Arena ----------------------------------------------------------- */}
         {snapshot !== null && (() => {
           const s1 = snapshot.bil1;
           const s2 = snapshot.bil2;
@@ -418,7 +484,7 @@ export default function ModelChipPage() {
           const totalNeutralised = Array.from(neutralised.entries())
             .reduce((sum, [t, c]) => sum + t * c, 0);
 
-          // ── Render one side column ─────────────────────────────────────────
+          // -- Render one side column -----------------------------------------
           // Shows ALL characters (paired per tier + remaining),
           // with per-character state based on battle progress.
           function renderColumn(
@@ -470,7 +536,7 @@ export default function ModelChipPage() {
                     }`}>
                       ×{tierVal}
                     </span>
-                    {tierDone && <span className="font-mono text-[7px] text-emerald-600">✓ luruh</span>}
+                    {tierDone && <span className="font-mono text-[7px] text-emerald-600">? luruh</span>}
                     {tierActive && !tierDone && (
                       <span className="font-mono text-[7px] text-amber-500 animate-pulse">bereaksi</span>
                     )}
@@ -481,13 +547,13 @@ export default function ModelChipPage() {
                     <div className="flex flex-wrap justify-center gap-1 mb-0.5">
                       {Array.from({ length: Math.min(pCount, 9) }, (_, i) => {
                         // i-th character state:
-                        //   < doneInTier          → already reacted → hidden
-                        //   === doneInTier (active tier, current pair) AND not approach → "gone" to arena
-                        //   === doneInTier (active tier, current pair) AND approach → dimmed (walking)
-                        //   > doneInTier           → waiting → full
-                        const isGone    = i < doneInTier || (tierActive && i === doneInTier && !isApproach);
-                        const isDimmed  = tierActive && i === doneInTier && isApproach;
-                        const isWaiting = !tierDone && (!tierActive || i > doneInTier);
+                        //   < doneInTier          ? already reacted ? hidden
+                        //   === doneInTier (active tier, current pair) AND not approach ? "gone" to arena
+                        //   === doneInTier (active tier, current pair) AND approach ? dimmed (walking)
+                        //   > doneInTier           ? waiting ? full
+                        const isGone    = i < doneInTier || (tierActive && i === pairInTier && !isApproach);
+                        const isDimmed  = tierActive && i === pairInTier && isApproach;
+                        const isWaiting = !tierDone && (!tierActive || i > pairInTier);
 
                         return (
                           <div
@@ -495,7 +561,7 @@ export default function ModelChipPage() {
                             className={`w-8 h-8 shrink-0 transition-all duration-500 ${
                               isGone   ? "opacity-0 scale-0" :
                               isDimmed ? "opacity-25 scale-90" :
-                              isWaiting && tierActive && i > doneInTier ? "opacity-60" :
+                              isWaiting && tierActive && i > pairInTier ? "opacity-60" :
                               "opacity-100"
                             }`}
                           >
@@ -554,8 +620,8 @@ export default function ModelChipPage() {
               <div className="flex items-center justify-between mb-3 pt-2">
                 <span className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
                   {vizPhase === "battle" ? "⚔️ Pertarungan!" :
-                   vizPhase === "center" ? "⚡ Reaksi Netralisasi" :
-                   isDone ? "✓ Selesai" : "Arena"}
+                   vizPhase === "center" ? "? Reaksi Netralisasi" :
+                   isDone ? "? Selesai" : "Arena"}
                 </span>
                 <div className="flex items-center gap-1.5">
                   <div className={`w-1.5 h-1.5 rounded-full ${isDone ? "bg-emerald-500" : "bg-yellow-400 animate-pulse"}`} />
@@ -568,7 +634,7 @@ export default function ModelChipPage() {
                 </div>
               </div>
 
-              {/* ── BATTLE ──────────────────────────────────────────────────── */}
+              {/* -- BATTLE ---------------------------------------------------- */}
               {vizPhase === "battle" && (
                 <div className="flex flex-col gap-4">
                   {/* PairReactionStage — wide, centred */}
@@ -592,7 +658,7 @@ export default function ModelChipPage() {
                         </div>
                         {totalNeutralised > 0 && (
                           <span className="font-mono text-[8px] text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
-                            −{totalNeutralised.toLocaleString("id-ID")} luruh
+                            -{totalNeutralised.toLocaleString("id-ID")} luruh
                           </span>
                         )}
                       </div>
@@ -603,7 +669,41 @@ export default function ModelChipPage() {
                         rightType={place}
                         leftFaction={s1Type}
                         isPerfect={pairs === 1 && snapTotalPos === snapTotalNeg}
-                        onDone={() => {}}
+                        onDone={() => {
+                          if (!curGroup) return;
+                          const next = new Map(neutralised);
+                          next.set(curGroup.tier, (next.get(curGroup.tier) ?? 0) + 1);
+                          setNeutralised(next);
+                          setStepPhase("clear");
+
+                          if (animModeRef.current === "auto") {
+                            // Mode Otomatis: auto-advance after 100ms
+                            const tNext = setTimeout(() => {
+                              runPair(tierGroups, tierIdx, pairInTier + 1, next);
+                            }, 100);
+                            timers.current.push(tNext);
+                          } else {
+                            // Mode Klik: check if more pairs remain
+                            // Determine next tIdx/pIdx (same logic as runPair tier advancement)
+                            let nTIdx = tierIdx;
+                            let nPIdx = pairInTier + 1;
+                            while (nTIdx < tierGroups.length && nPIdx >= tierGroups[nTIdx].count) {
+                              nTIdx += 1;
+                              nPIdx = 0;
+                            }
+                            if (nTIdx >= tierGroups.length) {
+                              // No more pairs — auto-advance to center/done
+                              setVizPhase("center");
+                              const t1 = setTimeout(() => setCenterExiting(true), 2000);
+                              const t2 = setTimeout(() => setVizPhase("done"), 2500);
+                              timers.current.push(t1, t2);
+                            } else {
+                              // Still pairs remaining — wait for user click
+                              pendingNextRef.current = { groups: tierGroups, tIdx: nTIdx, pIdx: nPIdx, neu: next };
+                              setWaitingForClick(true);
+                            }
+                          }
+                        }}
                         speed={animSpeed}
                         width={520}
                         height={200}
@@ -644,7 +744,7 @@ export default function ModelChipPage() {
                 </div>
               )}
 
-              {/* ── CENTER ──────────────────────────────────────────────────── */}
+              {/* -- CENTER ---------------------------------------------------- */}
               {vizPhase === "center" && (
                 <div className={`${centerExiting ? "reaction-center-out" : "reaction-center-in"}`}>
                   <div className="absolute inset-0 pointer-events-none">
@@ -673,7 +773,7 @@ export default function ModelChipPage() {
                       <div className="absolute inset-0 rounded-full border-2 border-intblue/30 reaction-burst" style={{ animationDelay: "400ms" }} />
                       <div className="absolute inset-0 rounded-full border-2 border-intpink/25 reaction-burst" style={{ animationDelay: "800ms" }} />
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-intblue via-white to-intpink opacity-70 blur-[2px]" />
-                      <span className="absolute font-bold text-xl text-slate-700 drop-shadow select-none">✕</span>
+                      <span className="absolute font-bold text-xl text-slate-700 drop-shadow select-none">?</span>
                     </div>
                     <div className={`flex flex-col items-center gap-2 ${centerExiting ? "chip-fly-right" : ""}`}>
                       <div className="flex gap-1 justify-center flex-wrap max-w-[140px]">
@@ -713,7 +813,7 @@ export default function ModelChipPage() {
                 </div>
               )}
 
-              {/* ── DONE ────────────────────────────────────────────────────── */}
+              {/* -- DONE ------------------------------------------------------ */}
               {isDone && (
                 <>
                   <div className="grid grid-cols-2 gap-4">
@@ -793,7 +893,7 @@ export default function ModelChipPage() {
               </p>
               {isDone && pairs > 0 && (
                 <p className="text-xs text-slate-400">
-                  {pairs.toLocaleString("id-ID")} zero-pair dinetralkan → sisa{" "}
+                  {pairs.toLocaleString("id-ID")} zero-pair dinetralkan ? sisa{" "}
                   <span className={remaining > 0 ? "text-intblue font-semibold" : remaining < 0 ? "text-intpink font-semibold" : "text-success font-semibold"}>
                     {remaining > 0 ? `+${remaining.toLocaleString("id-ID")} antibodi` : remaining < 0 ? `${remaining.toLocaleString("id-ID")} kuman` : "0 (netral)"}
                   </span>
