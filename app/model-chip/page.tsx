@@ -1,4 +1,4 @@
-// app/model-chip/page.tsx
+﻿// app/model-chip/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -202,6 +202,33 @@ export default function ModelChipPage() {
     pendingNextRef.current = null;
   };
 
+  // -- replayAnimation -------------------------------------------------------
+
+  /** Restart the animation from scratch using the current snapshot (no input re-entry). */
+  const replayAnimation = () => {
+    if (!snapshot) return;
+    clearTimers();
+    setCenterExiting(false);
+    setTierIdx(0);
+    setPairInTier(0);
+    setStepPhase("approach");
+    setNeutralised(new Map());
+    setWaitingForClick(false);
+    pendingNextRef.current = null;
+
+    const tp = Math.max(0, snapshot.bil1) + Math.max(0, snapshot.bil2);
+    const tn = Math.max(0, -snapshot.bil1) + Math.max(0, -snapshot.bil2);
+    const hasBattle = tp > 0 && tn > 0;
+
+    if (!hasBattle) { setVizPhase("done"); return; }
+
+    const pairCount = Math.min(tp, tn);
+    const groups = buildTierGroups(pairCount);
+    setTierGroups(groups);
+    playLaunch(); setVizPhase("battle");
+    runPair(groups, 0, 0, new Map());
+  };
+
   // -- handleNextClick --------------------------------------------------------
 
   /** Mode Klik only: advance to the next pair after the user presses "Lanjut ▶". */
@@ -391,22 +418,44 @@ export default function ModelChipPage() {
             </div>
 
             {/* Tombol Pasangkan — always interactive, speed control lives here */}
-            <div className="mt-4 flex justify-center">
-              {vizPhase === "idle" && (
-                <button
-                  onClick={handlePair}
-                  disabled={bil1 === 0 && bil2 === 0}
-                  className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  Pasangkan ⚡
-                </button>
-              )}
+            <div className="mt-4 flex flex-col items-center gap-2">
+              {/* Row 1: primary action buttons + replay (always visible after first run) */}
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                {vizPhase === "idle" && (
+                  <button
+                    onClick={handlePair}
+                    disabled={bil1 === 0 && bil2 === 0}
+                    className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Pasangkan ⚡
+                  </button>
+                )}
+                {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
+                  <button
+                    onClick={reset}
+                    className="px-8 py-2.5 bg-white border-2 border-border text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
+                  >
+                    Input Kembali 🔄
+                  </button>
+                )}
+                {snapshot !== null && (
+                  <button
+                    onClick={replayAnimation}
+                    aria-label="Ulangi animasi dengan nilai yang sama"
+                    className="px-5 py-2.5 bg-white border-2 border-intblue/30 text-intblue rounded-xl font-bold text-sm hover:bg-intblue-light transition-colors"
+                  >
+                    Putar ulang ↺
+                  </button>
+                )}
+              </div>
+              {/* Row 2: animating indicator (battle+center) */}
               {isAnimating && (
                 <div className="flex items-center gap-2 text-slate-400 font-mono text-sm">
                   <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
                   Animasi berjalan...
                 </div>
               )}
+              {/* Row 3: speed control + Lanjut (battle only) */}
               {vizPhase === "battle" && (
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
@@ -428,14 +477,6 @@ export default function ModelChipPage() {
                     </button>
                   )}
                 </div>
-              )}
-              {(isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle")) && (
-                <button
-                  onClick={reset}
-                  className="px-8 py-2.5 bg-white border-2 border-border text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
-                >
-                  Ulangi 🔄
-                </button>
               )}
             </div>
           </div>
@@ -536,7 +577,7 @@ export default function ModelChipPage() {
                     }`}>
                       ×{tierVal}
                     </span>
-                    {tierDone && <span className="font-mono text-[7px] text-emerald-600">? luruh</span>}
+                    {tierDone && <span className="font-mono text-[7px] text-emerald-600">✓ luruh</span>}
                     {tierActive && !tierDone && (
                       <span className="font-mono text-[7px] text-amber-500 animate-pulse">bereaksi</span>
                     )}
@@ -620,8 +661,8 @@ export default function ModelChipPage() {
               <div className="flex items-center justify-between mb-3 pt-2">
                 <span className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
                   {vizPhase === "battle" ? "⚔️ Pertarungan!" :
-                   vizPhase === "center" ? "? Reaksi Netralisasi" :
-                   isDone ? "? Selesai" : "Arena"}
+                   vizPhase === "center" ? "⚡ Reaksi Netralisasi" :
+                   isDone ? "✓ Selesai" : "Arena"}
                 </span>
                 <div className="flex items-center gap-1.5">
                   <div className={`w-1.5 h-1.5 rounded-full ${isDone ? "bg-emerald-500" : "bg-yellow-400 animate-pulse"}`} />
@@ -773,7 +814,7 @@ export default function ModelChipPage() {
                       <div className="absolute inset-0 rounded-full border-2 border-intblue/30 reaction-burst" style={{ animationDelay: "400ms" }} />
                       <div className="absolute inset-0 rounded-full border-2 border-intpink/25 reaction-burst" style={{ animationDelay: "800ms" }} />
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-intblue via-white to-intpink opacity-70 blur-[2px]" />
-                      <span className="absolute font-bold text-xl text-slate-700 drop-shadow select-none">?</span>
+                      <span className="absolute font-bold text-xl text-slate-700 drop-shadow select-none">✕</span>
                     </div>
                     <div className={`flex flex-col items-center gap-2 ${centerExiting ? "chip-fly-right" : ""}`}>
                       <div className="flex gap-1 justify-center flex-wrap max-w-[140px]">
