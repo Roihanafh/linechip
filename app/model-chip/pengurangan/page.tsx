@@ -162,6 +162,9 @@ export default function SubtractionPage() {
               neutralised={orch.neutralised}
               animSpeed={orch.animSpeed}
               onPairDone={orch.handlePairDone}
+              stepIdx={orch.stepIdx}
+              currentDecomposeStep={orch.currentDecomposeStep}
+              onDecomposeDone={orch.handleDecomposeDone}
             />
           )}
 

@@ -108,6 +108,9 @@ export default function ModelChipPage() {
             neutralised={anim.neutralised}
             animSpeed={anim.animSpeed}
             onPairDone={anim.handlePairDone}
+            stepIdx={anim.stepIdx}
+            currentDecomposeStep={anim.currentDecomposeStep}
+            onDecomposeDone={anim.handleDecomposeDone}
           />
         )}
 

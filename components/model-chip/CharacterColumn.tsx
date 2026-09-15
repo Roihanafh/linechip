@@ -22,6 +22,7 @@ export interface CharacterColumnProps {
   pairInTier: number;
   neutralised: Map<1 | 10 | 100 | 1000, number>;
   stepPhase: StepPhase;
+  activeDecomposeTier?: 1 | 10 | 100 | 1000 | null;
 }
 
 export function CharacterColumn({
@@ -35,6 +36,7 @@ export function CharacterColumn({
   pairInTier,
   neutralised,
   stepPhase,
+  activeDecomposeTier = null,
 }: CharacterColumnProps) {
   const allTiersOrder: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
 
@@ -109,6 +111,11 @@ export function CharacterColumn({
         {pCount > 0 && (
           <div className="flex flex-wrap justify-center gap-1 mb-0.5">
             {Array.from({ length: Math.min(pCount, 9) }, (_, i) => {
+              const isDecomposeActiveTier =
+                stepPhase === "decompose" &&
+                activeDecomposeTier !== null &&
+                t === activeDecomposeTier;
+
               const isGone =
                 i < doneInTier ||
                 (tierActive && i === pairInTier && !isApproach);
@@ -119,7 +126,9 @@ export function CharacterColumn({
                 <div
                   key={`${prefix}-p-${t}-${i}`}
                   className={`w-8 h-8 shrink-0 transition-all duration-500 ${
-                    isGone
+                    isDecomposeActiveTier
+                      ? "opacity-25 scale-90"
+                      : isGone
                       ? "opacity-0 scale-0"
                       : isDimmed
                       ? "opacity-25 scale-90"

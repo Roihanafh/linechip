@@ -3,6 +3,7 @@
 
 import { dominantPlace, TIER_TO_PLACE } from "@/components/game/CharacterSVGs";
 import type { VizPhase, TierGroup, StepPhase } from "@/lib/model-chip/types";
+import type { BattleStep } from "@/lib/model-chip/battlePlan";
 import { ArenaBattle } from "./ArenaBattle";
 import { ArenaCenter } from "./ArenaCenter";
 import { ArenaDone } from "./ArenaDone";
@@ -22,12 +23,16 @@ export interface ArenaPanelProps {
   neutralised: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number;
   onPairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
+  stepIdx: number;
+  currentDecomposeStep: BattleStep | null;
+  onDecomposeDone: () => void;
 }
 
 export function ArenaPanel({
   snapshot, vizPhase, centerExiting,
   snapTotalPos, snapTotalNeg, pairs, remaining,
   tierGroups, tierIdx, pairInTier, stepPhase, neutralised, animSpeed, onPairDone,
+  stepIdx, currentDecomposeStep, onDecomposeDone,
 }: ArenaPanelProps) {
   const s1 = snapshot.bil1;
   const s2 = snapshot.bil2;
@@ -104,6 +109,9 @@ export function ArenaPanel({
           animSpeed={animSpeed}
           vizPhase={vizPhase}
           onPairDone={onPairDone}
+          stepIdx={stepIdx}
+          currentDecomposeStep={currentDecomposeStep}
+          onDecomposeDone={onDecomposeDone}
         />
       )}
 

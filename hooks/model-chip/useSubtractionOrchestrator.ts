@@ -6,6 +6,7 @@ import type { SubtractionState } from "./useSubtractionState";
 import type { ModelChipState } from "./useModelChipState";
 import type { SubtractionSnapshot } from "@/lib/model-chip/subtractionTypes";
 import type { TierGroup, AnimMode, StepPhase } from "@/lib/model-chip/types";
+import type { BattleStep } from "@/lib/model-chip/battlePlan";
 
 export interface SubtractionOrchestratorOptions {
   state: SubtractionState;
@@ -29,6 +30,9 @@ export interface SubtractionOrchestratorReturn {
   handleSubtract: () => void;
   handleNextClick: () => void;
   replayAnimation: () => void;
+  stepIdx: number;
+  currentDecomposeStep: BattleStep | null;
+  handleDecomposeDone: () => void;
 }
 
 export function useSubtractionOrchestrator(
@@ -247,5 +251,8 @@ export function useSubtractionOrchestrator(
     handleSubtract,
     handleNextClick,
     replayAnimation,
+    stepIdx: innerOrch.stepIdx,
+    currentDecomposeStep: innerOrch.currentDecomposeStep,
+    handleDecomposeDone: innerOrch.handleDecomposeDone,
   };
 }

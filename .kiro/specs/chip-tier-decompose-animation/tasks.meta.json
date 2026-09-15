@@ -1,0 +1,348 @@
+{
+  "pbtResults": {
+    "1.3 Tulis property test untuk `buildBattlePlan` di `__tests__/model-chip/battlePlan.property.test.ts`": {
+      "status": "passed",
+      "lastRunTimestamp": 1789438249243
+    },
+    "3.2 Tulis property test untuk `DecomposeStage` di `__tests__/game/DecomposeStage.property.test.tsx`": {
+      "status": "passed",
+      "lastRunTimestamp": 1789438812004
+    }
+  },
+  "executionHistory": {
+    "1.1 Perbarui `lib/model-chip/types.ts` — tambah `\"decompose\"` ke `StepPhase`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437400058
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437413475
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437783172
+      }
+    ],
+    "1.2 Buat `lib/model-chip/battlePlan.ts` — fungsi `buildBattlePlan` dan tipe `BattleStep`/`BattlePlan`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437401885
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437413987
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437783925
+      }
+    ],
+    "1.3 Tulis property test untuk `buildBattlePlan` di `__tests__/model-chip/battlePlan.property.test.ts`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402075
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437789093
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438266461
+      }
+    ],
+    "1.4 Tulis unit test example-based untuk `buildBattlePlan` di file yang sama": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402219
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437789758
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438267030
+      }
+    ],
+    "2. Checkpoint — Phase 1": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402458
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438272687
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438301598
+      }
+    ],
+    "3.1 Buat `components/game/DecomposeStage.tsx` — animasi luruh chip tunggal": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402731
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438305957
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438407358
+      }
+    ],
+    "3.2 Tulis property test untuk `DecomposeStage` di `__tests__/game/DecomposeStage.property.test.tsx`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402850
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438412123
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438828896
+      }
+    ],
+    "3.3 Tulis unit test untuk `DecomposeStage` dengan mock timer di file yang sama": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437402956
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438412534
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438830458
+      }
+    ],
+    "4. Checkpoint — Phase 2": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403076
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438835906
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438866602
+      }
+    ],
+    "5.1 Perbarui `hooks/model-chip/useAnimationOrchestrator.ts` — konsumsi `BattlePlan`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403147
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438870936
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438985234
+      }
+    ],
+    "5.2 Perbarui `hooks/model-chip/useSubtractionOrchestrator.ts` — teruskan field baru": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403244
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438990081
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439354733
+      }
+    ],
+    "6. Checkpoint — Phase 3": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403389
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439359398
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439383949
+      }
+    ],
+    "7.1 Perbarui `components/model-chip/CharacterColumn.tsx` — tambah prop `activeDecomposeTier`": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403545
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439389007
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789450816106
+      }
+    ],
+    "7.2 Perbarui `components/model-chip/ArenaBattle.tsx` — render kondisional DecomposeStage/PairReactionStage": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403795
+      },
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439389654
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789450995158
+      }
+    ],
+    "7.3 Perbarui `components/model-chip/ArenaPanel.tsx` — teruskan props baru ke ArenaBattle": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437403935
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451006508
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451037741
+      }
+    ],
+    "7.4 Perbarui `app/model-chip/page.tsx` — teruskan field baru dari orchestrator": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437404069
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451044005
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451400924
+      }
+    ],
+    "7.5 Perbarui `app/model-chip/pengurangan/page.tsx` — teruskan field baru dari orchestrator": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437404167
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451044469
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451401013
+      }
+    ],
+    "8. Checkpoint — Phase 4 (Final)": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789437404378
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451406690
+      },
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451496911
+      }
+    ],
+    "1. Fase 1 — Types dan BattlePlanner": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438267072
+      }
+    ],
+    "3. Fase 2 — Komponen DecomposeStage": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789438830513
+      }
+    ],
+    "5. Fase 3 — Orchestrator Updates": [
+      {
+        "executionId": "27def75e-fddf-451c-8a0d-5891f10009b7",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789439354799
+      }
+    ],
+    "7. Fase 4 — UI Updates": [
+      {
+        "executionId": "7af7b844-35a8-4096-846b-1018350220cf",
+        "chatSessionId": "sess_ed9905f9-b4a4-469e-b768-9eca02e3bdd2",
+        "timestamp": 1789451401096
+      }
+    ]
+  }
+}

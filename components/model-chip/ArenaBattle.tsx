@@ -3,7 +3,9 @@
 
 import { TIER_TO_PLACE } from "@/components/game/CharacterSVGs";
 import { PairReactionStage } from "@/components/game/PairReactionStage";
+import { DecomposeStage } from "@/components/game/DecomposeStage";
 import type { TierGroup, StepPhase, VizPhase } from "@/lib/model-chip/types";
+import type { BattleStep } from "@/lib/model-chip/battlePlan";
 import { CharacterColumn } from "./CharacterColumn";
 
 interface ArenaBattleProps {
@@ -34,6 +36,10 @@ interface ArenaBattleProps {
   animSpeed: number;
   vizPhase: VizPhase;
   onPairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
+  // Decompose support
+  stepIdx: number;
+  currentDecomposeStep: BattleStep | null;
+  onDecomposeDone: () => void;
 }
 
 function TierProgressDots({
@@ -75,6 +81,7 @@ export function ArenaBattle({
   snapTotalPos, snapTotalNeg, pairs,
   tierGroups, tierIdx, pairInTier, stepPhase, neutralised, animSpeed,
   vizPhase, onPairDone,
+  stepIdx, currentDecomposeStep, onDecomposeDone,
 }: ArenaBattleProps) {
   const curGroup = tierGroups[tierIdx] ?? null;
   const place = curGroup ? TIER_TO_PLACE[curGroup.tier] : "satuan";
@@ -102,23 +109,34 @@ export function ArenaBattle({
               </span>
             )}
           </div>
-          <PairReactionStage
-            key={`pr-${tierIdx}-${pairInTier}-${animSpeed}`}
-            runKey={tierIdx * 1000 + pairInTier}
-            leftType={place}
-            rightType={place}
-            leftFaction={s1Type}
-            isPerfect={pairs === 1 && snapTotalPos === snapTotalNeg}
-            onDone={() => {
-              if (!curGroup) return;
-              const next = new Map(neutralised);
-              next.set(curGroup.tier, (next.get(curGroup.tier) ?? 0) + 1);
-              onPairDone(next);
-            }}
-            speed={animSpeed}
-            width={520}
-            height={200}
-          />
+          {stepPhase === "decompose" && currentDecomposeStep ? (
+            <DecomposeStage
+              key={`dc-${stepIdx}`}
+              chipTier={currentDecomposeStep.tier}
+              chipFaction={currentDecomposeStep.side === "pos" ? s1Type : s2Type}
+              speed={animSpeed}
+              runKey={stepIdx}
+              onDone={onDecomposeDone}
+            />
+          ) : (
+            <PairReactionStage
+              key={`pr-${tierIdx}-${pairInTier}-${animSpeed}`}
+              runKey={tierIdx * 1000 + pairInTier}
+              leftType={place}
+              rightType={place}
+              leftFaction={s1Type}
+              isPerfect={pairs === 1 && snapTotalPos === snapTotalNeg}
+              onDone={() => {
+                if (!curGroup) return;
+                const next = new Map(neutralised);
+                next.set(curGroup.tier, (next.get(curGroup.tier) ?? 0) + 1);
+                onPairDone(next);
+              }}
+              speed={animSpeed}
+              width={520}
+              height={200}
+            />
+          )}
         </div>
       )}
 
@@ -138,6 +156,7 @@ export function ArenaBattle({
               sType={s1Type} sColor={s1Color} sSign={s1Sign} prefix="b1"
               vizPhase={vizPhase} tierGroups={tierGroups} tierIdx={tierIdx}
               pairInTier={pairInTier} neutralised={neutralised} stepPhase={stepPhase}
+              activeDecomposeTier={currentDecomposeStep?.tier ?? null}
             />
           )}
         </div>
@@ -156,6 +175,7 @@ export function ArenaBattle({
               sType={s2Type} sColor={s2Color} sSign={s2Sign} prefix="b2"
               vizPhase={vizPhase} tierGroups={tierGroups} tierIdx={tierIdx}
               pairInTier={pairInTier} neutralised={neutralised} stepPhase={stepPhase}
+              activeDecomposeTier={currentDecomposeStep?.tier ?? null}
             />
           )}
         </div>

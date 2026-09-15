@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { buildTierGroups } from "@/lib/model-chip/tierUtils";
-import { computeNextStep } from "@/lib/model-chip/stepMachine";
+import { buildBattlePlan } from "@/lib/model-chip/battlePlan";
 import { useSound } from "@/hooks/useSound";
 import type { ModelChipState } from "./useModelChipState";
 import type { TierGroup, StepPhase, AnimMode } from "@/lib/model-chip/types";
+import type { BattlePlan, BattleStep } from "@/lib/model-chip/battlePlan";
 
 export interface AnimationOrchestratorOptions { state: ModelChipState }
 
@@ -21,9 +21,57 @@ export interface AnimationOrchestratorReturn {
   handleNextClick: () => void;
   handlePairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
   handleReset: () => void;
+  // New fields for BattlePlan / decompose support
+  stepIdx: number;
+  currentDecomposeStep: BattleStep | null;
+  handleDecomposeDone: () => void;
 }
 
-/** Requirements: 1.2, 1.3, 1.4, 1.6, 5.1–5.10 */
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * Derive TierGroup[] from the "pair" steps in a BattlePlan.
+ * Used by TierProgressDots — same shape as the old buildTierGroups output.
+ */
+function tierGroupsFromPlan(plan: BattlePlan): TierGroup[] {
+  const counts = new Map<1 | 10 | 100 | 1000, number>();
+  for (const step of plan.steps) {
+    if (step.type === "pair") {
+      counts.set(step.tier, (counts.get(step.tier) ?? 0) + 1);
+    }
+  }
+  const tiers: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
+  return tiers.filter(t => counts.has(t)).map(t => ({ tier: t, count: counts.get(t)! }));
+}
+
+/**
+ * Map a BattlePlan step index (which must be a "pair" step) to
+ * { tIdx, pIdx } coordinates inside `tierGroups`.
+ */
+function mapPairStepToPosition(
+  plan: BattlePlan,
+  idx: number,
+  tierGroups: TierGroup[],
+): { tIdx: number; pIdx: number } {
+  // Count how many "pair" steps precede idx
+  let pairNum = 0;
+  for (let i = 0; i < idx; i++) {
+    if (plan.steps[i].type === "pair") pairNum++;
+  }
+  // Map pairNum to tierIdx / pairInTier
+  let acc = 0;
+  for (let tIdx = 0; tIdx < tierGroups.length; tIdx++) {
+    if (pairNum < acc + tierGroups[tIdx].count) {
+      return { tIdx, pIdx: pairNum - acc };
+    }
+    acc += tierGroups[tIdx].count;
+  }
+  return { tIdx: tierGroups.length, pIdx: 0 };
+}
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
+
+/** Requirements: 1.2, 1.3, 1.4, 1.6, 5.1–5.5 */
 export function useAnimationOrchestrator(
   opts: AnimationOrchestratorOptions
 ): AnimationOrchestratorReturn {
@@ -38,6 +86,9 @@ export function useAnimationOrchestrator(
   const [animMode, setAnimMode] = useState<AnimMode>("auto"); // SSR-safe default
   const [waitingForClick, setWaitingForClick] = useState(false);
   const [centerExiting, setCenterExiting] = useState(false);
+  // New BattlePlan state
+  const [battlePlan, setBattlePlan] = useState<BattlePlan | null>(null);
+  const [stepIdx, setStepIdx] = useState(0);
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const animSpeedRef = useRef(1);
@@ -45,13 +96,18 @@ export function useAnimationOrchestrator(
   const tierGroupsRef = useRef<TierGroup[]>([]);
   const tierIdxRef = useRef(0);
   const pairInTierRef = useRef(0);
-  const pendingNextRef = useRef<{ groups: TierGroup[]; tIdx: number; pIdx: number; neu: Map<1 | 10 | 100 | 1000, number> } | null>(null);
+  // New refs for BattlePlan
+  const battlePlanRef = useRef<BattlePlan | null>(null);
+  const stepIdxRef = useRef(0);
+  const pendingNextRef = useRef<{ stepIdx: number } | null>(null);
 
   animModeRef.current = animMode;
   animSpeedRef.current = animSpeed;
   tierGroupsRef.current = tierGroups;
   tierIdxRef.current = tierIdx;
   pairInTierRef.current = pairInTier;
+  battlePlanRef.current = battlePlan;
+  stepIdxRef.current = stepIdx;
 
   const playLaunch = useSound("/luncurkan.mp3");
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
@@ -71,24 +127,59 @@ export function useAnimationOrchestrator(
     timers.current.push(t1, t2);
   };
 
-  const runPair = (groups: TierGroup[], tIdx: number, pIdx: number, _neu: Map<1 | 10 | 100 | 1000, number>) => {
-    if (tIdx >= groups.length) { finishAll(); return; }
-    const group = groups[tIdx];
-    if (pIdx >= group.count) { runPair(groups, tIdx + 1, 0, _neu); return; }
-    setTierIdx(tIdx); setPairInTier(pIdx); setStepPhase("approach"); setWaitingForClick(false);
+  // ── runCurrentStep ────────────────────────────────────────────────────────
+  const runCurrentStep = (plan: BattlePlan, idx: number) => {
+    if (idx >= plan.steps.length) {
+      finishAll();
+      return;
+    }
+
+    const step = plan.steps[idx];
+    setStepIdx(idx);
+    stepIdxRef.current = idx;
+
+    if (step.type === "decompose") {
+      setStepPhase("decompose");
+      setWaitingForClick(false);
+    } else {
+      // "pair" step: compute tierIdx / pairInTier from the derived tierGroups
+      const tgs = tierGroupsFromPlan(plan);
+      const { tIdx, pIdx } = mapPairStepToPosition(plan, idx, tgs);
+      setTierIdx(tIdx);
+      setPairInTier(pIdx);
+      setStepPhase("approach");
+      setWaitingForClick(false);
+    }
   };
 
-  const startBattle = (groups: TierGroup[]) => {
-    setTierGroups(groups); playLaunch(); state.setVizPhase("battle");
-    runPair(groups, 0, 0, new Map());
+  // ── startBattle ───────────────────────────────────────────────────────────
+  const startBattle = (plan: BattlePlan) => {
+    const tgs = tierGroupsFromPlan(plan);
+    setBattlePlan(plan);
+    battlePlanRef.current = plan;
+    setTierGroups(tgs);
+    playLaunch();
+    state.setVizPhase("battle");
+    runCurrentStep(plan, 0);
   };
 
+  // ── resetAnimState ────────────────────────────────────────────────────────
   const resetAnimState = () => {
-    clearTimers(); setCenterExiting(false); setTierIdx(0); setPairInTier(0);
-    setStepPhase("approach"); setNeutralised(new Map()); setWaitingForClick(false);
+    clearTimers();
+    setCenterExiting(false);
+    setTierIdx(0);
+    setPairInTier(0);
+    setStepPhase("approach");
+    setNeutralised(new Map());
+    setWaitingForClick(false);
+    setBattlePlan(null);
+    setStepIdx(0);
+    battlePlanRef.current = null;
+    stepIdxRef.current = 0;
     pendingNextRef.current = null;
   };
 
+  // ── handlePair ────────────────────────────────────────────────────────────
   const handlePair = () => {
     const { bil1, bil2 } = state;
     if (bil1 === 0 && bil2 === 0) return;
@@ -97,53 +188,97 @@ export function useAnimationOrchestrator(
     const tn = Math.max(0, -bil1) + Math.max(0, -bil2);
     state.setSnapshot({ bil1, bil2 });
     if (!(tp > 0 && tn > 0)) { state.setVizPhase("done"); return; }
-    startBattle(buildTierGroups(Math.min(tp, tn)));
+    startBattle(buildBattlePlan(bil1, bil2));
   };
 
+  // ── replayAnimation ───────────────────────────────────────────────────────
   const replayAnimation = () => {
     const { snapshot } = state;
     if (!snapshot) return;
     resetAnimState();
-    const tp = Math.max(0, snapshot.bil1) + Math.max(0, snapshot.bil2);
-    const tn = Math.max(0, -snapshot.bil1) + Math.max(0, -snapshot.bil2);
+    const { bil1, bil2 } = snapshot;
+    const tp = Math.max(0, bil1) + Math.max(0, bil2);
+    const tn = Math.max(0, -bil1) + Math.max(0, -bil2);
     if (!(tp > 0 && tn > 0)) { state.setVizPhase("done"); return; }
-    startBattle(buildTierGroups(Math.min(tp, tn)));
+    startBattle(buildBattlePlan(bil1, bil2));
   };
 
-  const handleNextClick = () => {
-    if (!waitingForClick || !pendingNextRef.current) return;
-    setWaitingForClick(false);
-    const { groups, tIdx, pIdx, neu } = pendingNextRef.current;
-    pendingNextRef.current = null;
-    runPair(groups, tIdx, pIdx, neu);
-  };
+  // ── handleDecomposeDone ───────────────────────────────────────────────────
+  const handleDecomposeDone = () => {
+    const plan = battlePlanRef.current;
+    if (!plan) return;
+    const nextIdx = stepIdxRef.current + 1;
 
-  const handlePairDone = (neu: Map<1 | 10 | 100 | 1000, number>) => {
-    setNeutralised(neu); setStepPhase("clear");
-    const groups = tierGroupsRef.current;
-    const tIdx = tierIdxRef.current;
-    const pIdx = pairInTierRef.current;
-    const nextStep = computeNextStep(groups, tIdx, pIdx);
     if (animModeRef.current === "auto") {
       timers.current.push(setTimeout(() => {
-        if (nextStep.type === "done") finishAll();
-        else runPair(groups, nextStep.tIdx, nextStep.pIdx, neu);
+        runCurrentStep(plan, nextIdx);
       }, 100));
     } else {
-      if (nextStep.type === "done") { finishAll(); }
-      else { pendingNextRef.current = { groups, tIdx: nextStep.tIdx, pIdx: nextStep.pIdx, neu }; setWaitingForClick(true); }
+      pendingNextRef.current = { stepIdx: nextIdx };
+      setWaitingForClick(true);
     }
   };
 
-  const handleReset = () => {
-    resetAnimState(); setTierGroups([]);
-    state.setBil1(0); state.setBil2(0); state.setVizPhase("idle"); state.setSnapshot(null);
+  // ── handlePairDone ────────────────────────────────────────────────────────
+  const handlePairDone = (neu: Map<1 | 10 | 100 | 1000, number>) => {
+    setNeutralised(neu);
+    setStepPhase("clear");
+
+    const plan = battlePlanRef.current;
+    if (!plan) return;
+    const nextIdx = stepIdxRef.current + 1;
+
+    if (animModeRef.current === "auto") {
+      timers.current.push(setTimeout(() => {
+        if (nextIdx >= plan.steps.length) finishAll();
+        else runCurrentStep(plan, nextIdx);
+      }, 100));
+    } else {
+      if (nextIdx >= plan.steps.length) {
+        finishAll();
+      } else {
+        pendingNextRef.current = { stepIdx: nextIdx };
+        setWaitingForClick(true);
+      }
+    }
   };
+
+  // ── handleNextClick ───────────────────────────────────────────────────────
+  const handleNextClick = () => {
+    if (!waitingForClick || !pendingNextRef.current) return;
+    const { stepIdx: nextIdx } = pendingNextRef.current;
+    pendingNextRef.current = null;
+    setWaitingForClick(false);
+
+    const plan = battlePlanRef.current;
+    if (!plan) return;
+    runCurrentStep(plan, nextIdx);
+  };
+
+  // ── handleReset ───────────────────────────────────────────────────────────
+  const handleReset = () => {
+    resetAnimState();
+    setTierGroups([]);
+    state.setBil1(0);
+    state.setBil2(0);
+    state.setVizPhase("idle");
+    state.setSnapshot(null);
+  };
+
+  // ── currentDecomposeStep ─────────────────────────────────────────────────
+  const currentDecomposeStep: BattleStep | null =
+    battlePlan?.steps[stepIdx]?.type === "decompose"
+      ? battlePlan.steps[stepIdx]
+      : null;
 
   return {
     tierGroups, setTierGroups, tierIdx, pairInTier, stepPhase, neutralised,
     animSpeed, setAnimSpeed: (s) => { animSpeedRef.current = s; setAnimSpeedState(s); },
     animMode, setAnimMode, waitingForClick, centerExiting, setCenterExiting,
     handlePair, replayAnimation, handleNextClick, handlePairDone, handleReset,
+    // New
+    stepIdx,
+    currentDecomposeStep,
+    handleDecomposeDone,
   };
 }
