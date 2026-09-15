@@ -3,8 +3,9 @@ import type { TierGroup } from "./types";
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface BattleStep {
-  /** "decompose": chip tier tinggi luruh; "pair": dua chip bereaksi dan saling netralisasi */
-  type: "decompose" | "pair";
+  /** "decompose": chip tier tinggi luruh; "pair": dua chip bereaksi dan saling netralisasi;
+   *  "approach-wait": chip naik tapi belum ada pasangannya (sebelum luruh) */
+  type: "decompose" | "pair" | "approach-wait";
   /** Tier chip yang terlibat dalam langkah ini */
   tier: 1 | 10 | 100 | 1000;
   /** Sisi yang memiliki chip ini ("pos" = nilai positif, "neg" = nilai negatif) */
@@ -36,6 +37,18 @@ export function decomposeToTierGroups(value: number): TierGroup[] {
     rem %= t;
   }
   return groups;
+}
+
+export function buildInitialChipMap(value: number): Map<1 | 10 | 100 | 1000, number> {
+  const map = new Map<1 | 10 | 100 | 1000, number>();
+  if (value <= 0) return map;
+  let rem = Math.floor(value);
+  for (const t of ALL_TIERS) {
+    const c = Math.floor(rem / t);
+    if (c > 0) map.set(t, c);
+    rem %= t;
+  }
+  return map;
 }
 
 // ─── Core: buildBattlePlan ────────────────────────────────────────────────────
@@ -72,43 +85,67 @@ export function buildBattlePlan(bil1: number, bil2: number): BattlePlan {
   }
 
   const smallerValue = Math.min(totalPos, totalNeg);
-  const largerValue  = Math.max(totalPos, totalNeg);
-  const smallerSide: "pos" | "neg" = totalPos <= totalNeg ? "pos" : "neg";
-  const largerSide:  "pos" | "neg" = smallerSide === "pos" ? "neg" : "pos";
-
-  // anchorGroups: tier groups dari sisi kecil, diurutkan ascending
-  // (terkecil ke terbesar: satuan → puluhan → ratusan → ribuan).
-  // Ini menentukan tier dan count yang perlu dipasangkan, dengan urutan pedagogis.
   const anchorGroups = decomposeToTierGroups(smallerValue).reverse();
-
-  // largerAvail: map tier → count untuk sisi besar yang akan dimutasi selama simulasi.
-  const largerAvail = new Map<1 | 10 | 100 | 1000, number>();
-  for (const g of decomposeToTierGroups(largerValue)) largerAvail.set(g.tier, g.count);
-
-  // totalPairs = chip-level count dari sisi kecil
   const totalPairs = anchorGroups.reduce((sum, g) => sum + g.count, 0);
+
+  const posAvail = buildInitialChipMap(totalPos);
+  const negAvail = buildInitialChipMap(totalNeg);
 
   const steps: BattleStep[] = [];
 
-  for (const { tier: T, count: need } of anchorGroups) {
-    // Luruhkan sisi besar sampai punya cukup chip di tier T
-    while ((largerAvail.get(T) ?? 0) < need) {
-      const sourceTier = highestAvailableAbove(largerAvail, T);
-      if (sourceTier === null) break; // safety; seharusnya tidak terjadi
-      steps.push({ type: "decompose", tier: sourceTier, side: largerSide });
-      largerAvail.set(sourceTier, (largerAvail.get(sourceTier) ?? 0) - 1);
-      if ((largerAvail.get(sourceTier) ?? 0) <= 0) largerAvail.delete(sourceTier);
-      const lowerTier = (sourceTier / 10) as 1 | 10 | 100;
-      largerAvail.set(lowerTier, (largerAvail.get(lowerTier) ?? 0) + 10);
-    }
+  for (const { tier: T, count: needTotal } of anchorGroups) {
+    let needRemaining = needTotal;
 
-    // Pair sejumlah `need` di tier T
-    const pairCount = Math.min(need, largerAvail.get(T) ?? 0);
-    for (let i = 0; i < pairCount; i++) {
-      steps.push({ type: "pair", tier: T, side: "pos" });
+    while (needRemaining > 0) {
+      const availPos = posAvail.get(T) ?? 0;
+      const availNeg = negAvail.get(T) ?? 0;
+      const directPairs = Math.min(availPos, availNeg, needRemaining);
+
+      if (directPairs > 0) {
+        for (let i = 0; i < directPairs; i++) {
+          steps.push({ type: "pair", tier: T, side: "pos" });
+        }
+        posAvail.set(T, availPos - directPairs);
+        if ((posAvail.get(T) ?? 0) <= 0) posAvail.delete(T);
+        negAvail.set(T, availNeg - directPairs);
+        if ((negAvail.get(T) ?? 0) <= 0) negAvail.delete(T);
+
+        needRemaining -= directPairs;
+      }
+
+      if (needRemaining > 0) {
+        // Target the side missing chips at tier T
+        const targetSide: "pos" | "neg" =
+          (posAvail.get(T) ?? 0) < (negAvail.get(T) ?? 0) ? "pos" : "neg";
+        const targetAvail = targetSide === "pos" ? posAvail : negAvail;
+        // The OTHER side (waitingSide) has chips at T and is waiting for a partner
+        const waitingSide: "pos" | "neg" = targetSide === "pos" ? "neg" : "pos";
+        const sourceTier = highestAvailableAbove(targetAvail, T);
+
+        if (sourceTier === null) {
+          // Fallback to other side if target side has no higher tier available
+          const otherSide: "pos" | "neg" = targetSide === "pos" ? "neg" : "pos";
+          const otherAvail = otherSide === "pos" ? posAvail : negAvail;
+          const fallbackSource = highestAvailableAbove(otherAvail, T);
+          if (fallbackSource === null) break;
+          // Show the waiting chip approaching before luruh
+          steps.push({ type: "approach-wait", tier: T, side: targetSide });
+          steps.push({ type: "decompose", tier: fallbackSource, side: otherSide });
+          otherAvail.set(fallbackSource, (otherAvail.get(fallbackSource) ?? 0) - 1);
+          if ((otherAvail.get(fallbackSource) ?? 0) <= 0) otherAvail.delete(fallbackSource);
+          const lowerTier = (fallbackSource / 10) as 1 | 10 | 100;
+          otherAvail.set(lowerTier, (otherAvail.get(lowerTier) ?? 0) + 10);
+        } else {
+          // Show the waiting chip approaching before luruh
+          steps.push({ type: "approach-wait", tier: T, side: waitingSide });
+          steps.push({ type: "decompose", tier: sourceTier, side: targetSide });
+          targetAvail.set(sourceTier, (targetAvail.get(sourceTier) ?? 0) - 1);
+          if ((targetAvail.get(sourceTier) ?? 0) <= 0) targetAvail.delete(sourceTier);
+          const lowerTier = (sourceTier / 10) as 1 | 10 | 100;
+          targetAvail.set(lowerTier, (targetAvail.get(lowerTier) ?? 0) + 10);
+        }
+      }
     }
-    largerAvail.set(T, (largerAvail.get(T) ?? 0) - pairCount);
-    if ((largerAvail.get(T) ?? 0) <= 0) largerAvail.delete(T);
   }
 
   return { steps, totalPairs };

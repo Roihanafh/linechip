@@ -33,6 +33,8 @@ interface ArenaBattleProps {
   pairInTier: number;
   stepPhase: StepPhase;
   neutralised: Map<1 | 10 | 100 | 1000, number>;
+  posChipMap?: Map<1 | 10 | 100 | 1000, number>;
+  negChipMap?: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number;
   vizPhase: VizPhase;
   onPairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
@@ -79,7 +81,7 @@ export function ArenaBattle({
   s1Abs, s2Abs, s1Paired, s2Paired, s1Remaining, s2Remaining,
   s1Color, s2Color, s1Dot, s2Dot, s1Sign, s2Sign,
   snapTotalPos, snapTotalNeg, pairs,
-  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, animSpeed,
+  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, posChipMap, negChipMap, animSpeed,
   vizPhase, onPairDone,
   stepIdx, currentDecomposeStep, onDecomposeDone,
 }: ArenaBattleProps) {
@@ -118,6 +120,23 @@ export function ArenaBattle({
               runKey={stepIdx}
               onDone={onDecomposeDone}
             />
+          ) : stepPhase === "approach-wait" ? (
+            <div
+              key={`aw-${stepIdx}`}
+              className="w-full rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 flex flex-col items-center justify-center gap-2 py-5"
+              style={{ minHeight: 100 }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-2xl animate-bounce">❓</span>
+                <span className="font-mono text-[11px] font-bold text-orange-600 uppercase tracking-widest animate-pulse">
+                  Belum ada pasangan
+                </span>
+                <span className="text-2xl animate-bounce" style={{ animationDelay: "150ms" }}>❓</span>
+              </div>
+              <p className="font-mono text-[9px] text-orange-400 text-center">
+                chip {TIER_TO_PLACE[curGroup.tier]} naik… menunggu luruhan
+              </p>
+            </div>
           ) : (
             <PairReactionStage
               key={`pr-${tierIdx}-${pairInTier}-${animSpeed}`}
@@ -157,6 +176,8 @@ export function ArenaBattle({
               vizPhase={vizPhase} tierGroups={tierGroups} tierIdx={tierIdx}
               pairInTier={pairInTier} neutralised={neutralised} stepPhase={stepPhase}
               activeDecomposeTier={currentDecomposeStep?.tier ?? null}
+              isDecomposeSide={currentDecomposeStep?.side === (s1 >= 0 ? "pos" : "neg")}
+              chipMap={s1 >= 0 ? posChipMap : negChipMap}
             />
           )}
         </div>
@@ -176,6 +197,8 @@ export function ArenaBattle({
               vizPhase={vizPhase} tierGroups={tierGroups} tierIdx={tierIdx}
               pairInTier={pairInTier} neutralised={neutralised} stepPhase={stepPhase}
               activeDecomposeTier={currentDecomposeStep?.tier ?? null}
+              isDecomposeSide={currentDecomposeStep?.side === (s2 >= 0 ? "pos" : "neg")}
+              chipMap={s2 >= 0 ? posChipMap : negChipMap}
             />
           )}
         </div>

@@ -21,6 +21,8 @@ export interface ArenaPanelProps {
   pairInTier: number;
   stepPhase: StepPhase;
   neutralised: Map<1 | 10 | 100 | 1000, number>;
+  posChipMap?: Map<1 | 10 | 100 | 1000, number>;
+  negChipMap?: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number;
   onPairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
   stepIdx: number;
@@ -31,7 +33,7 @@ export interface ArenaPanelProps {
 export function ArenaPanel({
   snapshot, vizPhase, centerExiting,
   snapTotalPos, snapTotalNeg, pairs, remaining,
-  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, animSpeed, onPairDone,
+  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, posChipMap, negChipMap, animSpeed, onPairDone,
   stepIdx, currentDecomposeStep, onDecomposeDone,
 }: ArenaPanelProps) {
   const s1 = snapshot.bil1;
@@ -106,6 +108,8 @@ export function ArenaPanel({
           pairInTier={pairInTier}
           stepPhase={stepPhase}
           neutralised={neutralised}
+          posChipMap={posChipMap}
+          negChipMap={negChipMap}
           animSpeed={animSpeed}
           vizPhase={vizPhase}
           onPairDone={onPairDone}

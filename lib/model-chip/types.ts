@@ -5,7 +5,7 @@ export type VizPhase = "idle" | "battle" | "center" | "done";
 export type AnimMode = "auto" | "click";
 
 /** Satu fase dalam satu PairReactionStage */
-export type StepPhase = "approach" | "clash" | "clear" | "decompose";
+export type StepPhase = "approach" | "clash" | "clear" | "decompose" | "approach-wait";
 
 /** Satu tier group hasil dekomposisi pasangan netral */
 export interface TierGroup {

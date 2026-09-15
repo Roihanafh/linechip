@@ -528,3 +528,40 @@ describe("Req 5.10 — SSR safety: animMode synchronous default is 'auto'", () =
     expect(readFromStorage("click")).toBe("click");
   });
 });
+
+describe("Tiered decomposition starting from Satuan (Requirement 1.1)", () => {
+  const { buildBattlePlan, buildInitialChipMap } = require("@/lib/model-chip/battlePlan");
+
+  it("buildInitialChipMap converts value to correct place value counts", () => {
+    const map30 = buildInitialChipMap(30);
+    expect(map30.get(10)).toBe(3);
+    expect(map30.get(1)).toBeUndefined();
+
+    const map12 = buildInitialChipMap(12);
+    expect(map12.get(10)).toBe(1);
+    expect(map12.get(1)).toBe(2);
+  });
+
+  it("buildBattlePlan starts pairing available tier 1 (satuan) chips before decomposing", () => {
+    // bil1 = +12 (1 ten, 2 units), bil2 = -5 (5 units)
+    // 2 units available on bil1, 5 units needed by bil2.
+    // Pairs 2 units first at tier 1, then decomposes 1 ten on bil1 into 10 units, then pairs remaining 3 units at tier 1.
+    const plan = buildBattlePlan(12, -5);
+    expect(plan.steps.length).toBe(6);
+    expect(plan.steps[0]).toEqual({ type: "pair", tier: 1, side: "pos" });
+    expect(plan.steps[1]).toEqual({ type: "pair", tier: 1, side: "pos" });
+    expect(plan.steps[2]).toEqual({ type: "decompose", tier: 10, side: "pos" });
+  });
+
+  it("does NOT trigger decomposition if tier 1 already has sufficient chips", () => {
+    // bil1 = +15 (1 ten, 5 units), bil2 = -3 (3 units)
+    // larger side has 5 units, smaller side needs 3 units.
+    // 5 >= 3, no decompose step needed!
+    const plan = buildBattlePlan(15, -3);
+    const decomposeSteps = plan.steps.filter((s: any) => s.type === "decompose");
+    expect(decomposeSteps.length).toBe(0);
+    expect(plan.steps.length).toBe(3);
+    expect(plan.steps.every((s: any) => s.type === "pair" && s.tier === 1)).toBe(true);
+  });
+});
+

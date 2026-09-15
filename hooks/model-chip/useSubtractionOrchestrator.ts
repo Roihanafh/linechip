@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAnimationOrchestrator } from "./useAnimationOrchestrator";
@@ -18,6 +18,8 @@ export interface SubtractionOrchestratorReturn {
   pairInTier: number;
   stepPhase: StepPhase;
   neutralised: Map<1 | 10 | 100 | 1000, number>;
+  posChipMap: Map<1 | 10 | 100 | 1000, number>;
+  negChipMap: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number;
   setAnimSpeed: (s: number) => void;
   animMode: AnimMode;
@@ -229,6 +231,8 @@ export function useSubtractionOrchestrator(
     pairInTier: innerOrch.pairInTier,
     stepPhase: innerOrch.stepPhase,
     neutralised: innerOrch.neutralised,
+    posChipMap: innerOrch.posChipMap,
+    negChipMap: innerOrch.negChipMap,
     animSpeed: innerOrch.animSpeed,
     setAnimSpeed: (s) => {
       animSpeedRef.current = s;

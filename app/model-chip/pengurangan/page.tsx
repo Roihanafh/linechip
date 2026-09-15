@@ -134,6 +134,28 @@ export default function SubtractionPage() {
           onNextClick={orch.handleNextClick}
         />
 
+        {/* Reset button — visible directly below input area during animation */}
+        {vizPhase !== "idle" && vizPhase !== "done" && (
+          <div className="flex justify-center -mt-2 mb-4">
+            <button
+              id="btn-reset-subtraction-animation"
+              onClick={orch.handleReset}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-rose-600 hover:border-rose-300 hover:shadow-md transition-all duration-200 text-xs font-bold"
+            >
+              <svg
+                width="14" height="14" viewBox="0 0 16 16" fill="none"
+                className="transition-transform duration-300 hover:rotate-180"
+              >
+                <path
+                  d="M13.5 8A5.5 5.5 0 1 1 8 2.5a5.5 5.5 0 0 1 3.89 1.61L13.5 2.5V6h-3.5l1.41-1.41A3.5 3.5 0 1 0 11.5 8"
+                  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                />
+              </svg>
+              Kembali ke Input
+            </button>
+          </div>
+        )}
+
         {/* TransformPanel — only during "transform" phase */}
         {vizPhase === "transform" && snapshot !== null && (
           <TransformPanel
@@ -160,6 +182,8 @@ export default function SubtractionPage() {
               pairInTier={orch.pairInTier}
               stepPhase={orch.stepPhase}
               neutralised={orch.neutralised}
+              posChipMap={orch.posChipMap}
+              negChipMap={orch.negChipMap}
               animSpeed={orch.animSpeed}
               onPairDone={orch.handlePairDone}
               stepIdx={orch.stepIdx}
@@ -167,6 +191,8 @@ export default function SubtractionPage() {
               onDecomposeDone={orch.handleDecomposeDone}
             />
           )}
+
+
 
         <SubtractionResultPanel
           eqBil1={eqBil1}

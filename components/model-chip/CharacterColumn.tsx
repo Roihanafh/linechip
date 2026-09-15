@@ -23,7 +23,14 @@ export interface CharacterColumnProps {
   neutralised: Map<1 | 10 | 100 | 1000, number>;
   stepPhase: StepPhase;
   activeDecomposeTier?: 1 | 10 | 100 | 1000 | null;
+  isDecomposeSide?: boolean; // true only if THIS column is the one being decomposed
+  chipMap?: Map<1 | 10 | 100 | 1000, number>;
 }
+
+// Decomposition must go from largest to smallest so each Math.floor(rem/t) is correct.
+const DECOMPOSE_ORDER: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
+// Rendering goes largest to smallest so Ribuan (x1000)/Puluhan (x10) appears at top and Satuan (x1) at bottom.
+const RENDER_ORDER: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
 
 export function CharacterColumn({
   sPaired,
@@ -37,9 +44,9 @@ export function CharacterColumn({
   neutralised,
   stepPhase,
   activeDecomposeTier = null,
+  isDecomposeSide = false,
+  chipMap,
 }: CharacterColumnProps) {
-  const allTiersOrder: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
-
   const isApproach = stepPhase === "approach";
 
   const isTierDone = (t: 1 | 10 | 100 | 1000): boolean => {
@@ -49,21 +56,22 @@ export function CharacterColumn({
   };
 
   const isTierActive = (t: 1 | 10 | 100 | 1000): boolean =>
-    tierGroups[tierIdx]?.tier === t && vizPhase === "battle";
+    tierGroups[tierIdx]?.tier === t && vizPhase === "battle" &&
+    (stepPhase === "approach" || stepPhase === "approach-wait");
 
-  // Decompose paired per tier
+  // Decompose paired per tier -- fallback if chipMap not provided
   const pairedByTier = new Map<1 | 10 | 100 | 1000, number>();
   let remP = sPaired;
-  for (const t of allTiersOrder) {
+  for (const t of DECOMPOSE_ORDER) {
     const c = Math.floor(remP / t);
     if (c > 0) pairedByTier.set(t, c);
     remP %= t;
   }
 
-  // Decompose remaining per tier
+  // Decompose remaining per tier -- fallback if chipMap not provided
   const remainByTier = new Map<1 | 10 | 100 | 1000, number>();
   let remR = sRemaining;
-  for (const t of allTiersOrder) {
+  for (const t of DECOMPOSE_ORDER) {
     const c = Math.floor(remR / t);
     if (c > 0) remainByTier.set(t, c);
     remR %= t;
@@ -71,15 +79,17 @@ export function CharacterColumn({
 
   const rows: React.ReactNode[] = [];
 
-  for (const t of allTiersOrder) {
-    const pCount = pairedByTier.get(t) ?? 0;
-    const rCount = remainByTier.get(t) ?? 0;
-    if (pCount === 0 && rCount === 0) continue;
+  // Render rows in ascending order so Satuan (x1) appears at top
+  for (const t of RENDER_ORDER) {
+    const count = chipMap
+      ? chipMap.get(t) ?? 0
+      : (pairedByTier.get(t) ?? 0) + (remainByTier.get(t) ?? 0);
+
+    if (count === 0) continue;
 
     const tierPlace  = TIER_TO_PLACE[t];
     const tierDone   = isTierDone(t);
     const tierActive = isTierActive(t);
-    const doneInTier = neutralised.get(t) ?? 0;
     const tierVal    = t.toLocaleString("id-ID");
 
     rows.push(
@@ -95,106 +105,82 @@ export function CharacterColumn({
                 : "text-slate-500"
             }`}
           >
-            ×{tierVal}
+            x{tierVal}
           </span>
           {tierDone && (
-            <span className="font-mono text-[7px] text-emerald-600">✓ luruh</span>
+            <span className="font-mono text-[7px] text-emerald-600">luruh</span>
           )}
-          {tierActive && !tierDone && (
+          {tierActive && !tierDone && stepPhase === "approach-wait" && (
+            <span className="font-mono text-[7px] text-orange-500 animate-pulse">
+              menunggu…
+            </span>
+          )}
+          {tierActive && !tierDone && stepPhase === "approach" && (
             <span className="font-mono text-[7px] text-amber-500 animate-pulse">
               bereaksi
             </span>
           )}
         </div>
 
-        {/* Paired characters — shown with individual react state */}
-        {pCount > 0 && (
-          <div className="flex flex-wrap justify-center gap-1 mb-0.5">
-            {Array.from({ length: Math.min(pCount, 9) }, (_, i) => {
-              const isDecomposeActiveTier =
-                stepPhase === "decompose" &&
-                activeDecomposeTier !== null &&
-                t === activeDecomposeTier;
+        {/* Chips container */}
+        <div className="flex flex-wrap justify-center gap-1">
+          {Array.from({ length: Math.min(count, 12) }, (_, i) => {
+            // During decompose, only highlight the chip being decomposed on its tier AND side
+            const isDecomposeActiveTier =
+              stepPhase === "decompose" &&
+              isDecomposeSide &&
+              activeDecomposeTier !== null &&
+              t === activeDecomposeTier;
 
-              const isGone =
-                i < doneInTier ||
-                (tierActive && i === pairInTier && !isApproach);
-              const isDimmed = tierActive && i === pairInTier && isApproach;
-              const isWaiting = !tierDone && (!tierActive || i > pairInTier);
+            const isDecomposingChip =
+              isDecomposeActiveTier && i === Math.min(count, 12) - 1;
 
-              return (
-                <div
-                  key={`${prefix}-p-${t}-${i}`}
-                  className={`w-8 h-8 shrink-0 transition-all duration-500 ${
-                    isDecomposeActiveTier
-                      ? "opacity-25 scale-90"
-                      : isGone
-                      ? "opacity-0 scale-0"
-                      : isDimmed
-                      ? "opacity-25 scale-90"
-                      : isWaiting && tierActive && i > pairInTier
-                      ? "opacity-60"
-                      : "opacity-100"
-                  }`}
-                >
-                  {sType === "ab" ? (
-                    <AntibodyCharacter
-                      type={tierPlace}
-                      uid={`${prefix}-p-${t}-${i}`}
-                    />
-                  ) : (
-                    <VirusCharacter
-                      type={tierPlace}
-                      uid={`${prefix}-p-${t}-${i}`}
-                    />
-                  )}
-                </div>
-              );
-            })}
-            {pCount > 9 && (
-              <span
-                className={`text-[8px] font-mono font-bold self-center ${
-                  sType === "ab" ? "text-blue-400" : "text-rose-400"
-                }`}
-              >
-                +{pCount - 9}
-              </span>
-            )}
-          </div>
-        )}
+            // Pair reaction visuals only apply during pair/approach-wait steps, NOT during decompose
+            const isPairPhase = stepPhase !== "decompose";
+            const isReactingChip = isPairPhase && tierActive && i === pairInTier;
+            const isGone = isReactingChip && stepPhase === "clear";
+            // Dimmed during approach (about to react) OR during approach-wait (waiting with no partner)
+            const isDimmed = isReactingChip && (stepPhase === "approach" || stepPhase === "approach-wait");
 
-        {/* Remaining characters — always full opacity */}
-        {rCount > 0 && (
-          <div className="flex flex-wrap justify-center gap-1">
-            {Array.from({ length: Math.min(rCount, 9) }, (_, i) => (
+            return (
               <div
-                key={`${prefix}-r-${t}-${i}`}
-                className="w-8 h-8 shrink-0"
+                key={`${prefix}-${t}-${i}`}
+                className={`w-8 h-8 shrink-0 transition-all duration-500 ${
+                  isDecomposingChip
+                    ? "opacity-30 scale-90 animate-pulse ring-2 ring-purple-500 rounded-full"
+                    : isGone
+                    ? "opacity-0 scale-0"
+                    : isDimmed && stepPhase === "approach-wait"
+                    ? "opacity-50 scale-95 ring-2 ring-orange-400 rounded-full animate-pulse"
+                    : isDimmed
+                    ? "opacity-25 scale-90"
+                    : "opacity-100"
+                }`}
               >
                 {sType === "ab" ? (
                   <AntibodyCharacter
                     type={tierPlace}
-                    uid={`${prefix}-r-${t}-${i}`}
+                    uid={`${prefix}-${t}-${i}`}
                   />
                 ) : (
                   <VirusCharacter
                     type={tierPlace}
-                    uid={`${prefix}-r-${t}-${i}`}
+                    uid={`${prefix}-${t}-${i}`}
                   />
                 )}
               </div>
-            ))}
-            {rCount > 9 && (
-              <span
-                className={`text-[8px] font-mono font-bold self-center ${
-                  sType === "ab" ? "text-blue-400" : "text-rose-400"
-                }`}
-              >
-                +{rCount - 9}
-              </span>
-            )}
-          </div>
-        )}
+            );
+          })}
+          {count > 12 && (
+            <span
+              className={`text-[8px] font-mono font-bold self-center ${
+                sType === "ab" ? "text-blue-400" : "text-rose-400"
+              }`}
+            >
+              +{count - 12}
+            </span>
+          )}
+        </div>
       </div>
     );
   }

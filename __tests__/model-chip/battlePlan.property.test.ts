@@ -233,21 +233,20 @@ describe("buildBattlePlan — example-based unit tests", () => {
 // CRITICAL: These tests encode the EXPECTED (correct) behavior.
 // They MUST FAIL on the unfixed code — failure confirms the bug exists.
 
-describe("buildBattlePlan — bug condition cases (UNFIXED: expected to fail)", () => {
+describe("buildBattlePlan — regression prevention (FIXED: expected to pass)", () => {
   // (123, -24): totalPos=123, totalNeg=24, smallerValue=24 → totalPairs=6 (2 tens + 4 ones)
-  // Expected order: satuan lebih dahulu, puluhan setelahnya
-  // [decompose pos-10, pair×1, pair×1, pair×1, pair×1, decompose pos-100, pair×10, pair×10]
+  // Expected order: 3 pairs at tier-1, 1 decompose tier-10, 1 pair tier-1, 1 pair tier-10, 1 decompose tier-100, 1 pair tier-10
   test("(123, -24): correct step sequence — ones first then tens, minimal decompose", () => {
     const plan = buildBattlePlan(123, -24);
     expect(plan.totalPairs).toBe(6);
     expect(plan.steps).toEqual([
+      { type: "pair", tier: 1, side: "pos" },
+      { type: "pair", tier: 1, side: "pos" },
+      { type: "pair", tier: 1, side: "pos" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
-      { type: "pair", tier: 1, side: "pos" },
-      { type: "pair", tier: 1, side: "pos" },
-      { type: "pair", tier: 1, side: "pos" },
-      { type: "decompose", tier: 100, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
+      { type: "decompose", tier: 100, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
     ]);
   });

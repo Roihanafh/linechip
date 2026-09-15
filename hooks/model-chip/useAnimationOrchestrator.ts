@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { buildBattlePlan } from "@/lib/model-chip/battlePlan";
+import { buildBattlePlan, buildInitialChipMap } from "@/lib/model-chip/battlePlan";
 import { useSound } from "@/hooks/useSound";
 import type { ModelChipState } from "./useModelChipState";
 import type { TierGroup, StepPhase, AnimMode } from "@/lib/model-chip/types";
@@ -13,6 +13,8 @@ export interface AnimationOrchestratorReturn {
   tierGroups: TierGroup[]; setTierGroups: (g: TierGroup[]) => void;
   tierIdx: number; pairInTier: number; stepPhase: StepPhase;
   neutralised: Map<1 | 10 | 100 | 1000, number>;
+  posChipMap: Map<1 | 10 | 100 | 1000, number>;
+  negChipMap: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number; setAnimSpeed: (s: number) => void;
   animMode: AnimMode; setAnimMode: (m: AnimMode) => void;
   waitingForClick: boolean; centerExiting: boolean;
@@ -40,7 +42,7 @@ function tierGroupsFromPlan(plan: BattlePlan): TierGroup[] {
       counts.set(step.tier, (counts.get(step.tier) ?? 0) + 1);
     }
   }
-  const tiers: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
+  const tiers: (1 | 10 | 100 | 1000)[] = [1, 10, 100, 1000];
   return tiers.filter(t => counts.has(t)).map(t => ({ tier: t, count: counts.get(t)! }));
 }
 
@@ -82,6 +84,8 @@ export function useAnimationOrchestrator(
   const [pairInTier, setPairInTier] = useState(0);
   const [stepPhase, setStepPhase] = useState<StepPhase>("approach");
   const [neutralised, setNeutralised] = useState<Map<1 | 10 | 100 | 1000, number>>(new Map());
+  const [posChipMap, setPosChipMap] = useState<Map<1 | 10 | 100 | 1000, number>>(new Map());
+  const [negChipMap, setNegChipMap] = useState<Map<1 | 10 | 100 | 1000, number>>(new Map());
   const [animSpeed, setAnimSpeedState] = useState(1);
   const [animMode, setAnimMode] = useState<AnimMode>("auto"); // SSR-safe default
   const [waitingForClick, setWaitingForClick] = useState(false);
@@ -141,6 +145,22 @@ export function useAnimationOrchestrator(
     if (step.type === "decompose") {
       setStepPhase("decompose");
       setWaitingForClick(false);
+    } else if (step.type === "approach-wait") {
+      // Show the waiting chip approaching with no partner — then auto-advance to decompose
+      const tgs = tierGroupsFromPlan(plan);
+      const tIdx = tgs.findIndex(g => g.tier === step.tier);
+      if (tIdx >= 0) setTierIdx(tIdx);
+      setPairInTier(0); // First remaining chip in the waiting side
+      setStepPhase("approach-wait");
+      setWaitingForClick(false);
+      if (animModeRef.current === "auto") {
+        timers.current.push(setTimeout(() => {
+          runCurrentStep(plan, idx + 1);
+        }, Math.round(1200 / animSpeedRef.current)));
+      } else {
+        pendingNextRef.current = { stepIdx: idx + 1 };
+        setWaitingForClick(true);
+      }
     } else {
       // "pair" step: compute tierIdx / pairInTier from the derived tierGroups
       const tgs = tierGroupsFromPlan(plan);
@@ -158,6 +178,14 @@ export function useAnimationOrchestrator(
     setBattlePlan(plan);
     battlePlanRef.current = plan;
     setTierGroups(tgs);
+
+    const snapBil1 = state.snapshot?.bil1 ?? state.bil1;
+    const snapBil2 = state.snapshot?.bil2 ?? state.bil2;
+    const posVal = Math.max(0, snapBil1) + Math.max(0, snapBil2);
+    const negVal = Math.max(0, -snapBil1) + Math.max(0, -snapBil2);
+    setPosChipMap(buildInitialChipMap(posVal));
+    setNegChipMap(buildInitialChipMap(negVal));
+
     playLaunch();
     state.setVizPhase("battle");
     runCurrentStep(plan, 0);
@@ -171,6 +199,8 @@ export function useAnimationOrchestrator(
     setPairInTier(0);
     setStepPhase("approach");
     setNeutralised(new Map());
+    setPosChipMap(new Map());
+    setNegChipMap(new Map());
     setWaitingForClick(false);
     setBattlePlan(null);
     setStepIdx(0);
@@ -207,6 +237,25 @@ export function useAnimationOrchestrator(
   const handleDecomposeDone = () => {
     const plan = battlePlanRef.current;
     if (!plan) return;
+
+    const currentStep = plan.steps[stepIdxRef.current];
+    if (currentStep && currentStep.type === "decompose") {
+      const targetSetter = currentStep.side === "pos" ? setPosChipMap : setNegChipMap;
+      targetSetter(prev => {
+        const next = new Map(prev);
+        const srcTier = currentStep.tier;
+        const dstTier = (srcTier / 10) as 1 | 10 | 100;
+        const srcCount = next.get(srcTier) ?? 0;
+        if (srcCount > 1) {
+          next.set(srcTier, srcCount - 1);
+        } else {
+          next.delete(srcTier);
+        }
+        next.set(dstTier, (next.get(dstTier) ?? 0) + 10);
+        return next;
+      });
+    }
+
     const nextIdx = stepIdxRef.current + 1;
 
     if (animModeRef.current === "auto") {
@@ -226,13 +275,38 @@ export function useAnimationOrchestrator(
 
     const plan = battlePlanRef.current;
     if (!plan) return;
+
+    const currentStep = plan.steps[stepIdxRef.current];
     const nextIdx = stepIdxRef.current + 1;
+
+    // Delay chipMap update so the CSS "gone" transition (500ms) fully plays out
+    // before React re-renders with a new count and re-keys the chip list.
+    // chipMap update fires at 450ms, next step fires at 600ms.
+    if (currentStep && currentStep.type === "pair") {
+      const t = currentStep.tier;
+      timers.current.push(setTimeout(() => {
+        setPosChipMap(prev => {
+          const next = new Map(prev);
+          const count = next.get(t) ?? 0;
+          if (count > 1) next.set(t, count - 1);
+          else next.delete(t);
+          return next;
+        });
+        setNegChipMap(prev => {
+          const next = new Map(prev);
+          const count = next.get(t) ?? 0;
+          if (count > 1) next.set(t, count - 1);
+          else next.delete(t);
+          return next;
+        });
+      }, 450));
+    }
 
     if (animModeRef.current === "auto") {
       timers.current.push(setTimeout(() => {
         if (nextIdx >= plan.steps.length) finishAll();
         else runCurrentStep(plan, nextIdx);
-      }, 100));
+      }, 600));
     } else {
       if (nextIdx >= plan.steps.length) {
         finishAll();
@@ -242,6 +316,7 @@ export function useAnimationOrchestrator(
       }
     }
   };
+
 
   // ── handleNextClick ───────────────────────────────────────────────────────
   const handleNextClick = () => {
@@ -273,6 +348,7 @@ export function useAnimationOrchestrator(
 
   return {
     tierGroups, setTierGroups, tierIdx, pairInTier, stepPhase, neutralised,
+    posChipMap, negChipMap,
     animSpeed, setAnimSpeed: (s) => { animSpeedRef.current = s; setAnimSpeedState(s); },
     animMode, setAnimMode, waitingForClick, centerExiting, setCenterExiting,
     handlePair, replayAnimation, handleNextClick, handlePairDone, handleReset,

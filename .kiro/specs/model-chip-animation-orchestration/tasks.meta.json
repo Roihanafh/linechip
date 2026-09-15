@@ -1,0 +1,165 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470957990
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470967829
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471034280
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958076
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470972453
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471038447
+      }
+    ],
+    "3.1 Update describe block label in `battlePlan.property.test.ts`": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958135
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471047899
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471225775
+      }
+    ],
+    "3.2 Create `battlePlanRegression.test.ts` with 11 regression cases": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958176
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471053407
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471231710
+      }
+    ],
+    "3.3 Add 7 PBT properties to `battlePlanRegression.test.ts`": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958252
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471058888
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471237788
+      }
+    ],
+    "3.4 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958289
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471242959
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471284909
+      }
+    ],
+    "3.5 Verify preservation tests still pass": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958327
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471247717
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471290846
+      }
+    ],
+    "5. Fix urutan render chip di CharacterColumn (Satuan di atas)": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958363
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470977259
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471043141
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789470958397
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471296020
+      },
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471331492
+      }
+    ],
+    "3. Fix misleading test label and create regression test suite": [
+      {
+        "executionId": "802eccd1-5af4-4454-ab22-226ecd003eb3",
+        "chatSessionId": "sess_e72b341c-9528-4e78-81f1-bdbb1770cfb7",
+        "timestamp": 1789471290975
+      }
+    ]
+  }
+}
