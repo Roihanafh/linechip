@@ -187,7 +187,7 @@ export default function GarisBilanganPage() {
             {/* Number A */}
             <div className="text-center">
               <p className="text-xs text-slate-400 mb-1.5">Bilangan 1</p>
-              <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => changeA(-1)}
                   className="w-8 h-8 bg-intblue-light text-intblue rounded-lg font-bold hover:bg-intblue hover:text-white transition-colors text-sm"
@@ -195,28 +195,41 @@ export default function GarisBilanganPage() {
                 >
                   −
                 </button>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={aStr}
-                  onChange={(e) => handleAInput(e.target.value)}
-                  onBlur={commitA}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") { commitA(); handleHitung(); }
-                    // Allow: digits, minus, backspace, delete, arrows, tab
-                    if (!/^[0-9\-]$/.test(e.key) &&
-                        !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
-                      e.preventDefault();
-                    }
-                  }}
-                  className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
-                    a >= 0
-                      ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
-                      : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
-                  }`}
-                  aria-label="Bilangan 1"
-                  maxLength={4}
-                />
+                <div className="relative">
+                  {a < 0 && (
+                    <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-lg font-black pointer-events-none select-none z-10 text-intpink">
+                      (
+                    </span>
+                  )}
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={aStr}
+                    onChange={(e) => handleAInput(e.target.value)}
+                    onBlur={commitA}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") { commitA(); handleHitung(); }
+                      // Allow: digits, minus, backspace, delete, arrows, tab
+                      if (!/^[0-9\-]$/.test(e.key) &&
+                          !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
+                      a >= 0
+                        ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
+                        : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
+                    }`}
+                    style={a < 0 ? { paddingLeft: "1.1rem", paddingRight: "1.1rem" } : undefined}
+                    aria-label="Bilangan 1"
+                    maxLength={4}
+                  />
+                  {a < 0 && (
+                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-lg font-black pointer-events-none select-none z-10 text-intpink">
+                      )
+                    </span>
+                  )}
+                </div>
                 <button
                   onClick={() => changeA(1)}
                   className="w-8 h-8 bg-intblue-light text-intblue rounded-lg font-bold hover:bg-intblue hover:text-white transition-colors text-sm"
@@ -259,27 +272,40 @@ export default function GarisBilanganPage() {
                 >
                   −
                 </button>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={bStr}
-                  onChange={(e) => handleBInput(e.target.value)}
-                  onBlur={commitB}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") { commitB(); handleHitung(); }
-                    if (!/^[0-9\-]$/.test(e.key) &&
-                        !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
-                      e.preventDefault();
-                    }
-                  }}
-                  className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
-                    b >= 0
-                      ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
-                      : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
-                  }`}
-                  aria-label="Bilangan 2"
-                  maxLength={4}
-                />
+                <div className="relative">
+                  {b < 0 && (
+                    <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-lg font-black pointer-events-none select-none z-10 text-intpink">
+                      (
+                    </span>
+                  )}
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={bStr}
+                    onChange={(e) => handleBInput(e.target.value)}
+                    onBlur={commitB}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") { commitB(); handleHitung(); }
+                      if (!/^[0-9\-]$/.test(e.key) &&
+                          !["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    className={`w-16 h-12 rounded-xl text-center font-mono font-bold text-xl border-2 outline-none transition-colors ${
+                      b >= 0
+                        ? "border-intblue bg-intblue-light text-intblue focus:ring-2 focus:ring-intblue/30"
+                        : "border-intpink bg-intpink-light text-intpink focus:ring-2 focus:ring-intpink/30"
+                    }`}
+                    style={b < 0 ? { paddingLeft: "1.1rem", paddingRight: "1.1rem" } : undefined}
+                    aria-label="Bilangan 2"
+                    maxLength={4}
+                  />
+                  {b < 0 && (
+                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-lg font-black pointer-events-none select-none z-10 text-intpink">
+                      )
+                    </span>
+                  )}
+                </div>
                 <button
                   onClick={() => changeB(1)}
                   className="w-8 h-8 bg-intblue-light text-intblue rounded-lg font-bold hover:bg-intblue hover:text-white transition-colors text-sm"

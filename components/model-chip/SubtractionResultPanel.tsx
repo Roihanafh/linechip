@@ -51,7 +51,7 @@ export function SubtractionResultPanel({
             >
               {eqBil1 >= 0
                 ? `+${eqBil1.toLocaleString("id-ID")}`
-                : eqBil1.toLocaleString("id-ID")}
+                : `(${eqBil1.toLocaleString("id-ID")})`}
             </span>
             <span className="text-slate-400 mx-2">−</span>
             <span
@@ -134,7 +134,7 @@ export function SubtractionResultPanel({
                   ? `+${remaining}`
                   : remaining === 0
                   ? "0"
-                  : remaining
+                  : `(${remaining})`
                 : "?"}
             </p>
           </div>
@@ -151,7 +151,7 @@ export function SubtractionResultPanel({
           >
             {eqBil1 >= 0
               ? `+${eqBil1.toLocaleString("id-ID")}`
-              : eqBil1.toLocaleString("id-ID")}
+              : `(${eqBil1.toLocaleString("id-ID")})`}
           </span>
           <span className="text-slate-400 mx-2">−</span>
           <span
@@ -178,7 +178,9 @@ export function SubtractionResultPanel({
             {isDone
               ? remaining > 0
                 ? `+${remaining.toLocaleString("id-ID")}`
-                : remaining.toLocaleString("id-ID")
+                : remaining < 0
+                ? `(${remaining.toLocaleString("id-ID")})`
+                : "0"
               : "?"}
           </span>
         </div>

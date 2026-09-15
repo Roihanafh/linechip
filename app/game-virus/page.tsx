@@ -289,7 +289,7 @@ export default function GameVirusPage() {
                   }
                 </div>
                 <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                  {signed(bil1Value)}
+                  {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
                 </span>
               </div>
               <span className="font-mono font-bold text-white/30 text-sm px-1">vs</span>
@@ -301,7 +301,7 @@ export default function GameVirusPage() {
                   }
                 </div>
                 <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                  {signed(bil2Value)}
+                  {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
                 </span>
               </div>
             </div>
@@ -423,7 +423,7 @@ export default function GameVirusPage() {
                     }
                   </div>
                   <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : bil1Value < 0 ? "text-rose-400" : "text-slate-600"}`}>
-                    {bil1Value !== 0 ? signed(bil1Value) : "Bil.1"}
+                    {bil1Value !== 0 ? (bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)) : "Bil.1"}
                   </span>
                 </div>
                 <div className="text-center">
@@ -440,7 +440,7 @@ export default function GameVirusPage() {
                     }
                   </div>
                   <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : bil2Value < 0 ? "text-rose-400" : "text-slate-600"}`}>
-                    {bil2Value !== 0 ? signed(bil2Value) : "Bil.2"}
+                    {bil2Value !== 0 ? (bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)) : "Bil.2"}
                   </span>
                 </div>
               </div>
@@ -480,7 +480,7 @@ export default function GameVirusPage() {
                 <p className={`font-heading font-black text-4xl mb-3 ${
                   resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"
                 }`}>
-                  {resultValue === 0 ? "0" : signed(resultValue)}
+                  {resultValue === 0 ? "0" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
                 </p>
                 {resultValue !== 0 && (
                   <div className="flex justify-center">
@@ -524,7 +524,7 @@ export default function GameVirusPage() {
                 {hasChips && (
                   <div className={`rounded-xl px-3 py-2 mb-3 text-center font-mono text-sm ${darkArena ? "bg-white/5 border border-white/10" : "bg-surface"}`}>
                     <span className={bil1Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
-                      {bil1Value !== 0 ? signed(bil1Value) : "0"}
+                      {bil1Value !== 0 ? (bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)) : "0"}
                     </span>
                     <span className={`mx-1.5 ${darkArena ? "text-slate-500" : "text-slate-400"}`}>+</span>
                     <span className={bil2Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
@@ -582,14 +582,16 @@ export default function GameVirusPage() {
           <div className="bg-white rounded-2xl border border-border shadow-sm p-5 mb-5">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3 text-center">Persamaan Lengkap</p>
             <div className="text-center font-mono flex items-baseline justify-center gap-2 flex-wrap">
-              <span className={`font-bold text-xl ${bil1Value >= 0 ? "text-intblue" : "text-intpink"}`}>{signed(bil1Value)}</span>
+              <span className={`font-bold text-xl ${bil1Value >= 0 ? "text-intblue" : "text-intpink"}`}>
+                {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
+              </span>
               <span className="text-slate-400 text-xl">+</span>
               <span className={`font-bold text-xl ${bil2Value >= 0 ? "text-intblue" : "text-intpink"}`}>
                 {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
               </span>
               <span className="text-slate-400 text-xl">=</span>
               <span className={`font-bold text-2xl ${resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"}`}>
-                {resultValue === 0 ? "0 ✓" : signed(resultValue)}
+                {resultValue === 0 ? "0 ✓" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
               </span>
             </div>
           </div>

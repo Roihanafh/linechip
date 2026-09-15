@@ -25,7 +25,7 @@ export function ResultPanel({ eqBil1, eqBil2, remaining, vizPhase, pairs }: Resu
         <div>
           <p className="text-sm font-medium text-slate-700 mb-1">
             <span className={`font-mono font-bold ${eqBil1 >= 0 ? "text-intblue" : "text-intpink"}`}>
-              {eqBil1 >= 0 ? `+${eqBil1.toLocaleString("id-ID")}` : eqBil1.toLocaleString("id-ID")}
+              {eqBil1 >= 0 ? `+${eqBil1.toLocaleString("id-ID")}` : `(${eqBil1.toLocaleString("id-ID")})`}
             </span>
             <span className="text-slate-400 mx-2">+</span>
             <span className={`font-mono font-bold ${eqBil2 >= 0 ? "text-intblue" : "text-intpink"}`}>
@@ -92,7 +92,7 @@ export function ResultPanel({ eqBil1, eqBil2, remaining, vizPhase, pairs }: Resu
                   ? `+${remaining}`
                   : remaining === 0
                   ? "0"
-                  : remaining
+                  : `(${remaining})`
                 : "?"}
             </p>
           </div>
@@ -102,7 +102,7 @@ export function ResultPanel({ eqBil1, eqBil2, remaining, vizPhase, pairs }: Resu
       {(eqBil1 !== 0 || eqBil2 !== 0) && (
         <div className="bg-surface rounded-xl p-3 text-center font-mono text-sm mb-4">
           <span className={`font-bold ${eqBil1 >= 0 ? "text-intblue" : "text-intpink"}`}>
-            {eqBil1 >= 0 ? `+${eqBil1.toLocaleString("id-ID")}` : eqBil1.toLocaleString("id-ID")}
+            {eqBil1 >= 0 ? `+${eqBil1.toLocaleString("id-ID")}` : `(${eqBil1.toLocaleString("id-ID")})`}
           </span>
           <span className="text-slate-400 mx-2">+</span>
           <span className={`font-bold ${eqBil2 >= 0 ? "text-intblue" : "text-intpink"}`}>
@@ -123,7 +123,9 @@ export function ResultPanel({ eqBil1, eqBil2, remaining, vizPhase, pairs }: Resu
             {isDone
               ? remaining > 0
                 ? `+${remaining.toLocaleString("id-ID")}`
-                : remaining.toLocaleString("id-ID")
+                : remaining < 0
+                ? `(${remaining.toLocaleString("id-ID")})`
+                : "0"
               : "?"}
           </span>
         </div>

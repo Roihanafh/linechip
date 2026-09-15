@@ -156,17 +156,29 @@ export function SubtractionInputPanel({
           {/* Row: inputs */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             {/* Bil1 input — tidak berubah */}
-            <input
-              type="number"
-              min={-9999}
-              max={9999}
-              value={bil1 === 0 ? "" : bil1}
-              placeholder="0"
-              aria-label="Minuend: masukkan bilangan bulat antara -9999 dan 9999"
-              onChange={(e) => onBil1Change(e.target.value)}
-              readOnly={vizPhase !== "idle"}
-              className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
-            />
+            <div className="relative">
+              {bil1 < 0 && (
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  (
+                </span>
+              )}
+              <input
+                type="number"
+                min={-9999}
+                max={9999}
+                value={bil1 === 0 ? "" : bil1}
+                placeholder="0"
+                aria-label="Minuend: masukkan bilangan bulat antara -9999 dan 9999"
+                onChange={(e) => onBil1Change(e.target.value)}
+                readOnly={vizPhase !== "idle"}
+                className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl ${bil1 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
+              />
+              {bil1 < 0 && (
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  )
+                </span>
+              )}
+            </div>
 
             {/* Operator — berubah dari − ke + saat konversi selesai */}
             <div className="flex flex-col items-center justify-center w-8 shrink-0 gap-0.5">
@@ -194,6 +206,11 @@ export function SubtractionInputPanel({
                 isTransforming ? `input-flip ${glowClass}` : ""
               }`}
             >
+              {displayedBil2 < 0 && (
+                <span className={`absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2Anim.isNeg ? "text-intpink" : "text-intblue"}`}>
+                  (
+                </span>
+              )}
               <input
                 type="number"
                 min={-9999}
@@ -203,12 +220,17 @@ export function SubtractionInputPanel({
                 aria-label="Pengurang: masukkan bilangan bulat antara -9999 dan 9999"
                 onChange={(e) => onBil2Change(e.target.value)}
                 readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p2Anim.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black outline-none text-center transition-colors duration-300 ${
+                className={`w-full border-2 ${p2Anim.inputBorder} focus:bg-white rounded-xl ${displayedBil2 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black outline-none text-center transition-colors duration-300 ${
                   showConverted ? `${p2Anim.inputColor} ${
                     p2Anim.isPos ? "bg-intblue-light/60" : p2Anim.isNeg ? "bg-intpink-light/60" : ""
                   } value-pop` : p2Anim.inputColor
                 }`}
               />
+              {displayedBil2 < 0 && (
+                <span className={`absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2Anim.isNeg ? "text-intpink" : "text-intblue"}`}>
+                  )
+                </span>
+              )}
 
               {/* Overlay badge "DIBALIK" saat transformasi aktif */}
               {isTransforming && (

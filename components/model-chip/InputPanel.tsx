@@ -57,29 +57,55 @@ export function InputPanel({
 
           {/* Baris input + operator */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <input
-              type="number"
-              min={-9999}
-              max={9999}
-              value={bil1 === 0 ? "" : bil1}
-              placeholder="0"
-              onChange={(e) => onBil1Change(e.target.value)}
-              readOnly={vizPhase !== "idle"}
-              className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
-            />
+            {/* bil1 wrapper */}
+            <div className="relative">
+              {bil1 < 0 && (
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  (
+                </span>
+              )}
+              <input
+                type="number"
+                min={-9999}
+                max={9999}
+                value={bil1 === 0 ? "" : bil1}
+                placeholder="0"
+                onChange={(e) => onBil1Change(e.target.value)}
+                readOnly={vizPhase !== "idle"}
+                className={`w-full border-2 ${p1.inputBorder} focus:bg-white rounded-xl ${bil1 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black ${p1.inputColor} outline-none transition-colors duration-300 text-center`}
+              />
+              {bil1 < 0 && (
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  )
+                </span>
+              )}
+            </div>
             <div className="flex items-center justify-center w-8 shrink-0">
               <span className="text-slate-300 font-bold text-2xl select-none">+</span>
             </div>
-            <input
-              type="number"
-              min={-9999}
-              max={9999}
-              value={bil2 === 0 ? "" : bil2}
-              placeholder="0"
-              onChange={(e) => onBil2Change(e.target.value)}
-              readOnly={vizPhase !== "idle"}
-              className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl px-3 py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
-            />
+            {/* bil2 wrapper */}
+            <div className="relative">
+              {bil2 < 0 && (
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  (
+                </span>
+              )}
+              <input
+                type="number"
+                min={-9999}
+                max={9999}
+                value={bil2 === 0 ? "" : bil2}
+                placeholder="0"
+                onChange={(e) => onBil2Change(e.target.value)}
+                readOnly={vizPhase !== "idle"}
+                className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl ${bil2 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black ${p2.inputColor} outline-none transition-colors duration-300 text-center`}
+              />
+              {bil2 < 0 && (
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 text-intpink">
+                  )
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Baris subtitle */}
