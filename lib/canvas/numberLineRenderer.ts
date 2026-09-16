@@ -102,6 +102,17 @@ export function computeTickLayout(
  * Positive ticks → intblue; negative ticks → intpink; zero → slate-900 (tickZero).
  * The zero tick mark is taller than the rest.
  */
+export interface GridAnimProgress {
+  p1Progress?: number;
+  p2Progress?: number;
+}
+
+const easeOutBack = (t: number): number => {
+  const c1 = 1.75;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
+
 export function drawNumberLineGrid(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -110,10 +121,16 @@ export function drawNumberLineGrid(
   num1: number,
   result: number,
   isIdle: boolean,
+  num2?: number,
+  operation?: '+' | '-',
+  animProgress?: GridAnimProgress,
 ): void {
   const lineY = LAYOUT.lineY;
   const left  = LAYOUT.padding;
   const right = canvas.width - LAYOUT.padding;
+
+  const p1Prog = animProgress?.p1Progress ?? 1;
+  const p2Prog = animProgress?.p2Progress ?? 1;
 
   // ── Horizontal line ────────────────────────────────────────────────────
   const gradient = ctx.createLinearGradient(left, lineY, right, lineY);
@@ -148,62 +165,277 @@ export function drawNumberLineGrid(
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // ── Tick marks & labels ────────────────────────────────────────────────
+  // ── Identify Key Stop Ticks & Standard Ticks ───────────────────────────
+  // Key stops: 0 (Start), num1 (Stop 1), result (Stop 2 / Result)
+  interface KeyBadge {
+    tick: number;
+    x: number;
+    label: string;
+    color: string;
+    isZero: boolean;
+    isNum1: boolean;
+    isResult: boolean;
+    badgeWidth: number;
+    badgeY: number;
+    popProgress: number; // 0..1
+  }
+
+  const keyBadges: KeyBadge[] = [];
+
+  // Helper to determine key badge color
+  const getKeyColor = (t: number, isNum1Val: boolean, isResVal: boolean) => {
+    if (isResVal) {
+      if (num2 !== undefined && operation !== undefined) {
+        return derivePhase2Color(num2, operation);
+      }
+      return t >= 0 ? COLORS.intblue : COLORS.intpink;
+    }
+    if (isNum1Val) {
+      return t >= 0 ? COLORS.intblue : COLORS.intpink;
+    }
+    return COLORS.tickZero; // #0F172A
+  };
+
+  // Collect key ticks (in uniqueTicks)
+  ctx.save();
+  ctx.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
   uniqueTicks.forEach((tick) => {
     const x = tickPositions.get(tick);
-    if (x === undefined) return;
-    // Clip ticks that overflow the usable area slightly
-    if (x < left - 12 || x > right + 12) return;
+    if (x === undefined || x < left - 12 || x > right + 12) return;
 
     const isZero   = tick === 0;
-    const isNum1   = !isIdle && tick === num1 && tick !== result;
-    const isResult = !isIdle && tick === result;
+    const isNum1Val   = !isIdle && tick === num1;
+    const isResVal    = !isIdle && tick === result;
 
-    // Tick mark height
-    const halfH = isZero ? 12 : isResult || isNum1 ? 9 : 6;
+    if (isZero || isNum1Val || isResVal) {
+      const label = tick.toString();
+      const textWidth = ctx.measureText(label).width;
+      const badgeWidth = Math.max(30, textWidth + 18);
+      const color = getKeyColor(tick, isNum1Val, isResVal);
 
-    ctx.save();
-    if (isZero) {
-      ctx.strokeStyle = COLORS.tickZero;
-      ctx.lineWidth = 2.5;
-    } else if (isResult) {
-      ctx.strokeStyle = tick >= 0 ? COLORS.intblue : COLORS.intpink;
-      ctx.lineWidth = 2;
-    } else if (isNum1) {
-      ctx.strokeStyle = tick >= 0 ? COLORS.intblue : COLORS.intpink;
-      ctx.lineWidth = 1.5;
-    } else {
+      // Determine popProgress (appearance trigger as car arrives)
+      let popProgress = 1;
+      if (!isIdle) {
+        if (isResVal) {
+          // Second stop badge: appears when car arrives in Phase 2
+          popProgress = p2Prog < 0.75 ? 0 : (p2Prog - 0.75) / 0.25;
+        } else if (isNum1Val && !isZero) {
+          // First stop badge: appears when car arrives in Phase 1
+          if (p2Prog > 0) popProgress = 1;
+          else popProgress = p1Prog < 0.75 ? 0 : (p1Prog - 0.75) / 0.25;
+        }
+      }
+
+      // Avoid duplicates at same tick value (prefer Result > Num1 > Zero)
+      const existing = keyBadges.find((kb) => kb.tick === tick);
+      if (existing) {
+        if (isResVal) {
+          existing.isResult = true;
+          existing.color = color;
+          existing.popProgress = popProgress;
+        } else if (isNum1Val) {
+          existing.isNum1 = true;
+        }
+      } else {
+        keyBadges.push({
+          tick,
+          x,
+          label,
+          color,
+          isZero,
+          isNum1: isNum1Val,
+          isResult: isResVal,
+          badgeWidth,
+          badgeY: lineY + 28,
+          popProgress,
+        });
+      }
+    }
+  });
+  ctx.restore();
+
+  // Sort key badges by X coordinate to calculate staggering
+  keyBadges.sort((a, b) => a.x - b.x);
+
+  // Stagger overlapping key badges vertically so key badges never collide
+  for (let i = 1; i < keyBadges.length; i++) {
+    const prev = keyBadges[i - 1];
+    const curr = keyBadges[i];
+    const minDist = (prev.badgeWidth + curr.badgeWidth) / 2 + 8;
+    if (curr.x - prev.x < minDist) {
+      curr.badgeY = prev.badgeY === lineY + 28 ? lineY + 56 : lineY + 28;
+    }
+  }
+
+  // Active key ranges (only badges that are appearing or visible popProgress > 0)
+  const activeKeyRanges = keyBadges
+    .filter((kb) => kb.popProgress > 0)
+    .map((kb) => ({
+      minX: kb.x - kb.badgeWidth / 2 - 8,
+      maxX: kb.x + kb.badgeWidth / 2 + 8,
+    }));
+
+  const drawnGridLabelRanges: Array<{ minX: number; maxX: number }> = [];
+
+  // ── Render Ticks & Labels ──────────────────────────────────────────────
+  uniqueTicks.forEach((tick) => {
+    const x = tickPositions.get(tick);
+    if (x === undefined || x < left - 12 || x > right + 12) return;
+
+    const keyBadge = keyBadges.find((kb) => kb.tick === tick);
+
+    if (!keyBadge) {
+      // ── Standard Grid Tick ──
+      ctx.save();
       ctx.strokeStyle = COLORS.tick;
       ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x, lineY - 5);
+      ctx.lineTo(x, lineY + 5);
+      ctx.stroke();
+      ctx.restore();
+
+      // Check collision for standard grid tick label
+      ctx.save();
+      ctx.font = '11px "Plus Jakarta Sans", sans-serif';
+      const textWidth = ctx.measureText(tick.toString()).width;
+      const labelMinX = x - textWidth / 2 - 6;
+      const labelMaxX = x + textWidth / 2 + 6;
+
+      const collidesWithKey = activeKeyRanges.some(
+        (kr) => labelMinX < kr.maxX && labelMaxX > kr.minX
+      );
+      const collidesWithOtherGrid = drawnGridLabelRanges.some(
+        (gr) => labelMinX < gr.maxX && labelMaxX > gr.minX
+      );
+
+      if (!collidesWithKey && !collidesWithOtherGrid) {
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = tick > 0 ? COLORS.intblue : tick < 0 ? COLORS.intpink : COLORS.tickZero;
+        ctx.globalAlpha = 0.75;
+        ctx.fillText(tick.toString(), x, lineY + 22);
+        drawnGridLabelRanges.push({ minX: labelMinX, maxX: labelMaxX });
+      }
+      ctx.restore();
     }
+  });
+
+  // ── Render Key Stop Badges ("Lebih Show" with Pop & Ripple Anim) ───────
+  keyBadges.forEach((kb) => {
+    const { x, badgeY, badgeWidth: bw, label, color, popProgress } = kb;
+    if (popProgress <= 0) return;
+
+    const popT = Math.min(1, Math.max(0, popProgress));
+    const scale = easeOutBack(popT);
+    const alpha = Math.min(1, popT * 2.5);
+
+    const bh = 22;
+    const br = 11;
+
+    ctx.save();
+
+    // 1. Shockwave Ripple ring on line axis when popping
+    if (popT > 0 && popT < 1.0) {
+      const rippleRadius = 5 + popT * 20;
+      const rippleAlpha = (1 - popT) * 0.8;
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5 * (1 - popT);
+      ctx.globalAlpha = rippleAlpha;
+      ctx.beginPath();
+      ctx.arc(x, lineY, rippleRadius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 2. Taller tick line through the axis
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.moveTo(x, lineY - halfH);
-    ctx.lineTo(x, lineY + halfH);
+    ctx.moveTo(x, lineY - 10);
+    ctx.lineTo(x, lineY + 10);
     ctx.stroke();
     ctx.restore();
 
-    // Label
-    const labelY = lineY + halfH + 14;
+    // 3. Glowing pin circle cap right on the line axis (with elastic scale)
     ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.translate(x, lineY);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = alpha;
 
-    if (isZero) {
-      ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = COLORS.tickZero;
-    } else if (tick > 0) {
-      ctx.font = isResult || isNum1
-        ? 'bold 12px "Plus Jakarta Sans", sans-serif'
-        : '11px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = COLORS.intblue;
-    } else {
-      ctx.font = isResult || isNum1
-        ? 'bold 12px "Plus Jakarta Sans", sans-serif'
-        : '11px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = COLORS.intpink;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(0, 0, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    // 4. Pointer line down to badge if staggered
+    if (badgeY > lineY + 28) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(x, lineY + 10);
+      ctx.lineTo(x, badgeY - bh / 2);
+      ctx.stroke();
+      ctx.restore();
     }
 
-    ctx.fillText(tick.toString(), x, labelY);
+    // 5. Pill Badge Background & Text with Elastic Spring Pop Animation
+    ctx.save();
+    ctx.translate(x, badgeY);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = alpha;
+
+    // Pill Background
+    ctx.shadowColor = color;
+    ctx.shadowBlur = kb.isResult ? 12 : 6;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(-bw / 2, -bh / 2, bw, bh, br);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // White border outline for result badge to make it pop
+    if (kb.isResult) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Top triangle notch for non-staggered badge
+    if (badgeY <= lineY + 28) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(-4, -bh / 2);
+      ctx.lineTo(4, -bh / 2);
+      ctx.lineTo(0, -bh / 2 - 4);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Badge Text Label
+    ctx.font = kb.isResult
+      ? 'bold 13px "Plus Jakarta Sans", sans-serif'
+      : 'bold 12px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(label, 0, 0);
+
+    ctx.restore();
     ctx.restore();
   });
 }

@@ -151,14 +151,15 @@ describe("buildBattlePlan — example-based unit tests", () => {
   // Test case: bil1=+10, bil2=-1
   // totalPos=10, totalNeg=1, smallerValue=1 → totalPairs=1
   // posAvail:{10:1} negAvail:{1:1}
-  // Iter1: pos(10) > neg(1) → decompose(10,"pos"), posAvail→{1:10}
+  // Iter1: pos(10) > neg(1) → approach-wait(1,"neg"), decompose(10,"pos"), posAvail→{1:10}
   // Iter2: pos(1) == neg(1) → pair(1,"pos"), done
   test("bil1=+10, bil2=-1: decompose tens then pair ones", () => {
     const plan = buildBattlePlan(10, -1);
     expect(plan.totalPairs).toBe(1);
-    expect(plan.steps).toHaveLength(2);
-    expect(plan.steps[0]).toEqual({ type: "decompose", tier: 10, side: "pos" });
-    expect(plan.steps[1]).toEqual({ type: "pair", tier: 1, side: "pos" });
+    expect(plan.steps).toHaveLength(3);
+    expect(plan.steps[0]).toEqual({ type: "approach-wait", tier: 1, side: "neg" });
+    expect(plan.steps[1]).toEqual({ type: "decompose", tier: 10, side: "pos" });
+    expect(plan.steps[2]).toEqual({ type: "pair", tier: 1, side: "pos" });
   });
 
   // Test case: bil1=+11, bil2=-1
@@ -177,14 +178,15 @@ describe("buildBattlePlan — example-based unit tests", () => {
   // Test case: bil1=+100, bil2=-10
   // totalPos=100, totalNeg=10, smallerValue=10 → totalPairs=1
   // posAvail:{100:1} negAvail:{10:1}
-  // Iter1: pos(100) > neg(10) → decompose(100,"pos"), posAvail→{10:10}
+  // Iter1: pos(100) > neg(10) → approach-wait(10,"neg"), decompose(100,"pos"), posAvail→{10:10}
   // Iter2: pos(10) == neg(10) → pair(10,"pos"), done
   test("bil1=+100, bil2=-10: decompose hundreds then pair tens", () => {
     const plan = buildBattlePlan(100, -10);
     expect(plan.totalPairs).toBe(1);
-    expect(plan.steps).toHaveLength(2);
-    expect(plan.steps[0]).toEqual({ type: "decompose", tier: 100, side: "pos" });
-    expect(plan.steps[1]).toEqual({ type: "pair", tier: 10, side: "pos" });
+    expect(plan.steps).toHaveLength(3);
+    expect(plan.steps[0]).toEqual({ type: "approach-wait", tier: 10, side: "neg" });
+    expect(plan.steps[1]).toEqual({ type: "decompose", tier: 100, side: "pos" });
+    expect(plan.steps[2]).toEqual({ type: "pair", tier: 10, side: "pos" });
   });
 
   // Test case: bil1=+10, bil2=-10 (tier match — no decompose needed)
@@ -231,7 +233,6 @@ describe("buildBattlePlan — example-based unit tests", () => {
 // Feature: battle-plan-decompose-order, Property 1: Bug Condition
 // Validates: Requirements 1.1, 1.2, 1.3, 1.4
 // CRITICAL: These tests encode the EXPECTED (correct) behavior.
-// They MUST FAIL on the unfixed code — failure confirms the bug exists.
 
 describe("buildBattlePlan — regression prevention (FIXED: expected to pass)", () => {
   // (123, -24): totalPos=123, totalNeg=24, smallerValue=24 → totalPairs=6 (2 tens + 4 ones)
@@ -243,21 +244,25 @@ describe("buildBattlePlan — regression prevention (FIXED: expected to pass)", 
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
+      { type: "approach-wait", tier: 10, side: "neg" },
       { type: "decompose", tier: 100, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
     ]);
   });
 
   // (100, -1): totalPos=100, totalNeg=1, smallerValue=1 → totalPairs=1
-  // [decompose pos-100, decompose pos-10, pair×1]
+  // [approach-wait, decompose pos-100, approach-wait, decompose pos-10, pair×1]
   test("(100, -1): two decompose steps then one pair, no excess decompose", () => {
     const plan = buildBattlePlan(100, -1);
     expect(plan.totalPairs).toBe(1);
     expect(plan.steps).toEqual([
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 100, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
     ]);
@@ -278,11 +283,12 @@ describe("buildBattlePlan — regression prevention (FIXED: expected to pass)", 
   });
 
   // (100, -10): totalPos=100, totalNeg=10, smallerValue=10 → totalPairs=1
-  // [decompose pos-100, pair×10]
+  // [approach-wait, decompose pos-100, pair×1]
   test("(100, -10): one decompose then one pair, no excess decompose", () => {
     const plan = buildBattlePlan(100, -10);
     expect(plan.totalPairs).toBe(1);
     expect(plan.steps).toEqual([
+      { type: "approach-wait", tier: 10, side: "neg" },
       { type: "decompose", tier: 100, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
     ]);

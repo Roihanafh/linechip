@@ -21,12 +21,13 @@ describe("buildBattlePlan — regression suite", () => {
   // Case 2: buildBattlePlan(11, -2)
   // totalPos=11, totalNeg=2, smallerValue=2, largerValue=11
   // pos: {10:1, 1:1}, neg: {1:2}
-  // tier-1 direct pair 1 → decompose pos-10 → pair 1
+  // tier-1 direct pair 1 → approach-wait neg-1 → decompose pos-10 → pair 1
   test("(11, -2): totalPairs=2, pair×1 then decompose pos-10 then pair×1", () => {
     const plan = buildBattlePlan(11, -2);
     expect(plan.totalPairs).toBe(2);
     expect(plan.steps).toEqual([
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
     ]);
@@ -49,7 +50,7 @@ describe("buildBattlePlan — regression suite", () => {
   // Case 4: buildBattlePlan(43, -28)
   // totalPos=43, totalNeg=28, smallerValue=28, largerValue=43
   // pos: {10:4, 1:3}, neg: {10:2, 1:8}
-  // tier-1 direct pair×3 → decompose pos-10 → pair×5
+  // tier-1 direct pair×3 → approach-wait neg-1 → decompose pos-10 → pair×5
   // tier-10 direct pair×2
   test("(43, -28): totalPairs=10, [pair-1×3, decompose-10, pair-1×5, pair-10×2]", () => {
     const plan = buildBattlePlan(43, -28);
@@ -58,6 +59,7 @@ describe("buildBattlePlan — regression suite", () => {
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
@@ -71,8 +73,8 @@ describe("buildBattlePlan — regression suite", () => {
 
   // Case 5: buildBattlePlan(352, -178)
   // totalPos=352={100:3,10:5,1:2}, totalNeg=178={100:1,10:7,1:8}
-  // tier-1 direct pair×2 → decompose-10 → pair×6
-  // tier-10 direct pair×4 → decompose-100 → pair×3
+  // tier-1 direct pair×2 → approach-wait neg-1 → decompose-10 → pair×6
+  // tier-10 direct pair×4 → approach-wait neg-10 → decompose-100 → pair×3
   // tier-100 direct pair×1
   test("(352, -178): totalPairs=16, correct step sequence with ascending tiers", () => {
     const plan = buildBattlePlan(352, -178);
@@ -80,6 +82,7 @@ describe("buildBattlePlan — regression suite", () => {
     expect(plan.steps).toEqual([
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
@@ -91,6 +94,7 @@ describe("buildBattlePlan — regression suite", () => {
       { type: "pair", tier: 10, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
+      { type: "approach-wait", tier: 10, side: "neg" },
       { type: "decompose", tier: 100, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
       { type: "pair", tier: 10, side: "pos" },
@@ -101,7 +105,7 @@ describe("buildBattlePlan — regression suite", () => {
 
   // Case 6: buildBattlePlan(4002, -1587)
   // totalPos=4002={1000:4, 1:2}, totalNeg=1587={1000:1,100:5,10:8,1:7}
-  // tier-1 direct pair×2 → decompose-1000 → decompose-100 → decompose-10 → pair×5
+  // tier-1 direct pair×2 → approach-wait neg-1 → decompose-1000 → approach-wait neg-1 → decompose-100 → approach-wait neg-1 → decompose-10 → pair×5
   // tier-10 direct pair×8
   // tier-100 direct pair×5
   // tier-1000 direct pair×1
@@ -111,8 +115,11 @@ describe("buildBattlePlan — regression suite", () => {
     expect(plan.steps).toEqual([
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 1000, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 100, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "neg" },
       { type: "decompose", tier: 10, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
       { type: "pair", tier: 1, side: "pos" },
@@ -151,12 +158,13 @@ describe("buildBattlePlan — regression suite", () => {
   // Case 8: buildBattlePlan(-11, 2)
   // totalPos=2, totalNeg=11, smallerSide=pos, largerSide=neg
   // pos: {1:2}, neg: {10:1, 1:1}
-  // tier-1 direct pair 1 → decompose neg-10 → pair 1
+  // tier-1 direct pair 1 → approach-wait pos-1 → decompose neg-10 → pair 1
   test("(-11, 2): totalPairs=2, pair×1 then decompose neg-10 then pair×1", () => {
     const plan = buildBattlePlan(-11, 2);
     expect(plan.totalPairs).toBe(2);
     expect(plan.steps).toEqual([
       { type: "pair", tier: 1, side: "pos" },
+      { type: "approach-wait", tier: 1, side: "pos" },
       { type: "decompose", tier: 10, side: "neg" },
       { type: "pair", tier: 1, side: "pos" },
     ]);
@@ -165,11 +173,12 @@ describe("buildBattlePlan — regression suite", () => {
   // Case 9: buildBattlePlan(1, -10)
   // totalPos=1, totalNeg=10, smallerSide=pos, largerSide=neg
   // largerAvail from 10: {10:1}; anchorGroups=[{tier:1,count:1}]
-  // tier-1 need 1: avail[1]=0<1 → decompose neg-10 → avail={1:10}; 10>=1 → pair×1
+  // tier-1 need 1: avail[1]=0<1 → approach-wait pos-1 → decompose neg-10 → avail={1:10}; 10>=1 → pair×1
   test("(1, -10): totalPairs=1, decompose neg-10 then pair×1 (neg side decomposes)", () => {
     const plan = buildBattlePlan(1, -10);
     expect(plan.totalPairs).toBe(1);
     expect(plan.steps).toEqual([
+      { type: "approach-wait", tier: 1, side: "pos" },
       { type: "decompose", tier: 10, side: "neg" },
       { type: "pair", tier: 1, side: "pos" },
     ]);

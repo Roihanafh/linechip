@@ -40,28 +40,52 @@ interface NumberLineCanvasProps {
   onResult?: (result: number) => void;
 }
 
-// ─── Tick layout ─────────────────────────────────────────────────────────────
+export function getStepSize(range: number): number {
+  if (range <= 15) return 1;
+  if (range <= 40) return 3;
+  if (range <= 100) return 5;
+  if (range <= 200) return 10;
+  return 50;
+}
 
 function computeFixedTickLayout(n1: number, n2: number, result: number, viewportWidth: number) {
   const tickSpacing = computeAdaptiveSpacing(Math.max(1, viewportWidth));
   const isIdle = n1 === 0 && n2 === 0 && result === 0;
   let uniqueTicks: number[];
+  let unitSpacing: number;
+
   if (isIdle) {
     uniqueTicks = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+    unitSpacing = tickSpacing;
   } else {
+    const minVal = Math.min(0, n1, result);
+    const maxVal = Math.max(0, n1, result);
+    const range = maxVal - minVal;
+    const step = getStepSize(range);
+    unitSpacing = tickSpacing / step;
+
+    const startMultiple = Math.floor((minVal - step) / step) * step;
+    const endMultiple = Math.ceil((maxVal + step) / step) * step;
+
     const s = new Set<number>();
-    s.add(0); s.add(n1); s.add(result);
-    const lo = Math.min(0, n1, result) - 1;
-    const hi = Math.max(0, n1, result) + 1;
-    for (let v = lo; v <= hi; v++) s.add(v);
+    s.add(0);
+    s.add(n1);
+    s.add(result);
+
+    for (let v = startMultiple; v <= endMultiple; v += step) {
+      s.add(v);
+    }
     uniqueTicks = [...s].sort((a, b) => a - b);
   }
+
   const minTick = uniqueTicks[0];
+  const maxTick = uniqueTicks[uniqueTicks.length - 1];
   const tickPositions = new Map<number, number>();
   for (const v of uniqueTicks) {
-    tickPositions.set(v, CANVAS_PADDING + (v - minTick) * tickSpacing);
+    tickPositions.set(v, CANVAS_PADDING + (v - minTick) * unitSpacing);
   }
-  const virtualWidth = computeVirtualWidth(uniqueTicks, tickSpacing);
+  const totalSpan = maxTick - minTick;
+  const virtualWidth = Math.max(viewportWidth, CANVAS_PADDING * 2 + totalSpan * unitSpacing);
   return { tickPositions, uniqueTicks, virtualWidth, tickSpacing };
 }
 
@@ -150,7 +174,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     resizeAndLayout(0, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const { tickPositions, uniqueTicks } = computeFixedTickLayout(0, 0, 0, getVW());
-    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, 0, 0, true);
+    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, 0, 0, true, 0, "+", { p1Progress: 1, p2Progress: 1 });
   }
 
   function drawDone() {
@@ -160,7 +184,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     const op = operationRef.current, res = resultRef.current;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
-    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
+    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false, n2, op, { p1Progress: 1, p2Progress: 1 });
     const startX  = tickPositions.get(0)  ?? 0;
     const num1X   = tickPositions.get(n1) ?? startX;
     const resultX = tickPositions.get(res) ?? num1X;
@@ -185,11 +209,12 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     const canvas = canvasRef.current; const ctx = getCtx();
     if (!canvas || !ctx) return;
     const n1 = num1Ref.current, n2 = num2Ref.current, res = resultRef.current;
+    const op = operationRef.current;
     const rawT = Math.min((now - startTimeRef.current) / PHASE_DURATION, 1);
     const t = easeOutCubic(rawT);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
-    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
+    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false, n2, op, { p1Progress: rawT, p2Progress: 0 });
     const originX  = tickPositions.get(0)  ?? 0;
     const num1X    = tickPositions.get(n1) ?? originX;
     const currentX = originX + (num1X - originX) * t;
@@ -219,7 +244,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     const t = easeOutCubic(rawT);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
-    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
+    drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false, n2, op, { p1Progress: 1, p2Progress: rawT });
     const originX  = tickPositions.get(0)  ?? 0;
     const num1X    = tickPositions.get(n1) ?? originX;
     const resultX  = tickPositions.get(res) ?? num1X;

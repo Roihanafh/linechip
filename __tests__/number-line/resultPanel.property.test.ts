@@ -108,7 +108,7 @@ describe("Property 16: ResultPanel menampilkan persamaan yang benar", () => {
         fc.integer({ min: -99, max: 99 }),
         fc.integer({ min: -99, max: 99 }),
         fc.constantFrom<Operation>("+", "-"),
-        (num1, num2) => {
+        (num1, num2, _op) => {
           const result = num2 >= 0 ? num1 + num2 : num1 - Math.abs(num2);
           const parts = buildEquationParts(num1, num2, "+", result);
           const expectedColor = (n: number) =>
