@@ -11,6 +11,8 @@ const MAIN_ROUTES = new Set([
   "/",
   "/game-virus",
   "/garis-bilangan",
+  "/garis-bilangan/penjumlahan",
+  "/garis-bilangan/pengurangan",
   "/intline-run",
   "/leaderboard",
   "/materi",

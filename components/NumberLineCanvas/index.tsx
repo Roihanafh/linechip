@@ -1,18 +1,7 @@
 "use client";
 
-/**
- * components/NumberLineCanvas/index.tsx
- *
- * Reusable canvas-based number-line component with a two-phase animation:
- *   Phase 1 (1200 ms): car travels 0 → num1
- *   Phase 2 (1200 ms): car travels num1 → result (num1 op num2)
- *
- * Uses easeOutCubic easing and drawing functions from lib/canvas/numberLineRenderer.
- */
-
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  computeTickLayout,
   drawNumberLineGrid,
   drawCarTrail,
   drawCar,
@@ -21,15 +10,17 @@ import {
   drawResultDot,
   derivePhase2Color,
 } from "../../lib/canvas/numberLineRenderer";
+import { computeAdaptiveSpacing, computeVirtualWidth, computeAutoScroll } from "../../lib/number-line/scrollLogic";
+import { getPhase2FacingDirection, getPhase2MovementDirection } from "../../lib/number-line/directionLogic";
 import { loadCarImage } from "../../lib/canvas/carImage";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const PHASE_DURATION = 1200; // ms per phase
-const CANVAS_HEIGHT  = 280;  // px (fixed)
-const CAR_Y          = 65;   // y of the car
-const LINE_Y         = 100;  // y of the number line (matches LAYOUT.lineY in renderer)
-
+const PHASE_DURATION = 1200;
+const CANVAS_HEIGHT  = 280;
+const CAR_Y          = 65;
+const LINE_Y         = 100;
+const CANVAS_PADDING = 60;
 const INTBLUE = "#2F6FED";
 const INTPINK = "#EC4899";
 
@@ -45,249 +36,244 @@ interface NumberLineCanvasProps {
   num1: number;
   num2: number;
   operation: "+" | "-";
-  /** Increment to re-trigger animation. No re-trigger if value unchanged. */
   runKey?: number;
-  /** Called once when animation reaches DONE, with the computed result. */
   onResult?: (result: number) => void;
+}
+
+// ─── Tick layout ─────────────────────────────────────────────────────────────
+
+function computeFixedTickLayout(n1: number, n2: number, result: number, viewportWidth: number) {
+  const tickSpacing = computeAdaptiveSpacing(Math.max(1, viewportWidth));
+  const isIdle = n1 === 0 && n2 === 0 && result === 0;
+  let uniqueTicks: number[];
+  if (isIdle) {
+    uniqueTicks = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  } else {
+    const s = new Set<number>();
+    s.add(0); s.add(n1); s.add(result);
+    const lo = Math.min(0, n1, result) - 1;
+    const hi = Math.max(0, n1, result) + 1;
+    for (let v = lo; v <= hi; v++) s.add(v);
+    uniqueTicks = [...s].sort((a, b) => a - b);
+  }
+  const minTick = uniqueTicks[0];
+  const tickPositions = new Map<number, number>();
+  for (const v of uniqueTicks) {
+    tickPositions.set(v, CANVAS_PADDING + (v - minTick) * tickSpacing);
+  }
+  const virtualWidth = computeVirtualWidth(uniqueTicks, tickSpacing);
+  return { tickPositions, uniqueTicks, virtualWidth, tickSpacing };
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function NumberLineCanvas({
-  num1,
-  num2,
-  operation,
-  runKey,
-  onResult,
-}: NumberLineCanvasProps) {
+export default function NumberLineCanvas({ num1, num2, operation, runKey, onResult }: NumberLineCanvasProps) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef     = useRef<HTMLDivElement>(null);
 
-  // Track runKey to detect changes without re-triggering on unrelated renders
-  const prevRunKeyRef = useRef<number | undefined>(undefined);
+  // ── Pure-ref scroll — single source of truth, no React state ──────────────
+  const scrollOffsetRef  = useRef(0);
+  const maxScrollRef     = useRef(0);
+  const viewportWidthRef = useRef(800);
 
-  // Animation state refs (kept in refs to avoid stale closure issues in rAF)
-  const phaseRef        = useRef<AnimPhase>("IDLE");
-  const startTimeRef    = useRef<number>(0);
-  const animFrameRef    = useRef<number>(0);
+  // Shadow gradient display (visual only, OK to be slightly lagged)
+  const [shadowLeft,  setShadowLeft]  = useState(false);
+  const [shadowRight, setShadowRight] = useState(false);
+  const [virtualWidthState, setVirtualWidthState] = useState(800);
 
-  // Snapshot props at animation start so mid-animation prop changes don't corrupt the frame
-  const num1Ref         = useRef<number>(0);
-  const num2Ref         = useRef<number>(0);
-  const operationRef    = useRef<"+" | "-">("+" );
-  const resultRef       = useRef<number>(0);
-  const onResultRef     = useRef<((r: number) => void) | undefined>(undefined);
-  const onResultCalledRef = useRef<boolean>(false);
-
-  // ── Helpers ──────────────────────────────────────────────────────────────
-
-  function resizeCanvas() {
-    const canvas    = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    canvas.width  = container.offsetWidth - 40;
-    canvas.height = CANVAS_HEIGHT;
+  /** Apply scroll: write ref + DOM transform immediately, update shadows via React */
+  function applyScroll(offset: number) {
+    const clamped = Math.max(0, Math.min(maxScrollRef.current, offset));
+    scrollOffsetRef.current = clamped;
+    if (innerRef.current) {
+      innerRef.current.style.transform = `translateX(-${clamped}px)`;
+    }
+    setShadowLeft(clamped > 0);
+    setShadowRight(clamped < maxScrollRef.current);
   }
 
-  function getCtx(): CanvasRenderingContext2D | null {
+  // ── Animation state refs ──────────────────────────────────────────────────
+  const phaseRef           = useRef<AnimPhase>("IDLE");
+  const startTimeRef       = useRef(0);
+  const animFrameRef       = useRef(0);
+  const prevRunKeyRef      = useRef<number | undefined>(undefined);
+
+  // Snapshot props captured at animation start
+  const num1Ref            = useRef(0);
+  const num2Ref            = useRef(0);
+  const operationRef       = useRef<"+" | "-">("+");
+  const resultRef          = useRef(0);
+  const onResultRef        = useRef<((r: number) => void) | undefined>(undefined);
+  const onResultCalledRef  = useRef(false);
+
+  // Drag state
+  const isDraggingRef      = useRef(false);
+  const dragStartXRef      = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+
+  // Aria label
+  const [canvasAriaLabel, setCanvasAriaLabel] = useState("Animasi garis bilangan");
+
+  // Keep onResult callback ref current
+  useEffect(() => { onResultRef.current = onResult; }, [onResult]);
+
+  // ── Canvas helpers ────────────────────────────────────────────────────────
+
+  function getCtx() {
+    return canvasRef.current?.getContext("2d") ?? null;
+  }
+
+  function getVW() {
+    return containerRef.current?.offsetWidth ?? viewportWidthRef.current;
+  }
+
+  /** Resize canvas and update maxScroll to match new tick layout */
+  function resizeAndLayout(n1: number, n2: number, res: number) {
     const canvas = canvasRef.current;
-    if (!canvas) return null;
-    return canvas.getContext("2d");
+    if (!canvas) return;
+    const vw = getVW();
+    viewportWidthRef.current = vw;
+    const { virtualWidth } = computeFixedTickLayout(n1, n2, res, vw);
+    const totalWidth = Math.max(vw, virtualWidth);
+    canvas.width  = totalWidth;
+    canvas.height = CANVAS_HEIGHT;
+    maxScrollRef.current = Math.max(0, totalWidth - vw);
+    setVirtualWidthState(totalWidth);
   }
 
-  // ── Draw helpers that read from snapshot refs ─────────────────────────────
+  // ── Draw functions ────────────────────────────────────────────────────────
 
   function drawIdle() {
-    const canvas = canvasRef.current;
-    const ctx    = getCtx();
+    const canvas = canvasRef.current; const ctx = getCtx();
     if (!canvas || !ctx) return;
-
+    resizeAndLayout(0, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const { tickPositions, uniqueTicks } = computeTickLayout(canvas, 0, 0, 0);
+    const { tickPositions, uniqueTicks } = computeFixedTickLayout(0, 0, 0, getVW());
     drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, 0, 0, true);
   }
 
   function drawDone() {
-    const canvas = canvasRef.current;
-    const ctx    = getCtx();
+    const canvas = canvasRef.current; const ctx = getCtx();
     if (!canvas || !ctx) return;
-
-    const n1  = num1Ref.current;
-    const n2  = num2Ref.current;
-    const op  = operationRef.current;
-    const res = resultRef.current;
-
+    const n1 = num1Ref.current, n2 = num2Ref.current;
+    const op = operationRef.current, res = resultRef.current;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const { tickPositions, uniqueTicks } = computeTickLayout(canvas, n1, n2, res);
-
+    const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
     drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
-
     const startX  = tickPositions.get(0)  ?? 0;
     const num1X   = tickPositions.get(n1) ?? startX;
     const resultX = tickPositions.get(res) ?? num1X;
-
-    const phase1Color = n1 >= 0 ? INTBLUE : INTPINK;
-    const phase2Color = derivePhase2Color(n2, op);
-
-    // Full phase 1 trail (with silhouette car at num1)
-    drawCarTrail(ctx, startX, num1X, LINE_Y, phase1Color);
-    if (n1 !== 0) {
-      drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
-    }
-
-    // Full phase 2 trail
+    const p1Color = n1 >= 0 ? INTBLUE : INTPINK;
+    const p2Color = derivePhase2Color(n2, op);
+    drawCarTrail(ctx, startX, num1X, LINE_Y, p1Color);
+    if (n1 !== 0) drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
     if (res !== n1) {
-      drawCarTrail(ctx, num1X, resultX, LINE_Y, phase2Color);
-      const pill2Text = n2 >= 0
-        ? (op === "+" ? `+${n2}` : `-${n2}`)
-        : (op === "+" ? `${n2}` : `+${Math.abs(n2)}`);
-      drawSegmentPill(
-        ctx,
-        (num1X + resultX) / 2,
-        CAR_Y - 30,
-        pill2Text,
-        phase2Color,
-      );
+      drawCarTrail(ctx, num1X, resultX, LINE_Y, p2Color);
+      const dir2Move = getPhase2MovementDirection(n1, n2, op);
+      const pill = dir2Move === "right" ? `+${Math.abs(n2)}` : `−${Math.abs(n2)}`;
+      drawSegmentPill(ctx, (num1X + resultX) / 2, CAR_Y - 30, pill, p2Color);
     }
-
-    // Car parked at result position — stays visible after animation ends.
-    // Direction = whichever way phase 2 moved (or phase 1 if result === n1).
-    const resultDir = resultX >= num1X ? "right" : "left";
-    drawCar(ctx, resultX, CAR_Y, resultDir);
-
-    // Result dot drawn on the line beneath the car
+    const facingDir = n2 === 0 ? (n1 >= 0 ? "right" : "left") : getPhase2FacingDirection(n2, op);
+    drawCar(ctx, resultX, CAR_Y, facingDir);
     drawResultDot(ctx, resultX, LINE_Y);
   }
 
   // ── Animation frames ──────────────────────────────────────────────────────
 
   function animatePhase1(now: number) {
-    const canvas = canvasRef.current;
-    const ctx    = getCtx();
+    const canvas = canvasRef.current; const ctx = getCtx();
     if (!canvas || !ctx) return;
-
-    const n1  = num1Ref.current;
-    const n2  = num2Ref.current;
-    const res = resultRef.current;
-
-    const elapsed  = now - startTimeRef.current;
-    const rawT     = Math.min(elapsed / PHASE_DURATION, 1);
-    const t        = easeOutCubic(rawT);
-
+    const n1 = num1Ref.current, n2 = num2Ref.current, res = resultRef.current;
+    const rawT = Math.min((now - startTimeRef.current) / PHASE_DURATION, 1);
+    const t = easeOutCubic(rawT);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const { tickPositions, uniqueTicks } = computeTickLayout(canvas, n1, n2, res);
+    const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
     drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
-
-    const originX = tickPositions.get(0)  ?? 0;
-    const num1X   = tickPositions.get(n1) ?? originX;
+    const originX  = tickPositions.get(0)  ?? 0;
+    const num1X    = tickPositions.get(n1) ?? originX;
     const currentX = originX + (num1X - originX) * t;
-
-    const color    = n1 >= 0 ? INTBLUE : INTPINK;
-    const direction: "left" | "right" = n1 >= 0 ? "right" : "left";
-
+    // Auto scroll to keep car in viewport margin
+    const newOffset = computeAutoScroll(currentX, scrollOffsetRef.current, viewportWidthRef.current, maxScrollRef.current);
+    applyScroll(newOffset);
+    const color = n1 >= 0 ? INTBLUE : INTPINK;
+    const dir: "left" | "right" = n1 >= 0 ? "right" : "left";
     drawCarTrail(ctx, originX, currentX, LINE_Y, color);
-    drawDustParticles(ctx, currentX, CAR_Y, direction, rawT);
-    drawCar(ctx, currentX, CAR_Y, direction);
-
+    drawDustParticles(ctx, currentX, CAR_Y, dir, rawT);
+    drawCar(ctx, currentX, CAR_Y, dir);
     if (rawT < 1) {
       animFrameRef.current = requestAnimationFrame(animatePhase1);
     } else {
-      // Transition to PHASE_2
-      phaseRef.current   = "PHASE_2";
+      phaseRef.current = "PHASE_2";
       startTimeRef.current = performance.now();
       animFrameRef.current = requestAnimationFrame(animatePhase2);
     }
   }
 
   function animatePhase2(now: number) {
-    const canvas = canvasRef.current;
-    const ctx    = getCtx();
+    const canvas = canvasRef.current; const ctx = getCtx();
     if (!canvas || !ctx) return;
-
-    const n1  = num1Ref.current;
-    const n2  = num2Ref.current;
-    const op  = operationRef.current;
-    const res = resultRef.current;
-
-    const elapsed = now - startTimeRef.current;
-    const rawT    = Math.min(elapsed / PHASE_DURATION, 1);
-    const t       = easeOutCubic(rawT);
-
+    const n1 = num1Ref.current, n2 = num2Ref.current;
+    const op = operationRef.current, res = resultRef.current;
+    const rawT = Math.min((now - startTimeRef.current) / PHASE_DURATION, 1);
+    const t = easeOutCubic(rawT);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const { tickPositions, uniqueTicks } = computeTickLayout(canvas, n1, n2, res);
+    const { tickPositions, uniqueTicks } = computeFixedTickLayout(n1, n2, res, getVW());
     drawNumberLineGrid(ctx, canvas, tickPositions, uniqueTicks, n1, res, false);
-
     const originX  = tickPositions.get(0)  ?? 0;
     const num1X    = tickPositions.get(n1) ?? originX;
     const resultX  = tickPositions.get(res) ?? num1X;
     const currentX = num1X + (resultX - num1X) * t;
-
-    const phase1Color = n1 >= 0 ? INTBLUE : INTPINK;
-    const phase2Color = derivePhase2Color(n2, op);
-    const dir2: "left" | "right" = currentX >= num1X ? "right" : "left";
-
-    // Phase 1 full trail + silhouette car at num1
-    drawCarTrail(ctx, originX, num1X, LINE_Y, phase1Color);
-    if (n1 !== 0) {
-      drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
-    }
-
-    // Phase 2 trail (growing)
-    drawCarTrail(ctx, num1X, currentX, LINE_Y, phase2Color);
-
-    // Phase 2 car
-    drawDustParticles(ctx, currentX, CAR_Y, dir2, rawT);
-    drawCar(ctx, currentX, CAR_Y, dir2);
-
-    // Phase 2 pill (show label above trail midpoint)
+    // Auto scroll to keep car in viewport margin
+    const newOffset = computeAutoScroll(currentX, scrollOffsetRef.current, viewportWidthRef.current, maxScrollRef.current);
+    applyScroll(newOffset);
+    const p1Color   = n1 >= 0 ? INTBLUE : INTPINK;
+    const p2Color   = derivePhase2Color(n2, op);
+    const dir2Face  = getPhase2FacingDirection(n2, op);
+    const dir2Move  = getPhase2MovementDirection(n1, n2, op);
+    drawCarTrail(ctx, originX, num1X, LINE_Y, p1Color);
+    if (n1 !== 0) drawCar(ctx, num1X, CAR_Y, n1 >= 0 ? "right" : "left", true);
+    drawCarTrail(ctx, num1X, currentX, LINE_Y, p2Color);
+    drawDustParticles(ctx, currentX, CAR_Y, dir2Face, rawT);
+    drawCar(ctx, currentX, CAR_Y, dir2Face);
     if (rawT > 0.15) {
-      const pill2Text = n2 >= 0
-        ? (op === "+" ? `+${n2}` : `-${n2}`)
-        : (op === "+" ? `${n2}` : `+${Math.abs(n2)}`);
-      drawSegmentPill(
-        ctx,
-        (num1X + currentX) / 2,
-        CAR_Y - 30,
-        pill2Text,
-        phase2Color,
-      );
+      const pill = dir2Move === "right" ? `+${Math.abs(n2)}` : `−${Math.abs(n2)}`;
+      drawSegmentPill(ctx, (num1X + currentX) / 2, CAR_Y - 30, pill, p2Color);
     }
-
     if (rawT < 1) {
       animFrameRef.current = requestAnimationFrame(animatePhase2);
     } else {
-      // Transition to DONE
       phaseRef.current = "DONE";
       cancelAnimationFrame(animFrameRef.current);
-
+      // Keep viewport steady — user can freely drag/scroll back to 0 or num1
       drawDone();
-
       if (!onResultCalledRef.current) {
         onResultCalledRef.current = true;
         onResultRef.current?.(res);
+        const opSym = op === "+" ? "+" : "−";
+        const fmt = (n: number) => n < 0 ? `(${n})` : `${n}`;
+        setCanvasAriaLabel(`Animasi garis bilangan: ${fmt(n1)} ${opSym} ${fmt(n2)} = ${fmt(res)}`);
       }
     }
   }
 
-  // ── Start / restart animation ─────────────────────────────────────────────
+  // ── Start animation ───────────────────────────────────────────────────────
 
   function startAnimation(n1: number, n2: number, op: "+" | "-") {
     const res = op === "+" ? n1 + n2 : n1 - n2;
-
-    // Snapshot props into refs so rAF callbacks stay consistent
-    num1Ref.current      = n1;
-    num2Ref.current      = n2;
-    operationRef.current = op;
-    resultRef.current    = res;
+    // Snapshot
+    num1Ref.current = n1; num2Ref.current = n2;
+    operationRef.current = op; resultRef.current = res;
     onResultCalledRef.current = false;
-
+    // Resize canvas synchronously with correct values
+    resizeAndLayout(n1, n2, res);
+    // Bring origin (0) into viewport at start
+    const { tickPositions } = computeFixedTickLayout(n1, n2, res, getVW());
+    const originX = tickPositions.get(0) ?? 0;
+    const initOffset = computeAutoScroll(originX, 0, viewportWidthRef.current, maxScrollRef.current);
+    applyScroll(initOffset);
     cancelAnimationFrame(animFrameRef.current);
-
-    phaseRef.current     = "PHASE_1";
+    phaseRef.current = "PHASE_1";
     startTimeRef.current = performance.now();
     animFrameRef.current = requestAnimationFrame(animatePhase1);
   }
@@ -295,46 +281,32 @@ export default function NumberLineCanvas({
   // ── Resize handler ────────────────────────────────────────────────────────
 
   function handleResize() {
-    resizeCanvas();
-    const phase = phaseRef.current;
-
-    if (phase === "IDLE") {
-      drawIdle();
-    } else if (phase === "DONE") {
-      drawDone();
-    } else {
-      // Animation running — cancel and restart from phase 1
+    resizeAndLayout(num1Ref.current, num2Ref.current, resultRef.current);
+    if (phaseRef.current === "IDLE") drawIdle();
+    else if (phaseRef.current === "DONE") drawDone();
+    else {
       cancelAnimationFrame(animFrameRef.current);
       onResultCalledRef.current = false;
-      phaseRef.current     = "PHASE_1";
+      phaseRef.current = "PHASE_1";
       startTimeRef.current = performance.now();
       animFrameRef.current = requestAnimationFrame(animatePhase1);
     }
   }
 
-  // ── Main effect: run on mount + when runKey/props change ──────────────────
+  // ── Main effect ───────────────────────────────────────────────────────────
 
   useEffect(() => {
-    // Preload car image in background so it's ready for first paint
-    loadCarImage().catch(() => {/* silently fall back to circle */});
-
-    resizeCanvas();
-
+    loadCarImage().catch(() => {});
     const isIdle = num1 === 0 && num2 === 0;
-
     if (runKey === undefined || runKey === prevRunKeyRef.current || isIdle) {
-      // No animation trigger: show static idle line
+      resizeAndLayout(0, 0, 0);
       phaseRef.current = "IDLE";
       drawIdle();
     } else {
-      // runKey changed and values are non-trivial: start animation
       startAnimation(num1, num2, operation);
     }
-
     prevRunKeyRef.current = runKey;
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener("resize", handleResize);
@@ -342,19 +314,64 @@ export default function NumberLineCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runKey, num1, num2, operation]);
 
-  // Keep onResult ref current without re-running the animation effect
-  useEffect(() => {
-    onResultRef.current = onResult;
-  }, [onResult]);
+  // ── Drag-to-scroll ────────────────────────────────────────────────────────
+
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    // Don't allow drag while animating — car controls scroll during animation
+    if (phaseRef.current === "PHASE_1" || phaseRef.current === "PHASE_2") return;
+    isDraggingRef.current      = true;
+    dragStartXRef.current      = e.clientX;
+    dragStartOffsetRef.current = scrollOffsetRef.current;
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    e.currentTarget.style.cursor = "grabbing";
+  }
+
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!isDraggingRef.current) return;
+    const delta = dragStartXRef.current - e.clientX;
+    applyScroll(dragStartOffsetRef.current + delta);
+  }
+
+  function handlePointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    isDraggingRef.current = false;
+    e.currentTarget.style.cursor = "";
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "ArrowLeft")  { e.preventDefault(); applyScroll(scrollOffsetRef.current - 40); }
+    if (e.key === "ArrowRight") { e.preventDefault(); applyScroll(scrollOffsetRef.current + 40); }
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div ref={containerRef} className="w-full">
-      <canvas
-        ref={canvasRef}
-        style={{ height: `${CANVAS_HEIGHT}px`, display: "block", width: "100%" }}
-      />
+    <div className="bg-white rounded-2xl border border-border shadow-sm mb-4 overflow-hidden">
+      <div
+        ref={containerRef}
+        className="w-full relative overflow-hidden"
+        style={{ height: `${CANVAS_HEIGHT}px`, cursor: "grab" }}
+        tabIndex={0}
+        aria-label={canvasAriaLabel}
+        onKeyDown={handleKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+      >
+        {shadowLeft && (
+          <div className="absolute left-0 top-0 bottom-0 w-6 z-10 pointer-events-none"
+            style={{ background: "linear-gradient(to right, rgba(0,0,0,0.08), transparent)" }} />
+        )}
+        <div
+          ref={innerRef}
+          style={{ width: virtualWidthState, transform: "translateX(0px)" }}
+        >
+          <canvas ref={canvasRef} style={{ height: `${CANVAS_HEIGHT}px`, display: "block" }} />
+        </div>
+        {shadowRight && (
+          <div className="absolute right-0 top-0 bottom-0 w-6 z-10 pointer-events-none"
+            style={{ background: "linear-gradient(to left, rgba(0,0,0,0.08), transparent)" }} />
+        )}
+      </div>
     </div>
   );
 }

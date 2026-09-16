@@ -34,7 +34,7 @@ export default function MateriPage() {
             <p className="text-slate-500 text-sm mb-6">Pelajari penjumlahan bilangan bulat positif dan negatif melalui dua metode visualisasi yang berbeda.</p>
             <div className="space-y-3">
               {[
-                { label: "Garis Bilangan", desc: "Visualisasi pergerakan di garis bilangan", href: "/garis-bilangan", num: "1" },
+                { label: "Garis Bilangan", desc: "Visualisasi pergerakan di garis bilangan", href: "/garis-bilangan/penjumlahan", num: "1" },
                 { label: "Model Chip", desc: "Chip biru & pink untuk memahami zero-pair", href: "/model-chip", num: "2" },
               ].map((item) => (
                 <Link
@@ -65,7 +65,7 @@ export default function MateriPage() {
             <p className="text-slate-500 text-sm mb-6">Pelajari pengurangan bilangan bulat positif dan negatif melalui dua metode visualisasi yang berbeda.</p>
             <div className="space-y-3">
               {[
-                { label: "Garis Bilangan", desc: "Visualisasi arah pengurangan", href: "/garis-bilangan", num: "1" },
+                { label: "Garis Bilangan", desc: "Visualisasi arah pengurangan", href: "/garis-bilangan/pengurangan", num: "1" },
                 { label: "Model Chip", desc: "Hilangkan chip untuk kurangkan bilangan", href: "/model-chip/pengurangan", num: "2" },
               ].map((item, i) => (
                 <Link
