@@ -14,11 +14,13 @@ export interface ParticleOptions {
   spread?: number;
   /** When true, bias particle direction upward (for alliance sparks) */
   upward?: boolean;
+  /** When true, all particles are rendered as star (✦) shape */
+  star?: boolean;
 }
 
 export function useParticles(runKey: number, opts: ParticleOptions): Particle[] {
   return useMemo(() => {
-    const { colors, spread = 90, upward } = opts;
+    const { colors, spread = 90, upward, star } = opts;
     const count = Math.min(opts.count, 28);
     const particles: Particle[] = [];
     for (let i = 0; i < count; i++) {
@@ -34,7 +36,7 @@ export function useParticles(runKey: number, opts: ParticleOptions): Particle[] 
         delay: Math.random() * 90,
         color: colors[Math.floor(Math.random() * colors.length)],
         rot: Math.random() * 320 - 160,
-        star: Math.random() < 0.4,
+        star: star !== undefined ? !!star : Math.random() < 0.4,
       });
     }
     return particles;

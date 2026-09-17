@@ -1,0 +1,277 @@
+{
+  "pbtResults": {
+    "2.2 Tulis property test untuk `isAllianceCase` (Property 1)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789623785002
+    },
+    "2.4 Tulis property test untuk delay AnimSpeed (Property 2)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789624182530
+    },
+    "3.4 Tulis property test untuk penerusan prop snapshot (Property 3 & 4 & 5)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789625190282
+    }
+  },
+  "executionHistory": {
+    "1. Perluas `VizPhase` di `lib/model-chip/types.ts`": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465325
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623473298
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623584402
+      }
+    ],
+    "2.1 Tambah helper `isAllianceCase` dan perbarui `handlePair`": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465399
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623599842
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623710241
+      }
+    ],
+    "2.2 Tulis property test untuk `isAllianceCase` (Property 1)": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465475
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623715598
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623808061
+      }
+    ],
+    "2.3 Implementasi `handleAllianceDone` dan perbarui `replayAnimation`": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465542
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623715971
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623808533
+      }
+    ],
+    "2.4 Tulis property test untuk delay AnimSpeed (Property 2)": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465571
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623813383
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789624879849
+      }
+    ],
+    "3.1 Tambah prop `onAllianceDone` dan cabang render `AllianceStage`": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465600
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623813939
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789624880529
+      }
+    ],
+    "3.2 Perbarui teks header, status badge, dan accent bar untuk fase alliance": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465627
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789624884865
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625003381
+      }
+    ],
+    "3.3 Tulis unit test untuk ArenaPanel cabang alliance": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465656
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625014075
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625888431
+      }
+    ],
+    "3.4 Tulis property test untuk penerusan prop snapshot (Property 3 & 4 & 5)": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465683
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625014638
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625889370
+      }
+    ],
+    "4. Teruskan `onAllianceDone` di `app/model-chip/page.tsx`": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465714
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789624885431
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625004312
+      }
+    ],
+    "5. Checkpoint — Pastikan semua test lulus": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465740
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626014021
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626062170
+      }
+    ],
+    "6.1 Tulis unit test untuk `useAnimationOrchestrator` kasus alliance": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465767
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625015259
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625890237
+      }
+    ],
+    "6.2 Tulis property test untuk `replayAnimation` kasus alliance (Property 6)": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465813
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625906298
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626009580
+      }
+    ],
+    "7. Final checkpoint — Pastikan semua test lulus": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789623465872
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626066410
+      },
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626243148
+      }
+    ],
+    "2. Refaktor `useAnimationOrchestrator` untuk mendukung alliance": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789624880091
+      }
+    ],
+    "3. Perbarui `ArenaPanel` dengan cabang alliance": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789625889400
+      }
+    ],
+    "6. Tulis test orchestrator dan property replay": [
+      {
+        "executionId": "4ac55487-695a-4d0c-9ad5-bdee6c05d657",
+        "chatSessionId": "sess_34d39652-8fe8-49cb-916c-bacc423e85b7",
+        "timestamp": 1789626009610
+      }
+    ]
+  }
+}

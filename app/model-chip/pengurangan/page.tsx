@@ -186,6 +186,7 @@ export default function SubtractionPage() {
               negChipMap={orch.negChipMap}
               animSpeed={orch.animSpeed}
               onPairDone={orch.handlePairDone}
+              onAllianceDone={() => {}}
               stepIdx={orch.stepIdx}
               currentDecomposeStep={orch.currentDecomposeStep}
               onDecomposeDone={orch.handleDecomposeDone}

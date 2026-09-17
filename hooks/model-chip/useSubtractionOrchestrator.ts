@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useAnimationOrchestrator } from "./useAnimationOrchestrator";
 import type { SubtractionState } from "./useSubtractionState";
 import type { ModelChipState } from "./useModelChipState";
-import type { SubtractionSnapshot } from "@/lib/model-chip/subtractionTypes";
+import type { SubtractionSnapshot, VizPhaseSub } from "@/lib/model-chip/subtractionTypes";
 import type { TierGroup, AnimMode, StepPhase } from "@/lib/model-chip/types";
 import type { BattleStep } from "@/lib/model-chip/battlePlan";
 
@@ -87,7 +87,8 @@ export function useSubtractionOrchestrator(
     },
     setVizPhase: (p) => {
       // keep a ref we can call from setTimeout
-      stateRef.current.setVizPhase(p);
+      // "alliance" is never reached in the subtraction path
+      stateRef.current.setVizPhase(p as VizPhaseSub);
     },
     get snapshot() {
       const s = stateRef.current.snapshot;

@@ -27,9 +27,19 @@ export interface AnimationOrchestratorReturn {
   stepIdx: number;
   currentDecomposeStep: BattleStep | null;
   handleDecomposeDone: () => void;
+  handleAllianceDone: () => void;
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Pure helpers ─────────────────────────────────────────────────────────────
+
+/**
+ * Returns true when both values have the same sign (both positive or both
+ * negative) and neither is zero — the Alliance_Case as defined in the spec.
+ * Requirements: 2.1, 2.2
+ */
+export function isAllianceCase(bil1: number, bil2: number): boolean {
+  return (bil1 > 0 && bil2 > 0) || (bil1 < 0 && bil2 < 0);
+}
 
 /**
  * Derive TierGroup[] from the "pair" steps in a BattlePlan.
@@ -211,13 +221,26 @@ export function useAnimationOrchestrator(
 
   // ── handlePair ────────────────────────────────────────────────────────────
   const handlePair = () => {
+    // Req 2.5: ignore call if animation is already in progress
+    if (state.vizPhase !== "idle") return;
     const { bil1, bil2 } = state;
-    if (bil1 === 0 && bil2 === 0) return;
     resetAnimState();
     const tp = Math.max(0, bil1) + Math.max(0, bil2);
     const tn = Math.max(0, -bil1) + Math.max(0, -bil2);
+    if (!(tp > 0 && tn > 0)) {
+      // Either all same-sign (alliance) or one side is zero
+      if (isAllianceCase(bil1, bil2)) {
+        // Req 2.1, 2.2: same-sign, non-zero → snapshot + alliance phase
+        state.setSnapshot({ bil1, bil2 });
+        state.setVizPhase("alliance");
+      } else {
+        // Req 2.4: zero-case → done, no snapshot
+        state.setVizPhase("done");
+      }
+      return;
+    }
+    // Req 2.3: battle-case → snapshot + start battle
     state.setSnapshot({ bil1, bil2 });
-    if (!(tp > 0 && tn > 0)) { state.setVizPhase("done"); return; }
     startBattle(buildBattlePlan(bil1, bil2));
   };
 
@@ -227,6 +250,10 @@ export function useAnimationOrchestrator(
     if (!snapshot) return;
     resetAnimState();
     const { bil1, bil2 } = snapshot;
+    if (isAllianceCase(bil1, bil2)) {
+      state.setVizPhase("alliance");
+      return;
+    }
     const tp = Math.max(0, bil1) + Math.max(0, bil2);
     const tn = Math.max(0, -bil1) + Math.max(0, -bil2);
     if (!(tp > 0 && tn > 0)) { state.setVizPhase("done"); return; }
@@ -330,6 +357,15 @@ export function useAnimationOrchestrator(
     runCurrentStep(plan, nextIdx);
   };
 
+  // ── handleAllianceDone ────────────────────────────────────────────────────
+  const handleAllianceDone = () => {
+    state.setVizPhase("center");
+    setCenterExiting(false);
+    const t1 = setTimeout(() => setCenterExiting(true), Math.round(2000 / animSpeedRef.current));
+    const t2 = setTimeout(() => state.setVizPhase("done"), Math.round(2000 / animSpeedRef.current) + Math.round(500 / animSpeedRef.current));
+    timers.current.push(t1, t2);
+  };
+
   // ── handleReset ───────────────────────────────────────────────────────────
   const handleReset = () => {
     resetAnimState();
@@ -356,5 +392,6 @@ export function useAnimationOrchestrator(
     stepIdx,
     currentDecomposeStep,
     handleDecomposeDone,
+    handleAllianceDone,
   };
 }

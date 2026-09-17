@@ -7,6 +7,7 @@ import type { BattleStep } from "@/lib/model-chip/battlePlan";
 import { ArenaBattle } from "./ArenaBattle";
 import { ArenaCenter } from "./ArenaCenter";
 import { ArenaDone } from "./ArenaDone";
+import { AllianceStage } from "@/components/game/AllianceStage";
 
 export interface ArenaPanelProps {
   snapshot: { bil1: number; bil2: number }; // guaranteed non-null (parent guards)
@@ -25,6 +26,7 @@ export interface ArenaPanelProps {
   negChipMap?: Map<1 | 10 | 100 | 1000, number>;
   animSpeed: number;
   onPairDone: (neu: Map<1 | 10 | 100 | 1000, number>) => void;
+  onAllianceDone: () => void;
   stepIdx: number;
   currentDecomposeStep: BattleStep | null;
   onDecomposeDone: () => void;
@@ -33,7 +35,7 @@ export interface ArenaPanelProps {
 export function ArenaPanel({
   snapshot, vizPhase, centerExiting,
   snapTotalPos, snapTotalNeg, pairs, remaining,
-  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, posChipMap, negChipMap, animSpeed, onPairDone,
+  tierGroups, tierIdx, pairInTier, stepPhase, neutralised, posChipMap, negChipMap, animSpeed, onPairDone, onAllianceDone,
   stepIdx, currentDecomposeStep, onDecomposeDone,
 }: ArenaPanelProps) {
   const s1 = snapshot.bil1;
@@ -59,17 +61,27 @@ export function ArenaPanel({
   const curGroup = tierGroups[tierIdx] ?? null;
 
   const headerText =
-    vizPhase === "battle" ? "⚔️ Pertarungan!"
+    vizPhase === "alliance" ? "🤝 Persekutuan!"
+    : vizPhase === "battle" ? "⚔️ Pertarungan!"
     : vizPhase === "center" ? "⚡ Reaksi Netralisasi"
     : isDone ? "✓ Selesai"
     : "Arena";
 
   const statusText =
-    vizPhase === "battle" && curGroup
+    vizPhase === "alliance" ? "Bergabung"
+    : vizPhase === "battle" && curGroup
       ? `${TIER_TO_PLACE[curGroup.tier]} ${pairInTier + 1}/${curGroup.count}`
       : vizPhase === "center" ? "Bereaksi"
       : isDone ? "Selesai"
       : "Standby";
+
+  const accentBarClass = isDone
+    ? "bg-emerald-400"
+    : vizPhase === "center"
+      ? "bg-gradient-to-r from-intblue to-intpink"
+      : vizPhase === "alliance"
+        ? (snapshot?.bil1 ?? 0) > 0 ? "bg-intblue" : "bg-intpink"
+        : "bg-gradient-to-r from-intblue via-amber-400 to-intpink animate-pulse";
 
   const sharedProps = {
     s1, s2, s1Type, s2Type, s1Abs, s2Abs,
@@ -80,15 +92,11 @@ export function ArenaPanel({
   return (
     <div className={`bg-white rounded-2xl border-2 border-slate-200 shadow-md p-4 mb-4 overflow-hidden relative ${isDone ? "arena-expand" : "arena-enter"}`}>
       {/* Top accent bar */}
-      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${
-        isDone ? "bg-emerald-400"
-        : vizPhase === "center" ? "bg-gradient-to-r from-intblue to-intpink"
-        : "bg-gradient-to-r from-intblue via-amber-400 to-intpink animate-pulse"
-      }`} />
+      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${accentBarClass}`} />
 
       {/* Header */}
       <div className="flex items-center justify-between mb-3 pt-2">
-        <span className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
+        <span data-testid="arena-header" className="font-mono text-[11px] tracking-[0.8px] text-slate-500 uppercase font-bold">
           {headerText}
         </span>
         <div className="flex items-center gap-1.5">
@@ -130,6 +138,18 @@ export function ArenaPanel({
           centerExiting={centerExiting}
           s1={s1}
           s2={s2}
+        />
+      )}
+
+      {vizPhase === "alliance" && snapshot && (
+        <AllianceStage
+          bil1Value={snapshot.bil1}
+          bil2Value={snapshot.bil2}
+          faction={snapshot.bil1 > 0 ? "ab" : "ku"}
+          autoStart={true}
+          hideControls={true}
+          speed={animSpeed}
+          onComplete={onAllianceDone}
         />
       )}
 

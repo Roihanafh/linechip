@@ -1,10 +1,11 @@
 // components/game/AllianceStage.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { type CSSProperties, useEffect, useRef, useState } from "react";
 import {
   AntibodyCharacter,
   VirusCharacter,
+  CHAR_NAMES,
   dominantPlace,
   type PlaceValue,
 } from "./CharacterSVGs";
@@ -21,6 +22,9 @@ export interface AllianceStageProps {
   /** When true, speed/loop controls are hidden (game context). Default false. */
   hideControls?: boolean;
   speed?: number;
+  /** NEW: Antrian PlaceValue berikutnya untuk ditampilkan sebagai WaitingLine.
+   *  Default: [] (array kosong). */
+  queueAhead?: PlaceValue[];
 }
 
 const SZ = 96;
@@ -35,12 +39,12 @@ const ALLIANCE_LABELS: Record<AlliancePhase, string> = {
 
 type Dir = "left" | "right";
 
-function allianceOuterStyle(phase: AlliancePhase, dir: Dir, scale: number): React.CSSProperties {
+function allianceOuterStyle(phase: AlliancePhase, dir: Dir, scale: number): CSSProperties {
   const ty = -(SZ / 2);
   const idleTx     = dir === "left" ? -(SZ / 2) - 190 : 190 - SZ / 2;
   const approachTx = dir === "left" ? -(SZ / 2) - 48  : 48 - SZ / 2;
 
-  const base: React.CSSProperties = {
+  const base: CSSProperties = {
     position: "absolute", top: "50%", left: "50%", width: SZ, height: SZ,
   };
 
@@ -57,6 +61,16 @@ function allianceOuterStyle(phase: AlliancePhase, dir: Dir, scale: number): Reac
   return { ...base, transform: `translateX(${approachTx}px) translateY(${ty}px)`, animation: "none" };
 }
 
+function idleInner(isIdle: boolean, hovered: boolean, delayMs: number): CSSProperties {
+  if (hovered) {
+    return { animation: "idle-hover-pop 220ms ease-out forwards" };
+  }
+  if (isIdle) {
+    return { animation: `idle-float 3200ms ease-in-out ${delayMs}ms infinite` };
+  }
+  return {};
+}
+
 function allianceInnerAnim(phase: AlliancePhase, faction: "ab" | "ku", scale: number): string {
   if (phase === "bounce") return `bounce-merge ${Math.round(600 * scale)}ms ease-out forwards`;
   if (phase === "settled") return `settled-glow-${faction === "ab" ? "blue" : "red"} 2s ease-in-out infinite`;
@@ -71,23 +85,24 @@ function SparkTrail({ accentHex, side }: { accentHex: string; side: "left" | "ri
   return (
     <>
       {sparks.map((i) => {
-        const ox = side === "left" ? -(i * 18 + 14) : (i * 18 + 14);
-        const oy = -20 + (i % 3) * 10;
+        const ox = side === "left" ? i * 12 : side === "right" ? -(i * 12) : 0;
+        const sz = 8 + (i % 3);
         return (
           <span key={i} aria-hidden="true" style={{
             position: "absolute",
             left: "50%",
             top: "50%",
-            width: 6 - i * 0.5,
-            height: 6 - i * 0.5,
-            borderRadius: "50%",
-            background: accentHex,
-            opacity: Math.max(0, 0.7 - i * 0.12),
-            transform: `translate(${ox}px, ${oy}px)`,
-            boxShadow: `0 0 6px ${accentHex}`,
-            animation: `idle-float ${1200 + i * 200}ms ease-in-out ${i * 80}ms infinite, popup-rise ${900 + i * 150}ms ease-out ${i * 60}ms forwards`,
+            width: sz,
+            height: sz,
+            lineHeight: `${sz}px`,
+            fontSize: sz,
+            textAlign: "center",
+            background: "transparent",
+            color: accentHex,
+            transform: `translate(${ox}px, -50%)`,
+            animation: `idle-float ${1200 + i * 200}ms ease-in-out ${i * 80}ms infinite, popup-rise ${900 + i * 150}ms ease-out ${i * 80}ms forwards`,
             pointerEvents: "none",
-          }} />
+          }}>✦</span>
         );
       })}
     </>
@@ -123,6 +138,70 @@ function SpeedButtons({ speed, onSpeed, accent }: { speed: number; onSpeed: (v: 
 }
 
 // ─── AllianceStage ──────────────────────────────────────────��─────────────────
+// ─── WaitingLine — shows queued characters below the stage ───────────────────
+function WaitingLine({
+  types,
+  kind,
+  side,
+  uidp,
+}: {
+  types: PlaceValue[];
+  kind: "ab" | "ku";
+  side: "left" | "right";
+  uidp: string;
+}): React.ReactElement | null {
+  if (types.length === 0) return null;
+  const shown = types.slice(0, 6);
+  const accent = kind === "ab" ? "#3b82f6" : "#ef4444";
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        bottom: 6,
+        ...(side === "left" ? { left: 10 } : { right: 10 }),
+        display: "flex",
+        flexDirection: side === "left" ? "row" : "row-reverse",
+        alignItems: "flex-end",
+        gap: 2,
+        pointerEvents: "none",
+      }}
+    >
+      {shown.map((pv, i) => {
+        const opacity = Math.max(0.28, 0.75 - i * 0.09);
+        return (
+          <div
+            key={`${uidp}-${i}`}
+            style={{
+              opacity,
+              animationDelay: `${i * 120}ms`,
+              animation: `idle-float 2600ms ease-in-out ${i * 120}ms infinite`,
+              width: 24,
+              height: 24,
+            }}
+          >
+            {kind === "ab"
+              ? <AntibodyCharacter type={pv} uid={`${uidp}-${i}`} />
+              : <VirusCharacter    type={pv} uid={`${uidp}-${i}`} />}
+          </div>
+        );
+      })}
+      {types.length > 6 && (
+        <span style={{
+          fontSize: 9,
+          fontWeight: 700,
+          color: accent,
+          opacity: 0.6,
+          alignSelf: "center",
+          paddingBottom: 2,
+        }}>
+          +{types.length - 6}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function AllianceStage({
   bil1Value,
   bil2Value,
@@ -131,11 +210,13 @@ export function AllianceStage({
   autoStart = false,
   hideControls = false,
   speed: speedProp,
+  queueAhead = [],
 }: AllianceStageProps) {
   const [phase, setPhase] = useState<AlliancePhase>("idle");
   const [runKey, setRunKey] = useState(0);
   const [showBurst, setShowBurst] = useState(false);
   const [showTrail, setShowTrail] = useState(false);
+  const [hover, setHover] = useState<null | "l" | "r">(null);
   const [internalSpeed, setInternalSpeed] = useState(1);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -146,14 +227,20 @@ export function AllianceStage({
   const tier2: PlaceValue = dominantPlace(Math.abs(bil2Value));
   const accentHex   = faction === "ab" ? "#3b82f6" : "#ef4444";
   const accentLight = faction === "ab" ? "rgba(59,130,246,0.75)" : "rgba(239,68,68,0.75)";
+  const accentRgba  = faction === "ab" ? "rgba(96,165,250,0.8)"
+                    : faction === "ku" ? "rgba(248,113,113,0.8)"
+                    : "rgba(200,200,200,0.7)";
 
   const particles = useParticles(runKey, {
     count: 20,
     colors: faction === "ab"
-      ? ["#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe", "#ffffff"]
-      : ["#ef4444", "#f87171", "#fca5a5", "#fecaca", "#ffffff"],
-    spread: 100,
+      ? ["#93c5fd", "#60a5fa", "#bfdbfe", "#38bdf8"]
+      : faction === "ku"
+      ? ["#fca5a5", "#f87171", "#fecaca", "#fb7185"]
+      : ["#ffffff", "#d1d5db"],
+    spread: 110,
     upward: true,
+    star: true,
   });
 
   function clearAllTimers() { timers.current.forEach(clearTimeout); timers.current = []; }
@@ -164,6 +251,7 @@ export function AllianceStage({
 
   function play() {
     clearAllTimers();
+    setHover(null);
     setShowBurst(false);
     setShowTrail(false);
     setRunKey((k) => k + 1);
@@ -285,15 +373,37 @@ export function AllianceStage({
           <Popup text="+ KUAT!" color={accentHex} scale={1} />
         )}
 
+        {/* WaitingLine — queued characters */}
+        {queueAhead && queueAhead.length > 0 && (
+          <>
+            <WaitingLine
+              types={queueAhead}
+              kind={faction}
+              side="left"
+              uidp={`wqa-l-${faction}-${runKey}`}
+            />
+            <WaitingLine
+              types={queueAhead}
+              kind={faction}
+              side="right"
+              uidp={`wqa-r-${faction}-${runKey}`}
+            />
+          </>
+        )}
+
         {/* Left character */}
         <div style={allianceOuterStyle(phase, "left", scale)}>
-          <div style={{
-            width: SZ, height: SZ,
-            filter: `drop-shadow(0 0 12px ${accentHex}cc) drop-shadow(0 2px 4px rgba(0,0,0,0.2))`,
-            animation: (phase === "bounce" || phase === "settled")
-              ? allianceInnerAnim(phase, faction, scale)
-              : phase === "idle" ? "idle-float 3000ms ease-in-out 0ms infinite" : undefined,
-          }}>
+          <div
+            onMouseEnter={() => { if (phase === "idle") setHover("l"); }}
+            onMouseLeave={() => setHover(null)}
+            style={{
+              width: SZ, height: SZ,
+              filter: `drop-shadow(0 0 12px ${accentHex}cc) drop-shadow(0 2px 4px rgba(0,0,0,0.2))`,
+              ...((phase === "bounce" || phase === "settled")
+                ? { animation: allianceInnerAnim(phase, faction, scale) }
+                : idleInner(phase === "idle", hover === "l", 0)),
+            }}
+          >
             {faction === "ab"
               ? <AntibodyCharacter type={tier1} uid="alliance-left" />
               : <VirusCharacter    type={tier1} uid="alliance-left" />}
@@ -302,17 +412,42 @@ export function AllianceStage({
 
         {/* Right character */}
         <div style={allianceOuterStyle(phase, "right", scale)}>
-          <div style={{
-            width: SZ, height: SZ,
-            filter: `drop-shadow(0 0 12px ${accentHex}cc) drop-shadow(0 2px 4px rgba(0,0,0,0.2))`,
-            animation: (phase === "bounce" || phase === "settled")
-              ? allianceInnerAnim(phase, faction, scale)
-              : phase === "idle" ? "idle-float 3000ms ease-in-out 700ms infinite" : undefined,
-          }}>
+          <div
+            onMouseEnter={() => { if (phase === "idle") setHover("r"); }}
+            onMouseLeave={() => setHover(null)}
+            style={{
+              width: SZ, height: SZ,
+              filter: `drop-shadow(0 0 12px ${accentHex}cc) drop-shadow(0 2px 4px rgba(0,0,0,0.2))`,
+              ...((phase === "bounce" || phase === "settled")
+                ? { animation: allianceInnerAnim(phase, faction, scale) }
+                : idleInner(phase === "idle", hover === "r", 700)),
+            }}
+          >
             {faction === "ab"
               ? <AntibodyCharacter type={tier2} uid="alliance-right" />
               : <VirusCharacter    type={tier2} uid="alliance-right" />}
           </div>
+        </div>
+
+        {/* Char name bar — only visible in idle with no queue */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            bottom: 8, left: 16, right: 16,
+            display: "flex",
+            justifyContent: "space-between",
+            opacity: phase === "idle" && !(queueAhead && queueAhead.length) ? 1 : 0,
+            transition: "opacity 300ms",
+            pointerEvents: "none",
+          }}
+        >
+          <span style={{ fontSize: 11, fontWeight: 700, color: accentRgba }}>
+            {CHAR_NAMES[faction]?.[tier1] ?? ""}
+          </span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: accentRgba }}>
+            {CHAR_NAMES[faction]?.[tier2] ?? ""}
+          </span>
         </div>
 
         {/* Click hint */}

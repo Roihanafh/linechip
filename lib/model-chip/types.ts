@@ -1,11 +1,11 @@
 /** Fase visualisasi utama halaman */
-export type VizPhase = "idle" | "battle" | "center" | "done";
+export type VizPhase = "idle" | "battle" | "center" | "done" | "alliance";
 
 /** Mode animasi: otomatis atau klik per-pasangan */
 export type AnimMode = "auto" | "click";
 
 /** Satu fase dalam satu PairReactionStage */
-export type StepPhase = "approach" | "clash" | "clear" | "decompose" | "approach-wait";
+export type StepPhase = "idle" | "approach" | "clash" | "clear" | "decompose" | "approach-wait";
 
 /** Satu tier group hasil dekomposisi pasangan netral */
 export interface TierGroup {

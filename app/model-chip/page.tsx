@@ -132,6 +132,7 @@ export default function ModelChipPage() {
             negChipMap={anim.negChipMap}
             animSpeed={anim.animSpeed}
             onPairDone={anim.handlePairDone}
+            onAllianceDone={anim.handleAllianceDone}
             stepIdx={anim.stepIdx}
             currentDecomposeStep={anim.currentDecomposeStep}
             onDecomposeDone={anim.handleDecomposeDone}

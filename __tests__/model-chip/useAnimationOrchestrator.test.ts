@@ -544,13 +544,18 @@ describe("Tiered decomposition starting from Satuan (Requirement 1.1)", () => {
 
   it("buildBattlePlan starts pairing available tier 1 (satuan) chips before decomposing", () => {
     // bil1 = +12 (1 ten, 2 units), bil2 = -5 (5 units)
-    // 2 units available on bil1, 5 units needed by bil2.
-    // Pairs 2 units first at tier 1, then decomposes 1 ten on bil1 into 10 units, then pairs remaining 3 units at tier 1.
+    // Algo: pair 2 available tier-1 chips, then emit approach-wait + decompose-10
+    // so neg side waits while pos decomposes, then pair remaining 3 tier-1 chips.
+    // Step sequence: pair, pair, approach-wait, decompose, pair, pair, pair  = 7 steps
     const plan = buildBattlePlan(12, -5);
-    expect(plan.steps.length).toBe(6);
+    expect(plan.steps.length).toBe(7);
     expect(plan.steps[0]).toEqual({ type: "pair", tier: 1, side: "pos" });
     expect(plan.steps[1]).toEqual({ type: "pair", tier: 1, side: "pos" });
-    expect(plan.steps[2]).toEqual({ type: "decompose", tier: 10, side: "pos" });
+    expect(plan.steps[2]).toEqual({ type: "approach-wait", tier: 1, side: "neg" });
+    expect(plan.steps[3]).toEqual({ type: "decompose", tier: 10, side: "pos" });
+    expect(plan.steps[4]).toEqual({ type: "pair", tier: 1, side: "pos" });
+    expect(plan.steps[5]).toEqual({ type: "pair", tier: 1, side: "pos" });
+    expect(plan.steps[6]).toEqual({ type: "pair", tier: 1, side: "pos" });
   });
 
   it("does NOT trigger decomposition if tier 1 already has sufficient chips", () => {

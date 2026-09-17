@@ -30,13 +30,13 @@ import {
 // Validates: Requirements 4.5, 11.3
 
 describe("DecomposeStage — Property 8: durasi terskala dengan speed", () => {
-  it("decomposeDuration(speed) === Math.round(600 / speed) for any speed in [0.1, 10]", () => {
+  it("decomposeDuration(speed) === Math.round(2000 / speed) for any speed in [0.1, 10]", () => {
     fc.assert(
       fc.property(
         fc.float({ min: Math.fround(0.1), max: Math.fround(10), noNaN: true }),
         (speed) => {
           const result = decomposeDuration(speed);
-          const expected = Math.round(600 / speed);
+          const expected = Math.round(2000 / speed);
           expect(result).toBe(expected);
         }
       ),
@@ -78,19 +78,19 @@ describe("DecomposeStage — Property 8: durasi terskala dengan speed", () => {
 
 describe("DecomposeStage — decomposeDuration spot-checks", () => {
   it("speed=1 → 600ms", () => {
-    expect(decomposeDuration(1)).toBe(600);
+    expect(decomposeDuration(1)).toBe(2000);
   });
 
   it("speed=2 → 300ms", () => {
-    expect(decomposeDuration(2)).toBe(300);
+    expect(decomposeDuration(2)).toBe(1000);
   });
 
   it("speed=0.5 → 1200ms", () => {
-    expect(decomposeDuration(0.5)).toBe(1200);
+    expect(decomposeDuration(0.5)).toBe(4000);
   });
 
   it("speed=3 → 200ms", () => {
-    expect(decomposeDuration(3)).toBe(200);
+    expect(decomposeDuration(3)).toBe(667);
   });
 });
 
@@ -152,13 +152,18 @@ describe("DecomposeStage — render without crash", () => {
   });
 });
 
-// ─── Unit tests: label text ───────────────────────────────────────────────────
+// ─── Unit tests: label text ────────────────────────────────────────────────────────────────────────────────
 // Requirements: 4.7
 
 describe("DecomposeStage — label text", () => {
   const noopOnDone = jest.fn();
 
-  it("tier=10 displays label '×10 → 10×1'", () => {
+  // The component renders a subtitle: "{parentName} luruh menjadi 10 {childName}"
+  // Character names from CHAR_NAMES:
+  //   ab: satuan=Monoab, puluhan=Bimoab, ratusan=Polyab, ribuan=Pentaab
+  //   ku: satuan=Mikrovir, puluhan=Sporovir, ratusan=Dendrovir, ribuan=Coronavir
+
+  it("tier=10 ab displays subtitle \'Bimoab luruh menjadi 10 Monoab\'", () => {
     const markup = renderToStaticMarkup(
       React.createElement(DecomposeStage, {
         chipTier: 10,
@@ -168,10 +173,10 @@ describe("DecomposeStage — label text", () => {
         runKey: 0,
       })
     );
-    expect(markup).toContain("×10 → 10×1");
+    expect(markup).toContain("Bimoab luruh menjadi 10 Monoab");
   });
 
-  it("tier=100 displays label '×100 → 10×10'", () => {
+  it("tier=100 ab displays subtitle \'Polyab luruh menjadi 10 Bimoab\'", () => {
     const markup = renderToStaticMarkup(
       React.createElement(DecomposeStage, {
         chipTier: 100,
@@ -181,10 +186,10 @@ describe("DecomposeStage — label text", () => {
         runKey: 0,
       })
     );
-    expect(markup).toContain("×100 → 10×10");
+    expect(markup).toContain("Polyab luruh menjadi 10 Bimoab");
   });
 
-  it("tier=1000 displays label '×1000 → 10×100'", () => {
+  it("tier=1000 ab displays subtitle \'Pentaab luruh menjadi 10 Polyab\'", () => {
     const markup = renderToStaticMarkup(
       React.createElement(DecomposeStage, {
         chipTier: 1000,
@@ -194,10 +199,10 @@ describe("DecomposeStage — label text", () => {
         runKey: 0,
       })
     );
-    expect(markup).toContain("×1000 → 10×100");
+    expect(markup).toContain("Pentaab luruh menjadi 10 Polyab");
   });
 
-  it("label text is consistent regardless of faction", () => {
+  it("label subtitle is faction-specific: ab uses ab names, ku uses ku names", () => {
     const mkAb = renderToStaticMarkup(
       React.createElement(DecomposeStage, {
         chipTier: 10,
@@ -216,10 +221,11 @@ describe("DecomposeStage — label text", () => {
         runKey: 0,
       })
     );
-    expect(mkAb).toContain("×10 → 10×1");
-    expect(mkKu).toContain("×10 → 10×1");
+    expect(mkAb).toContain("Bimoab luruh menjadi 10 Monoab");
+    expect(mkKu).toContain("Sporovir luruh menjadi 10 Mikrovir");
   });
 });
+
 
 // ─── Unit tests: chipTier === 1 behavior ─────────────────────────────────────
 // Requirements: 4.6

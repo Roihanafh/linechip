@@ -1,0 +1,469 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Tambah field `star?: boolean` ke interface `ParticleOptions` di `AnimationEffects.tsx`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615308460
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615328543
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615356117
+      }
+    ],
+    "1.2 Verifikasi test `AnimationEffects.property.test.tsx` tetap lulus setelah perubahan interface": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615310058
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615361494
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615461861
+      }
+    ],
+    "2.1 Tambah state `const [hover, setHover] = useState<null | \"l\" | \"r\">(null)` di dalam `AllianceStage`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615310261
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615475299
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615575404
+      }
+    ],
+    "2.2 Definisikan pure function `idleInner(isIdle: boolean, hovered: boolean, delayMs: number): React.CSSProperties` di atas komponen `SparkTrail` (setelah konstanta file-level)": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615310667
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615476852
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615576641
+      }
+    ],
+    "2.3 Update fungsi `play()`: tambah `setHover(null)` sebagai baris pertama setelah `clearAllTimers()`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615310859
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615477728
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615577422
+      }
+    ],
+    "3.1 Update `useParticles` untuk menggunakan `star: true` dan palette faction-aware": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311017
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615581963
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615646116
+      }
+    ],
+    "3.2 Update `useParticles` di `AnimationEffects.tsx` untuk menggunakan opsi `star`: setiap partikel `star = !!star` (gantikan `Math.random() < 0.4`)": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311152
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615361866
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615463249
+      }
+    ],
+    "4.1 Rewrite komponen `SparkTrail` di `AllianceStage.tsx` agar merender 6 partikel teks `✦` (bukan lingkaran)": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311266
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615582686
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615646987
+      }
+    ],
+    "5.1 Update inner-div karakter kiri: pasang `onMouseEnter` dan `onMouseLeave`, gunakan `idleInner()` untuk menentukan animasi": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311379
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615651930
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615707123
+      }
+    ],
+    "5.2 Update inner-div karakter kanan: pasang `onMouseEnter` dan `onMouseLeave`, gunakan `idleInner()` dengan `delayMs=700`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311771
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615652550
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615707779
+      }
+    ],
+    "6. Checkpoint — Pastikan semua test yang ada tetap lulus": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311860
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615727651
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616250159
+      }
+    ],
+    "7.1 Tulis function component `WaitingLine` di atas komponen `AllianceStage`, dengan props `types: PlaceValue[], kind: \"ab\" | \"ku\", side: \"left\" | \"right\", uidp: string`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615311960
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615728442
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616249396
+      }
+    ],
+    "8.1 Tambah `queueAhead?: PlaceValue[]` ke interface `AllianceStageProps` (default `[]`), dan tambah ke destructuring props": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312064
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616255311
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616303927
+      }
+    ],
+    "8.2 Render dua `WaitingLine` di dalam stage div saat `queueAhead && queueAhead.length > 0`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312175
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616309474
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616689830
+      }
+    ],
+    "8.3 Tambah char name bar di bawah stage (sebelum click hint):": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312293
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616309907
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616690313
+      }
+    ],
+    "9.1 Buat file `__tests__/game/AllianceStage.property.test.ts` dengan struktur dasar dan import `fast-check`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312438
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616701381
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616774304
+      }
+    ],
+    "9.2 Tulis property test untuk `idleInner` — Property 1: determinisme": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312557
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616780129
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616859362
+      }
+    ],
+    "9.3 Tulis property test untuk `idleInner` — Property 2: prioritas `hovered`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312672
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616780768
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616859960
+      }
+    ],
+    "9.4 Tulis property test untuk WaitingLine opacity — Property 9": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615312778
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616781426
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616860666
+      }
+    ],
+    "9.5 Tulis property test untuk WaitingLine delay — Property 10": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615313025
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616782015
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616861326
+      }
+    ],
+    "9.6 Tulis property test untuk SparkTrail offset — Property 11": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615313143
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616782357
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616861911
+      }
+    ],
+    "9.7 Tulis property test untuk SparkTrail delay — Property 12": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615313262
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616783052
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616862574
+      }
+    ],
+    "9.8 Tulis property test untuk `CHAR_NAMES` lookup — Property 7": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615313370
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616783613
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616863105
+      }
+    ],
+    "10. Checkpoint akhir — Verifikasi regression dan TypeScript": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615313472
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616868592
+      },
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789617225121
+      }
+    ],
+    "1. Tambah `star` option ke `AnimationEffects.tsx`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615461912
+      }
+    ],
+    "2. Tambah `idleInner()` helper, state `hover`, dan update `play()` di `AllianceStage.tsx`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615577481
+      }
+    ],
+    "3. Upgrade konfigurasi `useParticles` di `AllianceStage` ke star particles": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615646155
+      }
+    ],
+    "4. Upgrade `SparkTrail` ke star particles `✦`": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615647055
+      }
+    ],
+    "5. Pasang hover events pada inner-div karakter": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789615707819
+      }
+    ],
+    "7. Definisikan sub-komponen `WaitingLine` (inline di `AllianceStage.tsx`)": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616249460
+      }
+    ],
+    "8. Tambah prop `queueAhead`, render `WaitingLine`, dan char name bar": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616690534
+      }
+    ],
+    "9. Tulis property-based tests untuk AllianceStage": [
+      {
+        "executionId": "2e8762d1-b9e7-4953-aaff-b86146313e2b",
+        "chatSessionId": "sess_94cce499-042a-4f76-9bf3-aabeeed1cf98",
+        "timestamp": 1789616863166
+      }
+    ]
+  }
+}

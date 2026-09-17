@@ -32,6 +32,15 @@ const DECOMPOSE_ORDER: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
 // Rendering goes largest to smallest so Ribuan (x1000)/Puluhan (x10) appears at top and Satuan (x1) at bottom.
 const RENDER_ORDER: (1 | 10 | 100 | 1000)[] = [1000, 100, 10, 1];
 
+// ─── Helper: idle-float animation for chips when stepPhase === "idle" ─────────
+
+function chipIdleAnim(stepPhase: StepPhase, globalIdx: number): string | undefined {
+  if (stepPhase === "idle") {
+    return `idle-float 2800ms ease-in-out ${(globalIdx % 6) * 120}ms infinite`;
+  }
+  return undefined;
+}
+
 export function CharacterColumn({
   sPaired,
   sRemaining,
@@ -78,6 +87,7 @@ export function CharacterColumn({
   }
 
   const rows: React.ReactNode[] = [];
+  let globalChipIdx = 0;
 
   // Render rows in ascending order so Satuan (x1) appears at top
   for (const t of RENDER_ORDER) {
@@ -142,6 +152,11 @@ export function CharacterColumn({
             // Dimmed during approach (about to react) OR during approach-wait (waiting with no partner)
             const isDimmed = isReactingChip && (stepPhase === "approach" || stepPhase === "approach-wait");
 
+            const currentGlobalIdx = globalChipIdx++;
+            const idleAnim = !isDecomposingChip && !isGone && !isDimmed
+              ? chipIdleAnim(stepPhase, currentGlobalIdx)
+              : undefined;
+
             return (
               <div
                 key={`${prefix}-${t}-${i}`}
@@ -156,6 +171,7 @@ export function CharacterColumn({
                     ? "opacity-25 scale-90"
                     : "opacity-100"
                 }`}
+                style={{ animation: idleAnim }}
               >
                 {sType === "ab" ? (
                   <AntibodyCharacter
