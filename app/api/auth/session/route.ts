@@ -39,16 +39,25 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (err) {
+    // Log server-side so we can diagnose issues in dev
+    console.error('[/api/auth/session] Error:', err);
+
     // verifyIdToken or createSessionCookie failed
     const code = (err as { code?: string }).code ?? '';
-    if (code.includes('auth/') || code.includes('id-token')) {
+    const message = (err as { message?: string }).message ?? '';
+
+    if (
+      code.includes('auth/') ||
+      code.includes('id-token') ||
+      message.includes('Firebase Admin env')
+    ) {
       return NextResponse.json(
-        { error: 'Token tidak valid atau kadaluarsa.' },
+        { error: 'Token tidak valid atau kadaluarsa.', code },
         { status: 401 }
       );
     }
     return NextResponse.json(
-      { error: 'Terjadi kesalahan server.' },
+      { error: 'Terjadi kesalahan server.', code },
       { status: 500 }
     );
   }

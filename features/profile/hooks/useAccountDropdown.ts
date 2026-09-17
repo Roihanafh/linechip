@@ -34,12 +34,15 @@ export function useAccountDropdown(): UseAccountDropdownReturn {
     setIsLoggingOut(true);
     try {
       await logout();
-      close();
-      router.push('/');
-    } catch {
+    } catch (error) {
       // Graceful degradation — jangan crash UI karena logout error
+      console.error('[handleLogout] Logout gagal:', error);
+    } finally {
       setIsLoggingOut(false);
     }
+    // Always redirect and close, even if logout() throws
+    close();
+    router.push('/');
   }, [close, router]);
 
   // Requirement 6.7: close on outside click

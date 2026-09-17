@@ -1,0 +1,141 @@
+{
+  "pbtResults": {
+    "1. Write bug condition exploration test": {
+      "status": "passed",
+      "failingExample": "Counterexample 1 — Network error: logout() resolves with undefined when fetch throws TypeError('Failed to fetch'). The __session cookie is never cleared because the try/catch in authService.ts catches the network error silently and only logs a console.warn. Counterexample 2 — Non-ok response: logout() resolves with undefined when fetch returns { ok: false, status: 500 }. No res.ok check exists in the current code, so a failed server-side cookie deletion goes completely undetected.",
+      "lastRunTimestamp": 1789656610232
+    },
+    "2. Write preservation property tests (BEFORE implementing fix)": {
+      "status": "passed",
+      "lastRunTimestamp": 1789656899976
+    }
+  },
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656491648
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656509563
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656627700
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656492747
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656633141
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656920830
+      }
+    ],
+    "3.1 Fix `logout()` in `features/auth/services/authService.ts`": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656492835
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656931141
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656992469
+      }
+    ],
+    "3.2 Fix `handleLogout()` in `features/profile/hooks/useAccountDropdown.ts`": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656492921
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656997345
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657054601
+      }
+    ],
+    "3.3 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656495249
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657064962
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657149171
+      }
+    ],
+    "3.4 Verify preservation tests still pass": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656495291
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657153979
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657196245
+      }
+    ],
+    "4. Checkpoint — Ensure all tests pass": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789656495338
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657214461
+      },
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657255538
+      }
+    ],
+    "3. Fix: propagate logout errors and add res.ok check": [
+      {
+        "executionId": "021d9867-4bc9-4b85-b52a-7e5ab3a4a14b",
+        "chatSessionId": "sess_b22af0ad-6881-4f7b-bd48-a03d73eebc10",
+        "timestamp": 1789657196278
+      }
+    ]
+  }
+}

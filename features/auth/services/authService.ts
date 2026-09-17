@@ -263,13 +263,24 @@ export async function loginWithGoogle(): Promise<void> {
 
 export async function logout(): Promise<void> {
   const { auth } = getFirebaseClient();
-  await signOut(auth);
 
-  // Best-effort: don't throw if server-side logout fails
-  try {
-    await fetch('/api/auth/logout', { method: 'POST' });
-  } catch {
-    console.warn('[AuthService] Server-side logout failed (best-effort)');
+  const [signOutResult, fetchResult] = await Promise.allSettled([
+    signOut(auth),
+    fetch('/api/auth/logout', { method: 'POST' }),
+  ]);
+
+  if (signOutResult.status === 'rejected') {
+    throw signOutResult.reason;
+  }
+
+  if (fetchResult.status === 'rejected') {
+    console.warn('[AuthService] Server-side logout failed (network error)');
+    throw new Error('Cookie logout failed');
+  }
+
+  if (!fetchResult.value.ok) {
+    console.warn('[AuthService] Server-side logout returned non-ok status');
+    throw new Error('Cookie logout returned non-ok status');
   }
 }
 
