@@ -3,6 +3,7 @@
 
 import { inputPanelProps } from "@/lib/model-chip/inputPanelProps";
 import type { AnimMode, VizPhase } from "@/lib/model-chip/types";
+import { useSound } from "@/hooks/useSound";
 
 export interface InputPanelProps {
   bil1: number; bil2: number;
@@ -24,6 +25,7 @@ export function InputPanel({
   const p2 = inputPanelProps(bil2);
   const isAnimating = vizPhase === "battle" || vizPhase === "center";
   const isDone = vizPhase === "done";
+  const playLuncurkan = useSound('/luncurkan.mp3');
 
   return (
     <div className="mb-4">
@@ -151,7 +153,7 @@ export function InputPanel({
           <div className="flex items-center gap-2 flex-wrap justify-center">
             {vizPhase === "idle" && (
               <button
-                onClick={onPair}
+                onClick={() => { playLuncurkan(); onPair(); }}
                 disabled={bil1 === 0 && bil2 === 0}
                 className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >

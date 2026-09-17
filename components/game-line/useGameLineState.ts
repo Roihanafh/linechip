@@ -13,6 +13,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { clampSpacing } from '../../lib/canvas/gameLineRenderer';
+import { useLoopingSound } from '../../hooks/useSound';
 
 // ─── Exported Interfaces ──────────────────────────────────────────────────────
 
@@ -126,6 +127,13 @@ export function useGameLineState() {
   // Ref to cancel animation frames on unmount or re-trigger
   const animFrameRef = useRef<number | null>(null);
 
+  // Car sound — stored in ref so playArrows closure can access without deps
+  const { start: startSound, stop: stopSound } = useLoopingSound('/brumbrum.wav');
+  const startSoundRef = useRef(startSound);
+  const stopSoundRef  = useRef(stopSound);
+  startSoundRef.current = startSound;
+  stopSoundRef.current  = stopSound;
+
   // ── newQuestion ─────────────────────────────────────────────────────────────
   const newQuestion = useCallback(() => {
     setCurrentQuestion(generateQuestion());
@@ -222,6 +230,7 @@ export function useGameLineState() {
       if (current) return current; // already animating, no-op
       return true;
     });
+    startSoundRef.current();
 
     // Read committed lengths before starting
     setArrows((snapshot) => {
@@ -277,6 +286,7 @@ export function useGameLineState() {
                 1: { ...prev[1], visualLength: undefined },
                 2: { ...prev[2], visualLength: undefined },
               }));
+              stopSoundRef.current();
               // Brief delay before clearing isAnimating for visual polish
               setTimeout(() => setIsAnimating(false), 80);
             });

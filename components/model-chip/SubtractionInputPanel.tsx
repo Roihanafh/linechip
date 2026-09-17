@@ -4,6 +4,7 @@
 import { inputPanelProps } from "@/lib/model-chip/inputPanelProps";
 import type { AnimMode } from "@/lib/model-chip/types";
 import type { VizPhaseSub, SubtractionSnapshot } from "@/lib/model-chip/subtractionTypes";
+import { useSound } from "@/hooks/useSound";
 
 export interface SubtractionInputPanelProps {
   bil1: number;
@@ -44,6 +45,7 @@ export function SubtractionInputPanel({
 }: SubtractionInputPanelProps) {
   const p1 = inputPanelProps(bil1);
   const p2 = inputPanelProps(bil2);
+  const playLuncurkan = useSound('/luncurkan.mp3');
 
   const isDone = vizPhase === "done";
   const showInputKembali =
@@ -200,7 +202,7 @@ export function SubtractionInputPanel({
           <div className="flex items-center gap-2 flex-wrap justify-center">
             {vizPhase === "idle" && (
               <button
-                onClick={onSubtract}
+                onClick={() => { playLuncurkan(); onSubtract(); }}
                 disabled={bil1 === 0 && bil2 === 0}
                 className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >

@@ -13,6 +13,7 @@ import {
 import { computeAdaptiveSpacing, computeVirtualWidth, computeAutoScroll } from "../../lib/number-line/scrollLogic";
 import { getPhase2FacingDirection, getPhase2MovementDirection } from "../../lib/number-line/directionLogic";
 import { loadCarImage } from "../../lib/canvas/carImage";
+import { useLoopingSound } from "../../hooks/useSound";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -95,6 +96,13 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const innerRef     = useRef<HTMLDivElement>(null);
+
+  // ── Car sound ─────────────────────────────────────────────────────────────
+  const { start: startSound, stop: stopSound } = useLoopingSound("/brumbrum.wav");
+  const startSoundRef = useRef(startSound);
+  const stopSoundRef  = useRef(stopSound);
+  useEffect(() => { startSoundRef.current = startSound; }, [startSound]);
+  useEffect(() => { stopSoundRef.current  = stopSound;  }, [stopSound]);
 
   // ── Pure-ref scroll — single source of truth, no React state ──────────────
   const scrollOffsetRef  = useRef(0);
@@ -270,6 +278,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     } else {
       phaseRef.current = "DONE";
       cancelAnimationFrame(animFrameRef.current);
+      stopSoundRef.current();
       // Keep viewport steady — user can freely drag/scroll back to 0 or num1
       drawDone();
       if (!onResultCalledRef.current) {
@@ -300,6 +309,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     cancelAnimationFrame(animFrameRef.current);
     phaseRef.current = "PHASE_1";
     startTimeRef.current = performance.now();
+    startSoundRef.current();
     animFrameRef.current = requestAnimationFrame(animatePhase1);
   }
 
@@ -334,6 +344,7 @@ export default function NumberLineCanvas({ num1, num2, operation, runKey, onResu
     window.addEventListener("resize", handleResize);
     return () => {
       cancelAnimationFrame(animFrameRef.current);
+      stopSoundRef.current();
       window.removeEventListener("resize", handleResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

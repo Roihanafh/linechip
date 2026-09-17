@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { clampInt } from '../../lib/number-line/formatters';
 import type { InputPanelProps } from '../../lib/number-line/types';
+import { useSound } from '../../hooks/useSound';
 
 const MIN = -99;
 const MAX = 99;
@@ -130,6 +131,7 @@ export function InputPanel({
   onCalculate,
   onShowInstructions,
 }: InputPanelProps) {
+  const playLuncurkan = useSound('/luncurkan.mp3');
   return (
     <div className="mb-4">
       <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
@@ -199,7 +201,7 @@ export function InputPanel({
         <div className="mt-4 flex items-center justify-center gap-3">
           <button
             type="button"
-            onClick={onCalculate}
+            onClick={() => { playLuncurkan(); onCalculate(); }}
             aria-label="Hitung hasil"
             className="px-8 py-2.5 bg-intblue text-white rounded-xl font-bold text-sm hover:bg-intblue-dark transition-colors shadow-sm"
           >
