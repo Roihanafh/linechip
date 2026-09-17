@@ -8,18 +8,6 @@ import {
   dominantPlace,
 } from "@/components/game/CharacterSVGs";
 
-interface SideInfo {
-  sVal: number;
-  sPaired: number;
-  sRem: number;
-  sType: "ab" | "ku";
-  sColor: string;
-  sSign: string;
-  sDot: string;
-  prefix: string;
-  label: string;
-}
-
 interface ArenaDoneProps {
   s1: number;
   s2: number;
@@ -27,61 +15,97 @@ interface ArenaDoneProps {
   s2Paired: number;
   s1Remaining: number;
   s2Remaining: number;
-  s1Type: "ab" | "ku";
-  s2Type: "ab" | "ku";
-  s1Color: string;
-  s2Color: string;
-  s1Sign: string;
-  s2Sign: string;
-  s1Dot: string;
-  s2Dot: string;
   remaining: number;
-}
-
-function DoneSide({ sVal, sPaired, sRem, sType, sColor, sSign, sDot, prefix, label }: SideInfo) {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1.5 mb-1">
-        <div className={`w-2 h-2 rounded-full ${sDot}`} />
-        <span className={`font-mono text-[10px] ${sColor} uppercase tracking-wide font-bold`}>
-          {label} {sVal > 0 ? "Antibodi" : "Kuman"} {sSign}{sVal.toLocaleString("id-ID")}
-        </span>
-      </div>
-      {sPaired > 0 && (
-        <div>
-          <p className="text-[9px] text-slate-500 font-mono uppercase tracking-wide mb-1">Dinetralkan</p>
-          <CharacterChips value={sPaired} type={sType} phase="exploding" size="xs" maxPerTier={9} uidPrefix={`${prefix}-pair`} />
-        </div>
-      )}
-      {sRem > 0 && (
-        <div>
-          <p className={`text-[9px] ${sColor} font-mono font-bold uppercase tracking-wide mb-1`}>
-            Sisa {sSign}{sRem.toLocaleString("id-ID")}
-          </p>
-          <CharacterChips value={sRem} type={sType} size="xs" maxPerTier={9} uidPrefix={`${prefix}-rem`} />
-        </div>
-      )}
-      {sPaired > 0 && sRem === 0 && (
-        <p className="text-[10px] text-slate-600 font-mono italic">semua dinetralkan</p>
-      )}
-    </div>
-  );
 }
 
 export function ArenaDone({
   s1, s2, s1Paired, s2Paired, s1Remaining, s2Remaining,
-  s1Type, s2Type, s1Color, s2Color, s1Sign, s2Sign, s1Dot, s2Dot, remaining,
+  remaining,
 }: ArenaDoneProps) {
-  const sides: SideInfo[] = [
-    { sVal: s1, sPaired: s1Paired, sRem: s1Remaining, sType: s1Type, sColor: s1Color, sSign: s1Sign, sDot: s1Dot, prefix: "done-b1", label: "Bil.1" },
-    { sVal: s2, sPaired: s2Paired, sRem: s2Remaining, sType: s2Type, sColor: s2Color, sSign: s2Sign, sDot: s2Dot, prefix: "done-b2", label: "Bil.2" },
-  ];
+  const isAllianceCase = (s1 > 0 && s2 > 0) || (s1 < 0 && s2 < 0);
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
-        {sides.map((side) => <DoneSide key={side.prefix} {...side} />)}
-      </div>
+      {isAllianceCase ? (
+        (() => {
+          const faction: "ab" | "ku" = s1 > 0 ? "ab" : "ku";
+          const totalValue = Math.abs(s1) + Math.abs(s2);
+          return (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className={`w-2 h-2 rounded-full ${faction === "ab" ? "bg-intblue" : "bg-intpink"}`} />
+                <span className={`font-mono text-[10px] ${faction === "ab" ? "text-intblue" : "text-intpink"} uppercase tracking-wide font-bold`}>
+                  Total {faction === "ab" ? "Antibodi" : "Kuman"} {faction === "ab" ? "+" : "−"}{Math.abs(s1 + s2)}
+                </span>
+              </div>
+              <CharacterChips
+                value={totalValue}
+                type={faction}
+                phase="idle"
+                size="xs"
+                maxPerTier={12}
+                uidPrefix="done-alliance"
+              />
+            </div>
+          );
+        })()
+      ) : (
+        <div className="flex flex-col gap-3">
+          {/* Neutralised chips from both sides */}
+          {(s1Paired > 0 || s2Paired > 0) && (
+            <div className="flex flex-col gap-1">
+              <p className="text-[9px] text-slate-500 font-mono uppercase tracking-wide">
+                Dinetralkan: {s1Paired + s2Paired}
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                {s1Paired > 0 && (
+                  <CharacterChips
+                    value={s1Paired}
+                    type={s1 > 0 ? "ab" : "ku"}
+                    phase="exploding"
+                    size="xs"
+                    maxPerTier={6}
+                    uidPrefix="done-b1-pair"
+                  />
+                )}
+                {s2Paired > 0 && (
+                  <CharacterChips
+                    value={s2Paired}
+                    type={s2 > 0 ? "ab" : "ku"}
+                    phase="exploding"
+                    size="xs"
+                    maxPerTier={6}
+                    uidPrefix="done-b2-pair"
+                  />
+                )}
+              </div>
+            </div>
+          )}
+          {/* Winner chips */}
+          {remaining !== 0 && (() => {
+            const winFaction: "ab" | "ku" = remaining > 0 ? "ab" : "ku";
+            const winValue = Math.abs(remaining);
+            const winColor = remaining > 0 ? "text-intblue" : "text-intpink";
+            const winSign = remaining > 0 ? "+" : "−";
+            return (
+              <div className="flex flex-col gap-1">
+                <p className={`text-[9px] ${winColor} font-mono font-bold uppercase tracking-wide`}>
+                  Sisa {winSign}{winValue}
+                </p>
+                <CharacterChips
+                  value={winValue}
+                  type={winFaction}
+                  phase="idle"
+                  size="xs"
+                  maxPerTier={12}
+                  uidPrefix="done-battle-rem"
+                />
+              </div>
+            );
+          })()}
+        </div>
+      )}
+      {/* Bottom Sisa / Tepat nol section — unchanged */}
       <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-center gap-4 animate-fade-slide-in">
         {remaining !== 0 ? (
           <>

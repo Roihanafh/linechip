@@ -1,0 +1,347 @@
+{
+  "pbtResults": {
+    "2.7 Tulis property test untuk alliance path di `useSubtractionOrchestrator`": {
+      "status": "passed",
+      "lastRunTimestamp": 1789647671616
+    },
+    "2.8 Tulis property test untuk `handleAllianceSub` timing scaling": {
+      "status": "passed",
+      "lastRunTimestamp": 1789647676171
+    },
+    "4.4 Tulis property test untuk `AlliancePoolPanel`": {
+      "status": "passed",
+      "lastRunTimestamp": 1789648237998
+    }
+  },
+  "executionHistory": {
+    "1.1 Tambahkan literal `\"alliance\"` ke tipe `VizPhaseSub` di `lib/model-chip/subtractionTypes.ts`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893275
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646904882
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646930653
+      }
+    ],
+    "1.2 Re-export `isAllianceCase` dari `hooks/model-chip/useAnimationOrchestrator.ts` agar dapat di-import oleh `useSubtractionOrchestrator`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893366
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646905081
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646931170
+      }
+    ],
+    "2.1 Import `isAllianceCase` dari `useAnimationOrchestrator` dan tambahkan `beginAlliance()` callback": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893410
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646936382
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647004735
+      }
+    ],
+    "2.2 Modifikasi `handleSubtract()` untuk mendeteksi dan merutekan alliance case": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893446
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647011177
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647148653
+      }
+    ],
+    "2.3 Modifikasi `handleNextClick()` untuk mendukung alliance case di mode click": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893476
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647011133
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647149606
+      }
+    ],
+    "2.4 Implementasikan `handleAllianceSub()` sebagai alliance completion handler": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893506
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647011762
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647150204
+      }
+    ],
+    "2.5 Modifikasi `replayAnimation()` untuk menangani alliance snapshot": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893536
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647156341
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647513330
+      }
+    ],
+    "2.6 Tambahkan `handleAllianceSub` ke `SubtractionOrchestratorReturn` interface dan return value": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893578
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647156934
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647514249
+      }
+    ],
+    "2.7 Tulis property test untuk alliance path di `useSubtractionOrchestrator`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893608
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647524853
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647694121
+      }
+    ],
+    "2.8 Tulis property test untuk `handleAllianceSub` timing scaling": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893637
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647525552
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647695152
+      }
+    ],
+    "3. Checkpoint — Verifikasi TypeScript compile dan logika orchestrator": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893666
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647713714
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647772009
+      }
+    ],
+    "4.1 Tambahkan import `CharacterChips` dari `@/components/game/CharacterSVGs` di `ArenaPanel.tsx`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893697
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646936891
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647005578
+      }
+    ],
+    "4.2 Definisikan interface `AlliancePoolPanelProps` dan fungsi `AlliancePoolPanel` sebagai fungsi lokal di atas `ArenaPanel`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893727
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647012420
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647151123
+      }
+    ],
+    "4.3 Ganti blok `vizPhase === \"alliance\"` di `ArenaPanel` JSX dengan `<AlliancePoolPanel>`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893768
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647157457
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647514973
+      }
+    ],
+    "4.4 Tulis property test untuk `AlliancePoolPanel`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893830
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647776744
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789648271382
+      }
+    ],
+    "5.1 Perbaiki mapping `arenaPhase` agar `\"alliance\"` tidak difilter ke `\"idle\"`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893872
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647526148
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647695768
+      }
+    ],
+    "5.2 Ganti `onAllianceDone={() => {}}` dengan `orch.handleAllianceSub`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893903
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647526658
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647696663
+      }
+    ],
+    "6. Checkpoint — Verifikasi akhir": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646893934
+      },
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789648279465
+      }
+    ],
+    "1. Extend `VizPhaseSub` dan export `isAllianceCase`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789646931215
+      }
+    ],
+    "2. Implementasi alliance path di `useSubtractionOrchestrator`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647695332
+      }
+    ],
+    "5. Perbaiki halaman pengurangan `app/model-chip/pengurangan/page.tsx`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789647696816
+      }
+    ],
+    "4. Implementasi `AlliancePoolPanel` inline di `ArenaPanel.tsx`": [
+      {
+        "executionId": "143b7470-8725-4bfb-bd43-d25ba77debee",
+        "chatSessionId": "sess_8356a94f-cb13-42ad-8957-19ad3ea4636a",
+        "timestamp": 1789648271739
+      }
+    ]
+  }
+}

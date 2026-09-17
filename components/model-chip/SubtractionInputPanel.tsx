@@ -1,7 +1,6 @@
 ﻿// components/model-chip/SubtractionInputPanel.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { inputPanelProps } from "@/lib/model-chip/inputPanelProps";
 import type { AnimMode } from "@/lib/model-chip/types";
 import type { VizPhaseSub, SubtractionSnapshot } from "@/lib/model-chip/subtractionTypes";
@@ -25,16 +24,6 @@ export interface SubtractionInputPanelProps {
   onNextClick: () => void;
 }
 
-/**
- * SubtractionInputPanel
- *
- * Panel input untuk halaman pengurangan.
- * Saat fase "transform", area input bil2:
- *  - Melakukan flip 3D (kelas CSS input-flip)
- *  - Warna beralih ke jenis lawannya (biru->pink atau pink->biru)
- *  - Nilai berubah ke b_konversi (-bil2) dengan efek value-pop
- *  - Border berdenyut (glow-ring)
- */
 export function SubtractionInputPanel({
   bil1,
   bil2,
@@ -54,53 +43,7 @@ export function SubtractionInputPanel({
   onNextClick,
 }: SubtractionInputPanelProps) {
   const p1 = inputPanelProps(bil1);
-
-  // Saat fase transform, tampilkan nilai konversi dan warna lawannya
-  const isTransforming = vizPhase === "transform" && snapshot !== null;
-  const bil2Display = isTransforming ? snapshot!.bil2_converted : bil2;
-  const p2Display = inputPanelProps(isTransforming ? snapshot!.bil2_converted : bil2);
-  // Untuk label/dot di atas input, selalu gunakan p2 asli (bil2) saat idle
   const p2 = inputPanelProps(bil2);
-
-  // --- Flip animation state ---
-  // flipKey naik setiap kali kita masuk fase transform, memaksa re-mount kelas animasi
-  const [flipKey, setFlipKey] = useState(0);
-  const [showConverted, setShowConverted] = useState(false);
-  const prevPhaseRef = useRef<VizPhaseSub>("idle");
-  const flipTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const prev = prevPhaseRef.current;
-    prevPhaseRef.current = vizPhase;
-
-    if (vizPhase === "transform" && prev !== "transform") {
-      // Masuk ke fase transform: mulai flip
-      setShowConverted(false);
-      setFlipKey((k) => k + 1);
-      // Di midpoint flip (~350ms), tukar ke nilai konversi
-      flipTimerRef.current = setTimeout(() => setShowConverted(true), 350);
-    } else if (vizPhase === "idle") {
-      // Reset saat kembali idle
-      setShowConverted(false);
-      if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
-    }
-
-    return () => {
-      if (flipTimerRef.current) clearTimeout(flipTimerRef.current);
-    };
-  }, [vizPhase]);
-
-  // Nilai yang ditampilkan di input bil2
-  const displayedBil2 = showConverted && snapshot ? snapshot.bil2_converted : bil2;
-  const p2Anim = inputPanelProps(displayedBil2);
-
-  // Warna glow sesuai arah konversi
-  const glowClass =
-    isTransforming && snapshot
-      ? snapshot.bil2_original > 0
-        ? "glow-ring-pink"   // positif → negatif: glow pink
-        : "glow-ring-blue"   // negatif → positif: glow biru
-      : "";
 
   const isDone = vizPhase === "done";
   const showInputKembali =
@@ -137,18 +80,16 @@ export function SubtractionInputPanel({
 
             <div />
 
-            {/* Bil2 label — menampilkan nama asal saat idle, nama konversi saat transform selesai */}
+            {/* Bil2 label — static */}
             <div className="flex items-center gap-1.5 justify-end">
               <span
-                className={`font-bold text-sm truncate transition-colors duration-300 ${p2Anim.titleColor}`}
+                className={`font-bold text-sm truncate ${p2.titleColor}`}
                 style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}
               >
-                {showConverted && snapshot
-                  ? (p2Anim.troopName ?? "Pengurang")
-                  : (p2.troopName ?? "Pengurang")}
+                {p2.troopName ?? "Pengurang"}
               </span>
-              <div className={`w-2 h-2 rounded-full shrink-0 transition-colors duration-300 ${
-                p2Anim.isPos ? "bg-intblue" : p2Anim.isNeg ? "bg-intpink" : "bg-slate-300"
+              <div className={`w-2 h-2 rounded-full shrink-0 ${
+                p2.isPos ? "bg-intblue" : p2.isNeg ? "bg-intpink" : "bg-slate-300"
               }`} />
             </div>
           </div>
@@ -180,34 +121,15 @@ export function SubtractionInputPanel({
               )}
             </div>
 
-            {/* Operator — berubah dari − ke + saat konversi selesai */}
-            <div className="flex flex-col items-center justify-center w-8 shrink-0 gap-0.5">
-              <span
-                className={`font-black text-2xl select-none transition-all duration-200 ${
-                  showConverted
-                    ? "text-intblue scale-125"
-                    : "text-slate-300 scale-100"
-                }`}
-                title={showConverted ? "a + (−b)" : "a − b"}
-              >
-                {showConverted ? "+" : "\u2212"}
-              </span>
-              {showConverted && (
-                <span className="text-[8px] font-bold text-intblue/60 font-mono leading-none select-none">
-                  +(−b)
-                </span>
-              )}
+            {/* Operator — always minus */}
+            <div className="flex items-center justify-center w-8 shrink-0">
+              <span className="font-black text-2xl select-none text-slate-300">{"\u2212"}</span>
             </div>
 
-            {/* Bil2 wrapper — flip + glow saat transform */}
-            <div
-              key={flipKey}
-              className={`relative rounded-xl overflow-hidden ${
-                isTransforming ? `input-flip ${glowClass}` : ""
-              }`}
-            >
-              {displayedBil2 < 0 && (
-                <span className={`absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2Anim.isNeg ? "text-intpink" : "text-intblue"}`}>
+            {/* Bil2 wrapper — static */}
+            <div className="relative rounded-xl overflow-hidden">
+              {bil2 < 0 && (
+                <span className={`absolute left-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2.isNeg ? "text-intpink" : "text-intblue"}`}>
                   (
                 </span>
               )}
@@ -215,34 +137,17 @@ export function SubtractionInputPanel({
                 type="number"
                 min={-9999}
                 max={9999}
-                value={displayedBil2 === 0 ? "" : displayedBil2}
+                value={bil2 === 0 ? "" : bil2}
                 placeholder="0"
                 aria-label="Pengurang: masukkan bilangan bulat antara -9999 dan 9999"
                 onChange={(e) => onBil2Change(e.target.value)}
                 readOnly={vizPhase !== "idle"}
-                className={`w-full border-2 ${p2Anim.inputBorder} focus:bg-white rounded-xl ${displayedBil2 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black outline-none text-center transition-colors duration-300 ${
-                  showConverted ? `${p2Anim.inputColor} ${
-                    p2Anim.isPos ? "bg-intblue-light/60" : p2Anim.isNeg ? "bg-intpink-light/60" : ""
-                  } value-pop` : p2Anim.inputColor
-                }`}
+                className={`w-full border-2 ${p2.inputBorder} focus:bg-white rounded-xl ${bil2 < 0 ? "px-6" : "px-3"} py-3 text-3xl font-mono font-black outline-none text-center transition-colors duration-300 ${p2.inputColor}`}
               />
-              {displayedBil2 < 0 && (
-                <span className={`absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2Anim.isNeg ? "text-intpink" : "text-intblue"}`}>
+              {bil2 < 0 && (
+                <span className={`absolute right-2 top-1/2 -translate-y-1/2 text-2xl font-black pointer-events-none select-none z-10 ${p2.isNeg ? "text-intpink" : "text-intblue"}`}>
                   )
                 </span>
-              )}
-
-              {/* Overlay badge "DIBALIK" saat transformasi aktif */}
-              {isTransforming && (
-                <div
-                  className={`absolute top-1 right-1 px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider text-white transition-opacity duration-300 ${
-                    showConverted
-                      ? p2Anim.isPos ? "bg-intblue" : "bg-intpink"
-                      : "opacity-0"
-                  }`}
-                >
-                  &#8722;b
-                </div>
               )}
             </div>
           </div>
@@ -255,13 +160,10 @@ export function SubtractionInputPanel({
               {p1.absVal > 0 ? p1.subtitle : "-9.999 s/d +9.999"}
             </p>
             <div />
-            <p className={`text-[10px] transition-colors duration-300 ${
-              p2Anim.isPos ? "text-intblue/70" : p2Anim.isNeg ? "text-intpink/70" : "text-slate-400"
+            <p className={`text-[10px] ${
+              p2.isPos ? "text-intblue/70" : p2.isNeg ? "text-intpink/70" : "text-slate-400"
             } text-center`}>
-              {showConverted && snapshot
-                ? `\u2192 ${p2Anim.absVal > 0 ? p2Anim.subtitle : "Pengurang -9.999 s/d +9.999"}`
-                : p2.absVal > 0 ? `Pengurang ${p2.subtitle}` : "Pengurang -9.999 s/d +9.999"
-              }
+              {p2.absVal > 0 ? `Pengurang ${p2.subtitle}` : "Pengurang -9.999 s/d +9.999"}
             </p>
           </div>
         </div>
@@ -328,18 +230,6 @@ export function SubtractionInputPanel({
           <div aria-live="polite" aria-atomic="true" className="sr-only">
             {isAnimating ? "Animasi berjalan..." : ""}
           </div>
-
-          {/* Visual indicator saat transform */}
-          {vizPhase === "transform" && (
-            <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
-              <div className={`w-2 h-2 rounded-full animate-pulse ${
-                snapshot && snapshot.bil2_original > 0 ? "bg-intpink" : "bg-intblue"
-              }`} />
-              {showConverted
-                ? "Pengurang dibalik \u2013 siap bertempur!"
-                : "Membalik pengurang\u2026"}
-            </div>
-          )}
 
           {/* Visual indicator saat battle/center */}
           {(vizPhase === "battle" || vizPhase === "center") && (

@@ -2,7 +2,7 @@
  * Fase visualisasi halaman pengurangan.
  * Extends VizPhase dengan fase tambahan "transform" (konversi pengurang).
  */
-export type VizPhaseSub = "idle" | "transform" | "battle" | "center" | "done";
+export type VizPhaseSub = "idle" | "transform" | "alliance" | "battle" | "center" | "done";
 
 /**
  * Snapshot nilai-nilai saat animasi pengurangan dimulai.

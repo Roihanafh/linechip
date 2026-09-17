@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useAnimationOrchestrator } from "./useAnimationOrchestrator";
+import { useAnimationOrchestrator, isAllianceCase } from "./useAnimationOrchestrator";
 import type { SubtractionState } from "./useSubtractionState";
 import type { ModelChipState } from "./useModelChipState";
 import type { SubtractionSnapshot, VizPhaseSub } from "@/lib/model-chip/subtractionTypes";
@@ -35,6 +35,7 @@ export interface SubtractionOrchestratorReturn {
   stepIdx: number;
   currentDecomposeStep: BattleStep | null;
   handleDecomposeDone: () => void;
+  handleAllianceSub: () => void;
 }
 
 export function useSubtractionOrchestrator(
@@ -130,6 +131,23 @@ export function useSubtractionOrchestrator(
     innerReplayRef.current?.();
   }, []); // no deps needed — all reads go through refs
 
+  // ── beginAlliance — reads snapshotRef so safe inside setTimeout ─────────
+  const beginAlliance = useCallback((snap: SubtractionSnapshot) => {
+    setTransformExiting(false);
+    setWaitingForTransform(false);
+    snapshotRef.current = snap;
+    stateRef.current.setVizPhase("alliance");
+  }, []); // no deps needed — all reads go through refs
+
+  // ── handleAllianceSub ─────────────────────────────────────────────────────
+  const handleAllianceSub = useCallback(() => {
+    stateRef.current.setVizPhase("center");
+    const t1 = setTimeout(() => {
+      stateRef.current.setVizPhase("done");
+    }, Math.round(2000 / animSpeedRef.current) + Math.round(500 / animSpeedRef.current));
+    transformTimers.current.push(t1);
+  }, []);
+
   // ── handleSubtract ────────────────────────────────────────────────────────
   const handleSubtract = useCallback(() => {
     const { bil1, bil2 } = stateRef.current;
@@ -150,13 +168,37 @@ export function useSubtractionOrchestrator(
     stateRef.current.setSnapshot(snap);
     snapshotRef.current = snap;
 
+    // Req 2.1, 2.2: detect alliance case (both same sign, non-zero after conversion)
+    if (isAllianceCase(bil1, b_konversi)) {
+      if (bil2 !== 0) {
+        stateRef.current.setVizPhase("transform");
+
+        if (animModeRef.current === "auto") {
+          const delay = Math.round(4000 / animSpeedRef.current);
+          const t = setTimeout(() => {
+            setTransformExiting(true);
+            const t2 = setTimeout(() => beginAlliance(snap), 400);
+            transformTimers.current.push(t2);
+          }, delay);
+          transformTimers.current.push(t);
+        } else {
+          setWaitingForTransform(true);
+        }
+      } else {
+        // isAllianceCase(x, 0) is always false — safety guard only
+        stateRef.current.setVizPhase("done");
+      }
+      return;
+    }
+
+    // Non-alliance (battle) path — unchanged
     if (bil2 !== 0) {
       stateRef.current.setVizPhase("transform");
 
       if (animModeRef.current === "auto") {
         // Delay = time for transform animation to play (input flip ~700ms + panel ~750ms).
         // We wait for the "after" state in TransformPanel before transitioning.
-        const delay = Math.round(900 / animSpeedRef.current);
+        const delay = Math.round(4000 / animSpeedRef.current);
         const t = setTimeout(() => {
           setTransformExiting(true);
           // Give chip-flip-exit animation (350ms) time to play before mounting ArenaPanel
@@ -170,7 +212,7 @@ export function useSubtractionOrchestrator(
     } else {
       beginBattle(snap);
     }
-  }, [beginBattle]);
+  }, [beginBattle, beginAlliance]);
 
   // ── handleNextClick ───────────────────────────────────────────────────────
   const handleNextClick = useCallback(() => {
@@ -179,13 +221,18 @@ export function useSubtractionOrchestrator(
       setTransformExiting(true);
       const snap = snapshotRef.current;
       if (snap) {
-        const t = setTimeout(() => beginBattle(snap), 400);
-        transformTimers.current.push(t);
+        if (isAllianceCase(snap.bil1, snap.bil2_converted)) {
+          const t = setTimeout(() => beginAlliance(snap), 400);
+          transformTimers.current.push(t);
+        } else {
+          const t = setTimeout(() => beginBattle(snap), 400);
+          transformTimers.current.push(t);
+        }
       }
     } else {
       innerOrch.handleNextClick();
     }
-  }, [waitingForTransform, beginBattle, innerOrch]);
+  }, [waitingForTransform, beginAlliance, beginBattle, innerOrch]);
 
   // ── replayAnimation ───────────────────────────────────────────────────────
   const replayAnimation = useCallback(() => {
@@ -198,11 +245,32 @@ export function useSubtractionOrchestrator(
     setWaitingForTransform(false);
     snapshotRef.current = snap;
 
+    if (isAllianceCase(snap.bil1, snap.bil2_converted)) {
+      if (snap.bil2_original !== 0) {
+        stateRef.current.setVizPhase("transform");
+        if (animModeRef.current === "auto") {
+          const delay = Math.round(4000 / animSpeedRef.current);
+          const t = setTimeout(() => {
+            setTransformExiting(true);
+            const t2 = setTimeout(() => beginAlliance(snap), 400);
+            transformTimers.current.push(t2);
+          }, delay);
+          transformTimers.current.push(t);
+        } else {
+          setWaitingForTransform(true);
+        }
+      } else {
+        // isAllianceCase(x, 0) is false, so this is unreachable — safety guard
+        beginAlliance(snap);
+      }
+      return;
+    }
+
     if (snap.bil2_original !== 0) {
       stateRef.current.setVizPhase("transform");
 
       if (animModeRef.current === "auto") {
-        const delay = Math.round(900 / animSpeedRef.current);
+        const delay = Math.round(4000 / animSpeedRef.current);
         const t = setTimeout(() => {
           setTransformExiting(true);
           const t2 = setTimeout(() => beginBattle(snap), 400);
@@ -215,7 +283,7 @@ export function useSubtractionOrchestrator(
     } else {
       beginBattle(snap);
     }
-  }, [beginBattle]);
+  }, [beginBattle, beginAlliance]);
 
   // ── setAnimMode ───────────────────────────────────────────────────────────
   const setAnimMode = useCallback((m: AnimMode) => {
@@ -259,5 +327,6 @@ export function useSubtractionOrchestrator(
     stepIdx: innerOrch.stepIdx,
     currentDecomposeStep: innerOrch.currentDecomposeStep,
     handleDecomposeDone: innerOrch.handleDecomposeDone,
+    handleAllianceSub,
   };
 }

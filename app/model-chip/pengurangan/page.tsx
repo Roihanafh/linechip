@@ -37,7 +37,9 @@ export default function SubtractionPage() {
   const arenaPhase: VizPhase =
     vizPhase === "transform" || vizPhase === "idle"
       ? "idle"
-      : (vizPhase as VizPhase);
+      : vizPhase === "alliance"
+        ? "alliance"
+        : (vizPhase as VizPhase);
 
   // ArenaPanel uses bil2_converted, not the original bil2
   const arenaSnapshot = snapshot
@@ -47,6 +49,7 @@ export default function SubtractionPage() {
   // ── isAnimating flag ────────────────────────────────────────────────────
   const isAnimating =
     vizPhase === "transform" ||
+    vizPhase === "alliance" ||
     vizPhase === "battle" ||
     vizPhase === "center";
 
@@ -186,7 +189,7 @@ export default function SubtractionPage() {
               negChipMap={orch.negChipMap}
               animSpeed={orch.animSpeed}
               onPairDone={orch.handlePairDone}
-              onAllianceDone={() => {}}
+              onAllianceDone={orch.handleAllianceSub}
               stepIdx={orch.stepIdx}
               currentDecomposeStep={orch.currentDecomposeStep}
               onDecomposeDone={orch.handleDecomposeDone}

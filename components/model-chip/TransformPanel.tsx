@@ -1,4 +1,4 @@
-﻿// components/model-chip/TransformPanel.tsx
+// components/model-chip/TransformPanel.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -49,8 +49,8 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
   const [step, setStep] = useState<"before" | "flipping" | "after">("before");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStep("flipping"), 200);
-    const t2 = setTimeout(() => setStep("after"), 750);
+    const t1 = setTimeout(() => setStep("flipping"), 600);
+    const t2 = setTimeout(() => setStep("after"), 2000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -86,7 +86,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
               style={{
                 opacity: step === "after" ? 0.35 : 1,
                 transform: step === "after" ? "scale(0.85)" : "scale(1)",
-                transition: "opacity 0.5s ease-out, transform 0.5s ease-out",
+                transition: "opacity 1.0s ease-out, transform 1.0s ease-out",
               }}
             >
               <div className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
@@ -148,7 +148,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
                   : step === "flipping"
                   ? "scale(0.9)"
                   : "scale(1)",
-                transition: "opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)",
+                transition: "opacity 1.0s ease-out, transform 1.0s cubic-bezier(0.34,1.56,0.64,1)",
               }}
             >
               <div className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
@@ -158,7 +158,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
               </div>
               <div className="w-20 h-20 drop-shadow-md" style={{
                 filter: step === "after" ? "none" : "grayscale(0.4)",
-                transition: "filter 0.4s ease",
+                transition: "filter 0.8s ease",
               }}>
                 {toType === "ab"
                   ? <AntibodyCharacter type={place} uid="tf-to" />
@@ -183,7 +183,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
           </div>
 
           {/* Footer */}
-          <div className={`mt-4 rounded-xl px-4 py-2.5 text-center text-xs transition-all duration-500 ${
+          <div className={`mt-4 rounded-xl px-4 py-2.5 text-center text-xs transition-all duration-700 ${
             step === "after"
               ? isPositive
                 ? "bg-intpink-light border border-intpink/20 text-intpink"

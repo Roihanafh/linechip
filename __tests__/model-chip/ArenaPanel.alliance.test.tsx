@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 
 // ─── Mock all heavy child components ─────────────────────────────────────────
 
@@ -44,6 +44,7 @@ jest.mock("@/components/game/CharacterSVGs", () => ({
     return "satuan";
   },
   TIER_TO_PLACE: { 1: "satuan", 10: "puluhan", 100: "ratusan", 1000: "ribuan" },
+  CharacterChips: () => React.createElement("div", { "data-testid": "mock-character-chips" }),
 }));
 
 // ─── Import the component under test ─────────────────────────────────────────
@@ -244,5 +245,149 @@ describe("Req 7.7: ArenaBattle rendered (not AllianceStage) when vizPhase === 'b
   it("arena-header shows '⚔️ Pertarungan!' when vizPhase === 'battle'", () => {
     render(React.createElement(ArenaPanel, makeBattleProps()));
     expect(screen.getByTestId("arena-header").textContent).toBe("⚔️ Pertarungan!");
+  });
+});
+
+// ─── fast-check import (used by Property 7 below) ────────────────────────────
+import * as fc from "fast-check";
+
+// ─── Feature: same-type-pool-animation ───────────────────────────────────────
+
+// Feature: same-type-pool-animation, Property 6: AlliancePoolPanel selalu hadir saat vizPhase === "alliance"
+describe("Property 6 [same-type-pool-animation]: alliance-pool present when vizPhase === 'alliance'", () => {
+  it("before onComplete: shows two separate bil columns, not alliance-pool", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps()));
+    // alliance-pool is NOT visible yet (merged=false)
+    expect(container.querySelector("[data-testid='alliance-pool']")).toBeNull();
+    // Two columns exist: Bil.1 and Bil.2 headers
+    const spans = container.querySelectorAll("span.font-mono");
+    const bil1 = Array.from(spans).find((el) => el.textContent?.includes("Bil.1:"));
+    const bil2 = Array.from(spans).find((el) => el.textContent?.includes("Bil.2:"));
+    expect(bil1).toBeTruthy();
+    expect(bil2).toBeTruthy();
+  });
+
+  it("after onComplete: renders [data-testid=alliance-pool] when vizPhase === 'alliance'", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps()));
+    act(() => {
+      (lastAllianceStageProps.onComplete as () => void)();
+    });
+    expect(container.querySelector("[data-testid='alliance-pool']")).not.toBeNull();
+  });
+
+  it("does NOT render alliance-pool when vizPhase === 'battle'", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({
+      vizPhase: "battle",
+      snapshot: { bil1: 5, bil2: -3 },
+      snapTotalPos: 5, snapTotalNeg: 3, pairs: 3, remaining: 2,
+    })));
+    expect(container.querySelector("[data-testid='alliance-pool']")).toBeNull();
+  });
+
+  it("does NOT render alliance-pool when vizPhase === 'done'", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ vizPhase: "done" })));
+    expect(container.querySelector("[data-testid='alliance-pool']")).toBeNull();
+  });
+});
+
+// Feature: same-type-pool-animation, Property 7: data-total selalu akurat
+describe("Property 7 [same-type-pool-animation]: data-total equals |bil1| + |bil2|", () => {
+  it("data-total is correct for positive bil1 and bil2", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: 3, bil2: 5 } })));
+    act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+    const pool = container.querySelector("[data-testid='alliance-pool']");
+    expect(pool?.getAttribute("data-total")).toBe("8");
+  });
+
+  it("data-total is correct for negative bil1 and bil2", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: -4, bil2: -6 } })));
+    act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+    const pool = container.querySelector("[data-testid='alliance-pool']");
+    expect(pool?.getAttribute("data-total")).toBe("10");
+  });
+
+  it("property: data-total === String(|bil1| + |bil2|) for any same-sign integer values", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: -9999, max: 9999 }).filter(n => n !== 0),
+        fc.integer({ min: -9999, max: 9999 }).filter(n => n !== 0),
+        (bil1, bil2) => {
+          // Normalise to same-sign (valid alliance case)
+          const b1 = Math.abs(bil1);
+          const b2 = Math.abs(bil2);
+          const sign = bil1 > 0 ? 1 : -1;
+          const snapshot = { bil1: sign * b1, bil2: sign * b2 };
+          const { container, unmount } = render(
+            React.createElement(ArenaPanel, makeProps({ snapshot }))
+          );
+          // Trigger merge
+          act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+          const pool = container.querySelector("[data-testid='alliance-pool']");
+          expect(pool?.getAttribute("data-total")).toBe(String(b1 + b2));
+          unmount();
+        }
+      ),
+      { numRuns: 50 }
+    );
+  });
+});
+
+// Feature: same-type-pool-animation, Property 8: Header faction-aware selalu benar
+describe("Property 8 [same-type-pool-animation]: Header shows correct Total sign", () => {
+  it("shows 'Total: +N' for ab faction (bil1 > 0)", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: 3, bil2: 5 } })));
+    act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+    const header = container.querySelector(".text-intblue.font-mono");
+    expect(header?.textContent).toContain("Total: +8");
+  });
+
+  it("shows 'Total: \u2212N' for ku faction (bil1 < 0)", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: -4, bil2: -6 } })));
+    act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+    const header = container.querySelector(".text-intpink.font-mono");
+    expect(header?.textContent).toContain("Total: \u221210");
+  });
+});
+
+// Feature: same-type-pool-animation, Property 9: aria-hidden pada Pool_Gabungan
+describe("Property 9 [same-type-pool-animation]: alliance-pool has aria-hidden='true'", () => {
+  it("alliance-pool container has aria-hidden='true'", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps()));
+    act(() => { (lastAllianceStageProps.onComplete as () => void)(); });
+    const pool = container.querySelector("[data-testid='alliance-pool']");
+    expect(pool?.getAttribute("aria-hidden")).toBe("true");
+  });
+});
+
+// Feature: same-type-pool-animation, Property 10: Header dan status ArenaPanel saat alliance
+describe("Property 10 [same-type-pool-animation]: ArenaPanel header shows Persekutuan and Bergabung", () => {
+  it("arena-header shows '\uD83E\uDD1D Persekutuan!' during alliance", () => {
+    render(React.createElement(ArenaPanel, makeProps()));
+    expect(screen.getByTestId("arena-header").textContent).toBe("\uD83E\uDD1D Persekutuan!");
+  });
+});
+
+// Feature: same-type-pool-animation, Property 11: Accent bar tidak animate-pulse saat alliance
+describe("Property 11 [same-type-pool-animation]: Accent bar has no animate-pulse during alliance", () => {
+  it("accent bar does not have animate-pulse class for ab faction", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: 5, bil2: 3 } })));
+    const bar = container.querySelector(".absolute.top-0");
+    expect(bar?.className).not.toContain("animate-pulse");
+  });
+
+  it("accent bar does not have animate-pulse class for ku faction", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({ snapshot: { bil1: -5, bil2: -3 } })));
+    const bar = container.querySelector(".absolute.top-0");
+    expect(bar?.className).not.toContain("animate-pulse");
+  });
+
+  it("accent bar HAS animate-pulse during battle (regression check)", () => {
+    const { container } = render(React.createElement(ArenaPanel, makeProps({
+      vizPhase: "battle",
+      snapshot: { bil1: 5, bil2: -3 },
+      snapTotalPos: 5, snapTotalNeg: 3, pairs: 3, remaining: 2,
+    })));
+    const bar = container.querySelector(".absolute.top-0");
+    expect(bar?.className).toContain("animate-pulse");
   });
 });

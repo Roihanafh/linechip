@@ -1,13 +1,103 @@
 // components/model-chip/ArenaPanel.tsx
 "use client";
 
-import { dominantPlace, TIER_TO_PLACE } from "@/components/game/CharacterSVGs";
+import { useState } from "react";
+import { dominantPlace, TIER_TO_PLACE, CharacterChips } from "@/components/game/CharacterSVGs";
 import type { VizPhase, TierGroup, StepPhase } from "@/lib/model-chip/types";
 import type { BattleStep } from "@/lib/model-chip/battlePlan";
 import { ArenaBattle } from "./ArenaBattle";
 import { ArenaCenter } from "./ArenaCenter";
 import { ArenaDone } from "./ArenaDone";
 import { AllianceStage } from "@/components/game/AllianceStage";
+
+interface AlliancePoolPanelProps {
+  snapshot: { bil1: number; bil2: number };
+  animSpeed: number;
+  onAllianceDone: () => void;
+}
+
+function AlliancePoolPanel({ snapshot, animSpeed, onAllianceDone }: AlliancePoolPanelProps) {
+  const [merged, setMerged] = useState(false);
+  const faction: "ab" | "ku" = snapshot.bil1 > 0 ? "ab" : "ku";
+  const totalValue = Math.abs(snapshot.bil1) + Math.abs(snapshot.bil2);
+  const totalSign = faction === "ab" ? "+" : "−";
+  const totalColor = faction === "ab" ? "text-intblue" : "text-intpink";
+  const bil1Sign = snapshot.bil1 > 0 ? "+" : "−";
+  const bil2Sign = snapshot.bil2 > 0 ? "+" : "−";
+
+  function handleComplete() {
+    setMerged(true);
+    onAllianceDone();
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <AllianceStage
+        bil1Value={snapshot.bil1}
+        bil2Value={snapshot.bil2}
+        faction={faction}
+        autoStart={true}
+        hideControls={true}
+        speed={animSpeed}
+        onComplete={handleComplete}
+      />
+      <div className="transition-all duration-500">
+        {!merged ? (
+          // Pre-merge: two separate columns
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1">
+              <span className={`font-mono text-[10px] font-bold ${totalColor}`}>
+                Bil.1: {bil1Sign}{Math.abs(snapshot.bil1)}
+              </span>
+              <CharacterChips
+                value={Math.abs(snapshot.bil1)}
+                type={faction}
+                maxPerTier={6}
+                uidPrefix="ap-bil1"
+                phase="idle"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className={`font-mono text-[10px] font-bold ${totalColor}`}>
+                Bil.2: {bil2Sign}{Math.abs(snapshot.bil2)}
+              </span>
+              <CharacterChips
+                value={Math.abs(snapshot.bil2)}
+                type={faction}
+                maxPerTier={6}
+                uidPrefix="ap-bil2"
+                phase="idle"
+              />
+            </div>
+          </div>
+        ) : (
+          // Post-merge: single combined pool
+          <div
+            data-testid="alliance-pool"
+            aria-hidden="true"
+            data-total={String(totalValue)}
+            className="flex flex-col gap-1"
+          >
+            <span className={`font-mono text-[10px] font-bold ${totalColor}`}>
+              Total: {totalSign}{totalValue}
+            </span>
+            {totalValue === 0 ? (
+              <span className="font-mono text-slate-400 italic text-[9px]">tidak ada chip</span>
+            ) : (
+              <CharacterChips
+                value={totalValue}
+                type={faction}
+                maxPerTier={12}
+                uidPrefix="alliance-pool"
+                phase="idle"
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export interface ArenaPanelProps {
   snapshot: { bil1: number; bil2: number }; // guaranteed non-null (parent guards)
@@ -142,20 +232,21 @@ export function ArenaPanel({
       )}
 
       {vizPhase === "alliance" && snapshot && (
-        <AllianceStage
-          bil1Value={snapshot.bil1}
-          bil2Value={snapshot.bil2}
-          faction={snapshot.bil1 > 0 ? "ab" : "ku"}
-          autoStart={true}
-          hideControls={true}
-          speed={animSpeed}
-          onComplete={onAllianceDone}
+        <AlliancePoolPanel
+          snapshot={snapshot}
+          animSpeed={animSpeed}
+          onAllianceDone={onAllianceDone}
         />
       )}
 
       {isDone && (
         <ArenaDone
-          {...sharedProps}
+          s1={s1}
+          s2={s2}
+          s1Paired={sharedProps.s1Paired}
+          s2Paired={sharedProps.s2Paired}
+          s1Remaining={sharedProps.s1Remaining}
+          s2Remaining={sharedProps.s2Remaining}
           remaining={remaining}
         />
       )}
