@@ -120,6 +120,10 @@ export interface ArenaPanelProps {
   stepIdx: number;
   currentDecomposeStep: BattleStep | null;
   onDecomposeDone: () => void;
+  // click-mode controls
+  animMode?: "auto" | "click";
+  waitingForClick?: boolean;
+  onNextClick?: () => void;
 }
 
 export function ArenaPanel({
@@ -127,6 +131,7 @@ export function ArenaPanel({
   snapTotalPos, snapTotalNeg, pairs, remaining,
   tierGroups, tierIdx, pairInTier, stepPhase, neutralised, posChipMap, negChipMap, animSpeed, onPairDone, onAllianceDone,
   stepIdx, currentDecomposeStep, onDecomposeDone,
+  animMode, waitingForClick, onNextClick,
 }: ArenaPanelProps) {
   const s1 = snapshot.bil1;
   const s2 = snapshot.bil2;
@@ -215,6 +220,20 @@ export function ArenaPanel({
           currentDecomposeStep={currentDecomposeStep}
           onDecomposeDone={onDecomposeDone}
         />
+      )}
+
+      {/* Lanjut button — click mode, inside the arena */}
+      {vizPhase === "battle" && animMode === "click" && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={onNextClick}
+            disabled={!waitingForClick}
+            aria-label="Lanjut ke langkah berikutnya"
+            className="px-6 py-2 bg-intblue text-white rounded-xl font-bold text-sm transition-colors hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Lanjut &#9654;
+          </button>
+        </div>
       )}
 
       {vizPhase === "center" && (

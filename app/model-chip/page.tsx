@@ -136,6 +136,9 @@ export default function ModelChipPage() {
             stepIdx={anim.stepIdx}
             currentDecomposeStep={anim.currentDecomposeStep}
             onDecomposeDone={anim.handleDecomposeDone}
+            animMode={anim.animMode}
+            waitingForClick={anim.waitingForClick}
+            onNextClick={anim.handleNextClick}
           />
         )}
 

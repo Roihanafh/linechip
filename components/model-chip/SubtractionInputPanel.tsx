@@ -50,9 +50,6 @@ export function SubtractionInputPanel({
   const isDone = vizPhase === "done";
   const showInputKembali =
     isDone || (snapshot !== null && !isAnimating && vizPhase !== "idle");
-  const showLanjut =
-    animMode === "click" &&
-    (vizPhase === "transform" || vizPhase === "battle");
   const showSpeedControl = vizPhase === "battle";
 
   return (
@@ -243,36 +240,24 @@ export function SubtractionInputPanel({
 
           {/* Speed control — battle phase only */}
           {showSpeedControl && (
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
-                {([0.5, 1, 2] as const).map((spd) => (
-                  <button
-                    key={spd}
-                    onClick={() => onSpeedChange(spd)}
-                    className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                      animSpeed === spd
-                        ? "bg-intblue text-white shadow-sm"
-                        : "text-slate-400 hover:text-slate-600"
-                    }`}
-                  >
-                    {spd}&times;
-                  </button>
-                ))}
-              </div>
+            <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
+              {([0.5, 1, 2] as const).map((spd) => (
+                <button
+                  key={spd}
+                  onClick={() => onSpeedChange(spd)}
+                  className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
+                    animSpeed === spd
+                      ? "bg-intblue text-white shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
+                  }`}
+                >
+                  {spd}&times;
+                </button>
+              ))}
             </div>
           )}
 
-          {/* Lanjut button — click mode */}
-          {showLanjut && (
-            <button
-              onClick={onNextClick}
-              disabled={!waitingForClick}
-              aria-label="Lanjut ke langkah berikutnya"
-              className="px-6 py-2 bg-intblue text-white rounded-xl font-bold text-sm transition-colors hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Lanjut &#9654;
-            </button>
-          )}
+
         </div>
       </div>
     </div>

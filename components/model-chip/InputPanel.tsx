@@ -187,34 +187,22 @@ export function InputPanel({
             </div>
           )}
 
-          {/* Row 3: speed control + Lanjut (battle only) */}
+          {/* Row 3: speed control (battle only) */}
           {vizPhase === "battle" && (
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
-                {([0.5, 1, 2] as const).map((spd) => (
-                  <button
-                    key={spd}
-                    onClick={() => onSpeedChange(spd)}
-                    className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                      animSpeed === spd
-                        ? "bg-intblue text-white shadow-sm"
-                        : "text-slate-400 hover:text-slate-600"
-                    }`}
-                  >
-                    {spd}×
-                  </button>
-                ))}
-              </div>
-              {animMode === "click" && (
+            <div className="flex gap-0.5 p-1 rounded-lg bg-slate-100">
+              {([0.5, 1, 2] as const).map((spd) => (
                 <button
-                  onClick={onNextClick}
-                  disabled={!waitingForClick}
-                  aria-label="Mulai animasi pasangan berikutnya"
-                  className="px-6 py-2 bg-intblue text-white rounded-xl font-bold text-sm transition-colors hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  key={spd}
+                  onClick={() => onSpeedChange(spd)}
+                  className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
+                    animSpeed === spd
+                      ? "bg-intblue text-white shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
+                  }`}
                 >
-                  Lanjut ▶
+                  {spd}×
                 </button>
-              )}
+              ))}
             </div>
           )}
         </div>
