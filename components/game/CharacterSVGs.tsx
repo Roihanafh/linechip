@@ -399,6 +399,7 @@ export function CharacterChips({
   const sizeClass = size === "xs" ? "w-6 h-6" : size === "md" ? "w-10 h-10" : "w-8 h-8";
   const isCharging = phase === "charging";
   const isExploding = phase === "exploding";
+  const isSettled = phase === "settled";
 
   // Split an array into chunks of `n`
   function chunks<T>(arr: T[], n: number): T[][] {
@@ -447,11 +448,11 @@ export function CharacterChips({
                 })}
               </div>
             ))}
-            {count > maxPerTier && (
+            {count > maxPerTier && !isExploding && !isSettled && (
               <span className={`text-xs font-mono font-bold ${
                 type === "ab" ? "text-blue-500" : "text-rose-500"
               }`}>
-                +{(count - maxPerTier).toLocaleString("id-ID")} lagi
+                +{(count - maxPerTier).toLocaleString("id-ID")}
               </span>
             )}
           </div>
