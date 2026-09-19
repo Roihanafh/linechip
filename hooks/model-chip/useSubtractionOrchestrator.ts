@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAnimationOrchestrator, isAllianceCase } from "./useAnimationOrchestrator";
@@ -173,7 +173,6 @@ export function useSubtractionOrchestrator(
       if (bil2 !== 0) {
         stateRef.current.setVizPhase("transform");
 
-        if (animModeRef.current === "auto") {
           const delay = Math.round(4000 / animSpeedRef.current);
           const t = setTimeout(() => {
             setTransformExiting(true);
@@ -181,9 +180,6 @@ export function useSubtractionOrchestrator(
             transformTimers.current.push(t2);
           }, delay);
           transformTimers.current.push(t);
-        } else {
-          setWaitingForTransform(true);
-        }
       } else {
         // isAllianceCase(x, 0) is always false — safety guard only
         stateRef.current.setVizPhase("done");
@@ -195,7 +191,6 @@ export function useSubtractionOrchestrator(
     if (bil2 !== 0) {
       stateRef.current.setVizPhase("transform");
 
-      if (animModeRef.current === "auto") {
         // Delay = time for transform animation to play (input flip ~700ms + panel ~750ms).
         // We wait for the "after" state in TransformPanel before transitioning.
         const delay = Math.round(4000 / animSpeedRef.current);
@@ -206,9 +201,6 @@ export function useSubtractionOrchestrator(
           transformTimers.current.push(t2);
         }, delay);
         transformTimers.current.push(t);
-      } else {
-        setWaitingForTransform(true);
-      }
     } else {
       beginBattle(snap);
     }
@@ -248,7 +240,6 @@ export function useSubtractionOrchestrator(
     if (isAllianceCase(snap.bil1, snap.bil2_converted)) {
       if (snap.bil2_original !== 0) {
         stateRef.current.setVizPhase("transform");
-        if (animModeRef.current === "auto") {
           const delay = Math.round(4000 / animSpeedRef.current);
           const t = setTimeout(() => {
             setTransformExiting(true);
@@ -256,9 +247,6 @@ export function useSubtractionOrchestrator(
             transformTimers.current.push(t2);
           }, delay);
           transformTimers.current.push(t);
-        } else {
-          setWaitingForTransform(true);
-        }
       } else {
         // isAllianceCase(x, 0) is false, so this is unreachable — safety guard
         beginAlliance(snap);
@@ -269,7 +257,6 @@ export function useSubtractionOrchestrator(
     if (snap.bil2_original !== 0) {
       stateRef.current.setVizPhase("transform");
 
-      if (animModeRef.current === "auto") {
         const delay = Math.round(4000 / animSpeedRef.current);
         const t = setTimeout(() => {
           setTransformExiting(true);
@@ -277,9 +264,6 @@ export function useSubtractionOrchestrator(
           transformTimers.current.push(t2);
         }, delay);
         transformTimers.current.push(t);
-      } else {
-        setWaitingForTransform(true);
-      }
     } else {
       beginBattle(snap);
     }

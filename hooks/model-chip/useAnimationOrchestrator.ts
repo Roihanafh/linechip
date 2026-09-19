@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { buildBattlePlan, buildInitialChipMap } from "@/lib/model-chip/battlePlan";
@@ -285,14 +285,11 @@ export function useAnimationOrchestrator(
 
     const nextIdx = stepIdxRef.current + 1;
 
-    if (animModeRef.current === "auto") {
-      timers.current.push(setTimeout(() => {
-        runCurrentStep(plan, nextIdx);
-      }, 100));
-    } else {
-      pendingNextRef.current = { stepIdx: nextIdx };
-      setWaitingForClick(true);
-    }
+    // Decompose steps always auto-advance regardless of animMode —
+    // the animation is self-contained and does not need a manual "next" click.
+    timers.current.push(setTimeout(() => {
+      runCurrentStep(plan, nextIdx);
+    }, 100));
   };
 
   // ── handlePairDone ────────────────────────────────────────────────────────
