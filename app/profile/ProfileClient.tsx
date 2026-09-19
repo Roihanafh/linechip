@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth';
 import { useProfile } from '@/features/profile';
+import { resolveDisplayScore } from '@/lib/game/chipHelpers';
 import { formatDate } from '@/features/profile/utils/dateUtils';
 import { getProviderLabel } from '@/features/profile/utils/providerUtils';
 import Avatar from '@/components/profile/Avatar';
@@ -254,7 +255,7 @@ export function ProfileClient() {
           </div>
 
           {/* Joined date */}
-          <div className="flex items-center gap-3 py-2.5">
+          <div className="flex items-center gap-3 py-2.5 border-b border-[#f1f5f9]">
             <span
               className="material-symbols-outlined text-[18px] text-[#94a3b8] shrink-0"
               aria-hidden="true"
@@ -267,6 +268,27 @@ export function ProfileClient() {
               </p>
               <p className="text-[14px] text-[#334155]">
                 {formatDate(profile.createdAt)}
+              </p>
+            </div>
+          </div>
+
+          {/* Total score */}
+          <div className="flex items-center gap-3 py-2.5">
+            <span
+              className="material-symbols-outlined text-[18px] text-[#94a3b8] shrink-0"
+              aria-hidden="true"
+            >
+              emoji_events
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] text-[#94a3b8] font-mono uppercase tracking-[0.4px] mb-0.5">
+                Total Poin
+              </p>
+              <p
+                className="text-[14px] text-[#334155]"
+                aria-label={`Total poin: ${resolveDisplayScore(profile.totalScore).toLocaleString('id-ID')}`}
+              >
+                {resolveDisplayScore(profile.totalScore).toLocaleString('id-ID')}
               </p>
             </div>
           </div>

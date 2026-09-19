@@ -92,7 +92,7 @@ export default function MateriPage() {
           <div className="text-3xl">🎮</div>
           <div className="flex-1">
             <h3 className="font-semibold text-lg text-[#0f172a]" style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>Ingin belajar sambil bermain?</h3>
-            <p className="text-slate-500 text-sm">Coba dua game seru: Antibodi vs Kuman dan Game Garis Bilangan — jawab soal bilangan bulat dengan mengatur panah!</p>
+            <p className="text-slate-500 text-sm">Coba dua game seru dengan soal otomatis: Antibodi vs Kuman dan Game Garis Bilangan — susun chip dan panah, lalu kumpulkan poin dari setiap jawaban benar!</p>
           </div>
           <div className="flex gap-3 shrink-0">
             <Link href="/game-virus" className="bg-intblue text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-intblue-dark transition-colors">

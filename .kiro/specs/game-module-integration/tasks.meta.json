@@ -1,0 +1,431 @@
+{
+  "pbtResults": {
+    "11.2 Buat `__tests__/game/arrowHelpers.property.test.ts` — property tests dengan fast-check": {
+      "status": "passed",
+      "lastRunTimestamp": 1789741026760
+    },
+    "11.1 Buat `__tests__/game/chipHelpers.property.test.ts` — property tests dengan fast-check": {
+      "status": "passed",
+      "lastRunTimestamp": 1789741037444
+    }
+  },
+  "executionHistory": {
+    "1.1 Buat `lib/game/chipQuestion.ts` dengan `ChipQuestion` interface dan `generateChipQuestion()` pure function": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364325
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738375189
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738490207
+      }
+    ],
+    "1.2 Buat `lib/game/chipHelpers.ts` dengan semua helper pure functions": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364441
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738495920
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738591676
+      }
+    ],
+    "2.1 Buat `lib/game/arrowHelpers.ts` dengan `validateArrowPlacement()` pure function": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364509
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738375685
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738491031
+      }
+    ],
+    "3.1 Verifikasi `features/game/scoreService.ts` sudah lengkap": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364572
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738496421
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738591304
+      }
+    ],
+    "4.1 Modifikasi `features/auth/types/index.ts` — tambah field `totalScore?: number` ke `UserProfile`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364648
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738597568
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738680741
+      }
+    ],
+    "5.1 Modifikasi `app/profile/ProfileClient.tsx` — tambah baris \"Total Poin\" di section \"Informasi Akun\"": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364722
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738687128
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740277065
+      }
+    ],
+    "6. Checkpoint — pastikan semua layer utility berjalan": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364774
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741386195
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789742120300
+      }
+    ],
+    "7.1 Tambah state dan imports baru ke `app/game-virus/page.tsx`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364818
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738687727
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740304821
+      }
+    ],
+    "7.2 Implementasikan `handleComputeWithValidation` dan ganti tombol \"Hitung Hasil\"": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364863
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740350999
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740444527
+      }
+    ],
+    "7.3 Implementasikan Answer_Input, `handleCheckChipAnswer`, dan `handleNewChipQuestion`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364912
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740450721
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740891563
+      }
+    ],
+    "7.4 Tambah Chip_Question header dan skor sesi ke UI `game-virus`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738364956
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740451161
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740893519
+      }
+    ],
+    "8.1 Tambah state, imports, dan skor sesi ke `app/intline-run/page.tsx`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365002
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738688784
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740339793
+      }
+    ],
+    "8.2 Wrap `handleCheckAnswer` dengan validasi arrow placement dua lapis": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365047
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740351861
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740445127
+      }
+    ],
+    "9.1 Modifikasi `app/materi/page.tsx` — update teks deskripsi promo game": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365101
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740451693
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740928606
+      }
+    ],
+    "10.1 Buat `__tests__/game/chipHelpers.test.ts` — unit tests example-based": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365149
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738598045
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738681338
+      }
+    ],
+    "10.2 Buat `__tests__/game/arrowHelpers.test.ts` — unit tests example-based": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365224
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738599777
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738681979
+      }
+    ],
+    "11.1 Buat `__tests__/game/chipHelpers.property.test.ts` — property tests dengan fast-check": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365273
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740938361
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741379518
+      }
+    ],
+    "11.2 Buat `__tests__/game/arrowHelpers.property.test.ts` — property tests dengan fast-check": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365324
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740938924
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741380254
+      }
+    ],
+    "12.1 Buat `__tests__/game/scoreService.test.ts` — unit tests untuk scoreService": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365381
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740937657
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741380597
+      }
+    ],
+    "13. Checkpoint Final — pastikan semua tests pass": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738365436
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789742124886
+      },
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789742261270
+      }
+    ],
+    "2. Buat pure function untuk validasi arrow placement": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738491085
+      }
+    ],
+    "3. Verifikasi dan validasi `scoreService.ts`": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738591384
+      }
+    ],
+    "1. Buat pure functions dan tipe untuk Game Model Chip": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738591724
+      }
+    ],
+    "4. Perluas `UserProfile` interface": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738680779
+      }
+    ],
+    "10. Tulis unit tests untuk chipHelpers dan arrowHelpers": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789738682037
+      }
+    ],
+    "5. Tambahkan baris \"Total Poin\" ke halaman profil": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740277133
+      }
+    ],
+    "8. Modifikasi `app/intline-run/page.tsx` — validasi arrow placement dan skor sesi": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740445232
+      }
+    ],
+    "7. Modifikasi `app/game-virus/page.tsx` — integrasi soal, validasi, dan skor": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740893591
+      }
+    ],
+    "9. Update teks promo game di halaman materi": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789740928757
+      }
+    ],
+    "11. Tulis property-based tests": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741380344
+      }
+    ],
+    "12. Tulis unit tests untuk scoreService": [
+      {
+        "executionId": "f6a04040-8cd5-4da4-87c0-b0b364ad81df",
+        "chatSessionId": "sess_fdd64443-906a-4d1b-83fb-498d1d1853b5",
+        "timestamp": 1789741380702
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 ﻿// app/game-virus/page.tsx
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   TIERS,
@@ -19,6 +19,20 @@ import {
 } from "@/components/game/CharacterSVGs";
 import { InteractionAnimation } from "@/components/game/InteractionAnimation";
 import { useSound } from "@/hooks/useSound";
+import { generateChipQuestion, type ChipQuestion } from "@/lib/game/chipQuestion";
+import {
+  validateChipPlacement,
+  validateChipAnswer,
+  formatOperand,
+  getOperandColorClass,
+  getFeedbackClass,
+  formatScore,
+  resolveDisplayScore,
+  filterAnswerInput,
+  generateAriaLabel,
+} from "@/lib/game/chipHelpers";
+import { awardPoints, POINTS_PER_CORRECT } from "@/features/game/scoreService";
+import { useAuth } from "@/features/auth";
 
 interface HistoryEntry {
   type: "ab" | "ku";
@@ -42,9 +56,31 @@ export default function GameVirusPage() {
   const [kuTarget, setKuTarget] = useState<1 | 2>(2);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [animating, setAnimating] = useState(false);
-  const handleComputeResult = useRef<() => void>(() => {});
-  const playLaunch = useSound("/luncurkan.mp3");
 
+  // --- Game-module integration state (tasks 7.1–7.4) ---
+  const [currentQuestion, setCurrentQuestion] = useState<ChipQuestion | null>(
+    () => generateChipQuestion()
+  );
+  const [answerInput, setAnswerInput] = useState("");
+  const [chipFeedback, setChipFeedback] = useState<{
+    correct: boolean;
+    feedback: string;
+  } | null>(null);
+  const [sessionScore, setSessionScore] = useState(0);
+  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { user, profile } = useAuth();
+
+  // Cleanup auto-advance timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+    };
+  }, []);
+
+  const handleComputeResult = useRef<() => void>(() => {});
+  const computedEquation = useRef<{ a: number; b: number; op: "+" | "-" } | null>(null);
+  const playLaunch = useSound("/luncurkan.mp3");
 
   const hasChips = bil1Value !== 0 || bil2Value !== 0;
   const canCompute = hasChips && phase === "idle" && resultValue === null && !animating;
@@ -87,9 +123,12 @@ export default function GameVirusPage() {
     }
   };
 
+  // Original handleCompute — NOT modified (task 7.2 wraps it)
   const handleCompute = () => {
     if (!canCompute) return;
-    const r = bil1Value + bil2Value;
+    const op = currentQuestion?.op ?? "+";
+    const r = op === "+" ? bil1Value + bil2Value : bil1Value - bil2Value;
+    computedEquation.current = { a: bil1Value, b: bil2Value, op };
     // Store the result callback — InteractionAnimation will call this via onComplete
     handleComputeResult.current = () => {
       setResultValue(r);
@@ -99,8 +138,54 @@ export default function GameVirusPage() {
       setAnimating(false);
       setTimeout(() => setPhase("idle"), 1400);
     };
-    playLaunch(); setAnimating(true);
+    playLaunch();
+    setAnimating(true);
   };
+
+  // Task 7.2 — validates chip placement before computing
+  const handleComputeWithValidation = () => {
+    if (!canCompute) return;
+    if (!currentQuestion) {
+      setChipFeedback({ correct: false, feedback: "Memuat soal..." });
+      return;
+    }
+    const result = validateChipPlacement(bil1Value, bil2Value, currentQuestion);
+    if (!result.valid) {
+      setChipFeedback({ correct: false, feedback: result.message });
+      return;
+    }
+    setChipFeedback(null);
+    handleCompute();
+  };
+
+  // Task 7.3 — reset to a new question
+  const handleNewChipQuestion = useCallback(() => {
+    if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+    setCurrentQuestion(generateChipQuestion());
+    setBil1Value(0);
+    setBil2Value(0);
+    setResultValue(null);
+    setPhase("idle");
+    setHistory([]);
+    setAnswerInput("");
+    setChipFeedback(null);
+    computedEquation.current = null; // clear Persamaan Lengkap on new question
+    // sessionScore intentionally NOT reset
+  }, []);
+
+  // Task 7.3 — check written answer
+  const handleCheckChipAnswer = useCallback(() => {
+    if (animating) return;
+    if (!currentQuestion) return;
+    const result = validateChipAnswer(answerInput, currentQuestion);
+    setChipFeedback(result);
+    if (result.correct) {
+      setSessionScore((prev) => prev + awardPoints(user?.uid ?? null));
+      autoAdvanceRef.current = setTimeout(() => {
+        handleNewChipQuestion();
+      }, 2000);
+    }
+  }, [animating, currentQuestion, answerInput, user, handleNewChipQuestion]);
 
   const reset = () => {
     setBil1Value(0);
@@ -278,35 +363,75 @@ export default function GameVirusPage() {
               </p>
             </div>
           </div>
-          {/* Live VS preview */}
-          {bil1Value !== 0 && bil2Value !== 0 && (
-            <div className="hidden sm:flex items-center gap-2 shrink-0 bg-[#0f172a] rounded-2xl px-3 py-2 border border-[#1e293b]">
-              <div className="flex flex-col items-center gap-0.5">
-                <div className="w-9 h-9">
-                  {bil1Value > 0
-                    ? <AntibodyCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
-                    : <VirusCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
-                  }
-                </div>
-                <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                  {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
-                </span>
+
+          <div className="flex items-center gap-3 shrink-0">
+            {/* Session / Total score — task 7.4 */}
+            <div className="flex flex-col items-end gap-0.5">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-slate-400">Sesi:</span>
+                <span className="font-mono font-bold text-sm text-intblue">{formatScore(sessionScore)}</span>
               </div>
-              <span className="font-mono font-bold text-white/30 text-sm px-1">vs</span>
-              <div className="flex flex-col items-center gap-0.5">
-                <div className="w-9 h-9">
-                  {bil2Value > 0
-                    ? <AntibodyCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
-                    : <VirusCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
-                  }
+              {user && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-slate-400">Total:</span>
+                  <span className="font-mono font-bold text-sm text-intpink">
+                    {formatScore(resolveDisplayScore(profile?.totalScore))}
+                  </span>
                 </div>
-                <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                  {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
-                </span>
-              </div>
+              )}
             </div>
-          )}
+
+            {/* Live VS preview */}
+            {bil1Value !== 0 && bil2Value !== 0 && (
+              <div className="hidden sm:flex items-center gap-2 bg-[#0f172a] rounded-2xl px-3 py-2 border border-[#1e293b]">
+                <div className="flex flex-col items-center gap-0.5">
+                  <div className="w-9 h-9">
+                    {bil1Value > 0
+                      ? <AntibodyCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
+                      : <VirusCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
+                    }
+                  </div>
+                  <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
+                    {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
+                  </span>
+                </div>
+                <span className="font-mono font-bold text-white/30 text-sm px-1">vs</span>
+                <div className="flex flex-col items-center gap-0.5">
+                  <div className="w-9 h-9">
+                    {bil2Value > 0
+                      ? <AntibodyCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
+                      : <VirusCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
+                    }
+                  </div>
+                  <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
+                    {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Task 7.4 — Chip_Question banner */}
+        {currentQuestion && (
+          <div
+            className="bg-white rounded-2xl border border-border p-4 mb-4 flex items-center justify-center gap-2"
+            aria-label={generateAriaLabel(currentQuestion)}
+          >
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mr-2">SOAL:</span>
+            <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.a)}`}>
+              {formatOperand(currentQuestion.a)}
+            </span>
+            <span className="font-mono font-bold text-xl text-slate-400">
+              {currentQuestion.op === "+" ? "+" : "−"}
+            </span>
+            <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
+              {formatOperand(currentQuestion.b)}
+            </span>
+            <span className="font-mono font-bold text-xl text-slate-400">=</span>
+            <span className="font-mono font-bold text-xl text-slate-300">?</span>
+          </div>
+        )}
 
         {/* Tier legend — SVG characters, no chip badges */}
         <div className="bg-white rounded-2xl border border-border p-4 mb-4">
@@ -427,7 +552,10 @@ export default function GameVirusPage() {
                   </span>
                 </div>
                 <div className="text-center">
-                  <p className="font-mono font-bold text-white/20 text-lg leading-none">VS</p>
+                  {/* Task 6 — operator-aware separator */}
+                  <p className="font-mono font-bold text-white/20 text-lg leading-none">
+                    {currentQuestion?.op === "+" ? "+" : "−"}
+                  </p>
                   <p className="text-[9px] font-bold mt-1 text-slate-500">⚗️</p>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
@@ -462,6 +590,18 @@ export default function GameVirusPage() {
                 <p className={`text-xs font-semibold ${phase === "charging" ? "text-yellow-400 animate-pulse" : "text-orange-400"}`}>
                   {phase === "charging" ? "⚡ Mengisi daya..." : "💥 Menghitung..."}
                 </p>
+              </div>
+            )}
+
+            {/* Task 7.4 — Feedback_Panel inside reactor */}
+            {chipFeedback && (
+              <div
+                role="alert"
+                className={`rounded-xl border px-4 py-2.5 mb-3 text-sm font-semibold ${getFeedbackClass(
+                  chipFeedback.correct ? "success" : "error"
+                )}`}
+              >
+                {chipFeedback.feedback}
               </div>
             )}
 
@@ -503,30 +643,35 @@ export default function GameVirusPage() {
             ) : (
               <>
                 {animating ? (
-                <div className="flex-1 flex items-center justify-center py-4">
-                  <InteractionAnimation
-                    bil1Value={bil1Value}
-                    bil2Value={bil2Value}
-                    onComplete={() => handleComputeResult.current()}
-                  />
-                </div>
-              ) : (
-                <div className="flex-1 flex flex-col gap-2 mb-3">
-                  <BilanganZone bil={1} value={bil1Value} />
-                  <div className="flex items-center justify-center gap-2">
-                    <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
-                    <span className={`font-bold text-base ${darkArena ? "text-slate-500" : "text-slate-400"}`}>+</span>
-                    <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
+                  <div className="flex-1 flex items-center justify-center py-4">
+                    <InteractionAnimation
+                      bil1Value={bil1Value}
+                      bil2Value={bil2Value}
+                      onComplete={() => handleComputeResult.current()}
+                    />
                   </div>
-                  <BilanganZone bil={2} value={bil2Value} />
-                </div>
-              )}
+                ) : (
+                  <div className="flex-1 flex flex-col gap-2 mb-3">
+                    <BilanganZone bil={1} value={bil1Value} />
+                    <div className="flex items-center justify-center gap-2">
+                      <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
+                      {/* Task 6 — operator-aware separator in live preview row */}
+                      <span className={`font-bold text-base ${darkArena ? "text-slate-500" : "text-slate-400"}`}>
+                        {currentQuestion?.op === "+" ? "+" : "−"}
+                      </span>
+                      <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
+                    </div>
+                    <BilanganZone bil={2} value={bil2Value} />
+                  </div>
+                )}
                 {hasChips && (
                   <div className={`rounded-xl px-3 py-2 mb-3 text-center font-mono text-sm ${darkArena ? "bg-white/5 border border-white/10" : "bg-surface"}`}>
                     <span className={bil1Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
                       {bil1Value !== 0 ? (bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)) : "0"}
                     </span>
-                    <span className={`mx-1.5 ${darkArena ? "text-slate-500" : "text-slate-400"}`}>+</span>
+                    <span className={`mx-1.5 ${darkArena ? "text-slate-500" : "text-slate-400"}`}>
+                      {currentQuestion?.op === "+" ? "+" : "−"}
+                    </span>
                     <span className={bil2Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
                       {bil2Value !== 0 ? (bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)) : "0"}
                     </span>
@@ -544,8 +689,9 @@ export default function GameVirusPage() {
                   ↺ Hitung Lagi
                 </button>
               ) : (
+                /* Task 7.2 — button calls handleComputeWithValidation */
                 <button
-                  onClick={handleCompute}
+                  onClick={handleComputeWithValidation}
                   disabled={!canCompute}
                   className={`w-full py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
                     canCompute
@@ -582,18 +728,83 @@ export default function GameVirusPage() {
           <div className="bg-white rounded-2xl border border-border shadow-sm p-5 mb-5">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3 text-center">Persamaan Lengkap</p>
             <div className="text-center font-mono flex items-baseline justify-center gap-2 flex-wrap">
-              <span className={`font-bold text-xl ${bil1Value >= 0 ? "text-intblue" : "text-intpink"}`}>
-                {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
+              {computedEquation.current && (<>
+              <span className={`font-bold text-xl ${computedEquation.current.a >= 0 ? "text-intblue" : "text-intpink"}`}>
+                {computedEquation.current.a < 0 ? `(${signed(computedEquation.current.a)})` : signed(computedEquation.current.a)}
               </span>
-              <span className="text-slate-400 text-xl">+</span>
-              <span className={`font-bold text-xl ${bil2Value >= 0 ? "text-intblue" : "text-intpink"}`}>
-                {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
+              <span className="text-slate-400 text-xl">{computedEquation.current.op === "+" ? "+" : "−"}</span>
+              <span className={`font-bold text-xl ${computedEquation.current.b >= 0 ? "text-intblue" : "text-intpink"}`}>
+                {computedEquation.current.b < 0 ? `(${signed(computedEquation.current.b)})` : signed(computedEquation.current.b)}
               </span>
               <span className="text-slate-400 text-xl">=</span>
+              </>)}
               <span className={`font-bold text-2xl ${resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"}`}>
                 {resultValue === 0 ? "0 ✓" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
               </span>
             </div>
+          </div>
+        )}
+
+        {/* Task 7.3 — Answer section (shown when result is ready and question active) */}
+        {resultValue !== null && phase === "idle" && currentQuestion && (
+          <div className="bg-white rounded-2xl border border-border shadow-sm p-5 mb-5">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3 text-center">
+              Jawab Soal
+            </p>
+            <p className="text-sm text-slate-500 text-center mb-4">
+              Berapa hasil dari{" "}
+              <span className={`font-bold ${getOperandColorClass(currentQuestion.a)}`}>
+                {formatOperand(currentQuestion.a)}
+              </span>{" "}
+              {currentQuestion.op === "+" ? "+" : "−"}{" "}
+              <span className={`font-bold ${getOperandColorClass(currentQuestion.b)}`}>
+                {formatOperand(currentQuestion.b)}
+              </span>
+              ?
+            </p>
+            <div className="flex gap-2 mb-3">
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={answerInput}
+                disabled={animating || !!chipFeedback?.correct}
+                aria-label={generateAriaLabel(currentQuestion)}
+                placeholder="Jawaban..."
+                onChange={(e) => setAnswerInput(filterAnswerInput(e.target.value))}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleCheckChipAnswer();
+                }}
+                className="flex-1 rounded-xl border border-border px-4 py-2.5 font-mono text-base text-center focus:outline-none focus:ring-2 focus:ring-intblue/40 disabled:opacity-50"
+              />
+              <button
+                onClick={handleCheckChipAnswer}
+                disabled={animating || !answerInput || !!chipFeedback?.correct}
+                aria-disabled={animating || !answerInput || !!chipFeedback?.correct}
+                tabIndex={0}
+                className="px-5 py-2.5 rounded-xl font-bold text-sm bg-intblue text-white hover:bg-intblue-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Periksa
+              </button>
+            </div>
+            {/* Feedback panel */}
+            {chipFeedback && (
+              <div
+                role="alert"
+                className={`rounded-xl border px-4 py-2.5 mb-3 text-sm font-semibold ${getFeedbackClass(
+                  chipFeedback.correct ? "success" : "error"
+                )}`}
+              >
+                {chipFeedback.feedback}
+              </div>
+            )}
+            {/* Soal Baru button */}
+            <button
+              onClick={handleNewChipQuestion}
+              className="w-full py-2.5 rounded-xl font-bold text-sm border border-border text-slate-600 hover:bg-slate-50 transition-colors"
+            >
+              Soal Baru →
+            </button>
           </div>
         )}
 

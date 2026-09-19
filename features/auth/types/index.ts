@@ -9,6 +9,7 @@ export interface UserProfile {
   school: string;
   photoURL?: string;
   role: 'user' | 'admin';
+  totalScore?: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

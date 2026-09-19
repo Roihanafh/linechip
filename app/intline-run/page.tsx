@@ -8,13 +8,17 @@
  * Layout: max-w-5xl, 1-col mobile / 2-col md+
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useGameLineState } from "../../components/game-line/useGameLineState";
 import GameLineCanvas from "../../components/game-line/GameLineCanvas";
 import GameLineArrowControls from "../../components/game-line/GameLineArrowControls";
 import GameLineKeypad from "../../components/game-line/GameLineKeypad";
 import { useSound } from "../../hooks/useSound";
+import { validateArrowPlacement } from "../../lib/game/arrowHelpers";
+import { awardPoints } from "../../features/game/scoreService";
+import { resolveDisplayScore, formatScore } from "../../lib/game/chipHelpers";
+import { useAuth } from "../../features/auth";
 
 export default function IntLineRunPage() {
   const {
@@ -36,6 +40,11 @@ export default function IntLineRunPage() {
     handleCanvasDrag,
   } = useGameLineState();
 
+  const { user, profile } = useAuth();
+
+  const [sessionScore, setSessionScore] = useState(0);
+  const [arrowFeedback, setArrowFeedback] = useState<string | null>(null);
+
   const playLaunch = useSound("/luncurkan.mp3");
 
   // Auto-advance after correct answer (2000 ms delay)
@@ -48,10 +57,21 @@ export default function IntLineRunPage() {
   }, []);
 
   const handleCheckAnswer = () => {
+    // Layer 1: validate arrow placement
+    const placementResult = validateArrowPlacement(arrows, currentQuestion);
+    if (!placementResult.valid) {
+      setArrowFeedback(placementResult.message ?? "Posisi panah tidak valid.");
+      return;
+    }
+
+    // Layer 2: placement valid — check the answer
+    setArrowFeedback(null);
     const correct = checkAnswer();
     if (correct) {
+      setSessionScore(prev => prev + awardPoints(user?.uid ?? null));
       autoAdvanceRef.current = setTimeout(() => {
         newQuestion();
+        setArrowFeedback(null);
       }, 2000);
     }
   };
@@ -71,7 +91,7 @@ export default function IntLineRunPage() {
               <path d="M10 3L5 8l5 5" stroke="#64748b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </Link>
-          <div>
+          <div className="flex-1">
             <p className="text-xs text-slate-400 font-medium">Game</p>
             <h1
               className="font-bold text-2xl text-slate-900"
@@ -79,6 +99,23 @@ export default function IntLineRunPage() {
             >
               Game Garis Bilangan 🎯
             </h1>
+          </div>
+          {/* Score display */}
+          <div className="flex flex-col items-end gap-0.5 text-right">
+            <span className="text-xs text-slate-400 font-medium">
+              Sesi:{" "}
+              <span className="font-bold text-slate-700" aria-label={`Skor sesi: ${sessionScore}`}>
+                {formatScore(sessionScore)}
+              </span>
+            </span>
+            {user && (
+              <span className="text-xs text-slate-400 font-medium">
+                Total:{" "}
+                <span className="font-bold text-intblue" aria-label={`Total poin: ${resolveDisplayScore(profile?.totalScore)}`}>
+                  {resolveDisplayScore(profile?.totalScore).toLocaleString("id-ID")}
+                </span>
+              </span>
+            )}
           </div>
         </div>
 
@@ -187,24 +224,26 @@ export default function IntLineRunPage() {
                 Periksa
               </button>
               <button
-                onClick={newQuestion}
+                onClick={() => { newQuestion(); setArrowFeedback(null); }}
                 className="flex-1 py-3 rounded-xl border border-border text-slate-600 font-semibold hover:bg-slate-50 transition-colors"
               >
                 Soal Baru
               </button>
             </div>
 
-            {/* Feedback panel */}
-            {feedback && (
+            {/* Feedback panel — arrowFeedback takes priority over hook feedback */}
+            {(arrowFeedback || feedback) && (
               <div
                 className={`rounded-2xl p-4 text-sm font-medium ${
-                  feedback.type === "success"
+                  arrowFeedback
+                    ? "bg-error/10 border border-error/30 text-error"
+                    : feedback!.type === "success"
                     ? "bg-success/10 border border-success/30 text-success"
                     : "bg-error/10 border border-error/30 text-error"
                 }`}
                 role="alert"
               >
-                {feedback.message}
+                {arrowFeedback ?? feedback!.message}
               </div>
             )}
           </div>
