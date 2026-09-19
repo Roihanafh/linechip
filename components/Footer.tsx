@@ -15,10 +15,10 @@ const SIM_LINKS = [
 ];
 
 const MATERI_LINKS = [
-  { href: "/model-chip",              label: "Chip · Penjumlahan",   color: "hover:text-intblue" },
-  { href: "/model-chip/pengurangan",  label: "Chip · Pengurangan",   color: "hover:text-intpink" },
-  { href: "/garis-bilangan/penjumlahan", label: "Mobil · Penjumlahan", color: "hover:text-intblue" },
-  { href: "/garis-bilangan/pengurangan", label: "Mobil · Pengurangan", color: "hover:text-intpink" },
+  { href: "/model-chip",              label: "Model Chip · Penjumlahan",   color: "hover:text-intblue" },
+  { href: "/model-chip/pengurangan",  label: "Model Chip · Pengurangan",   color: "hover:text-intpink" },
+  { href: "/garis-bilangan/penjumlahan", label: "Garis Bilangan · Penjumlahan", color: "hover:text-intblue" },
+  { href: "/garis-bilangan/pengurangan", label: "Garis Bilangan · Pengurangan", color: "hover:text-intpink" },
 ];
 
 export default function Footer() {
