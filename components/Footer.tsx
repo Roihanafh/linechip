@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 const MENU_LINKS = [
   { href: "/", label: "Beranda" },
@@ -12,6 +12,13 @@ const SIM_LINKS = [
   { href: "/model-chip", label: "Model Chip", color: "hover:text-intblue" },
   { href: "/game-virus", label: "Game Antibodi vs Kuman", color: "hover:text-intpink" },
   { href: "/intline-run", label: "Game Garis Bilangan", color: "hover:text-intblue" },
+];
+
+const MATERI_LINKS = [
+  { href: "/model-chip",              label: "Chip · Penjumlahan",   color: "hover:text-intblue" },
+  { href: "/model-chip/pengurangan",  label: "Chip · Pengurangan",   color: "hover:text-intpink" },
+  { href: "/garis-bilangan/penjumlahan", label: "Mobil · Penjumlahan", color: "hover:text-intblue" },
+  { href: "/garis-bilangan/pengurangan", label: "Mobil · Pengurangan", color: "hover:text-intpink" },
 ];
 
 export default function Footer() {
@@ -54,6 +61,18 @@ export default function Footer() {
               ))}
             </div>
             <div className="space-y-2">
+              <p className="font-semibold text-[#0f172a] mb-3">Materi</p>
+              {MATERI_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block text-slate-500 transition-colors ${link.color}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="space-y-2">
               <p className="font-semibold text-[#0f172a] mb-3">Simulasi & Game</p>
               {SIM_LINKS.map((link) => (
                 <Link
@@ -81,3 +100,4 @@ export default function Footer() {
     </footer>
   );
 }
+
