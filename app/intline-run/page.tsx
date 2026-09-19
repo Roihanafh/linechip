@@ -138,7 +138,10 @@ export default function IntLineRunPage() {
                 className="text-3xl font-bold text-slate-900"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                {currentQuestion.a} {currentQuestion.op} {currentQuestion.b} = ?
+                {currentQuestion.a < 0 ? `(${currentQuestion.a})` : currentQuestion.a}
+                {" "}{currentQuestion.op}{" "}
+                {currentQuestion.b < 0 ? `(${currentQuestion.b})` : currentQuestion.b}
+                {" = ?"}
               </p>
             </div>
 
@@ -262,3 +265,4 @@ export default function IntLineRunPage() {
     </div>
   );
 }
+
