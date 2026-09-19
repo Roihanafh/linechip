@@ -302,6 +302,7 @@ export function useSubtractionOrchestrator(
       setTransformExiting(false);
       setWaitingForTransform(false);
       snapshotRef.current = null;
+      stateRef.current.setBil2(0);
       innerOrch.handleReset();
     },
     transformExiting,
