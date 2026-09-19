@@ -1,4 +1,4 @@
-// components/model-chip/TransformPanel.tsx
+﻿// components/model-chip/TransformPanel.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -42,6 +42,21 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
   const labelBefore = isPositive ? `+${n}` : `\u2212${n}`;
   const labelAfter  = isPositive ? `\u2212${n}` : `+${n}`;
 
+  // Dynamic formula based on sign of bil2
+  // bil2 > 0: a - b = a + (-b)   => pengurang positif dibalik jadi negatif
+  // bil2 < 0: a - (-b) = a + b   => pengurang negatif dibalik jadi positif
+  const formulaHeader = isPositive
+    ? "a \u2212 b = a + (\u2212b)"
+    : "a \u2212 (\u2212b) = a + b";
+  const formulaArrow = isPositive
+    ? "\u2212b\u00a0=\u00a0+(\u2212b)"
+    : "\u2212(\u2212b)\u00a0=\u00a0+b";
+
+  // Explanation text shown before animation starts
+  const explainBefore = isPositive
+    ? `Pengurang \u003cstrong\u003e${fromName}\u003c/strong\u003e (antibodi) akan berubah menjadi kuman`
+    : `Pengurang \u003cstrong\u003e${fromName}\u003c/strong\u003e (kuman) akan berubah menjadi antibodi`;
+
   const tipeSumber = isPositive ? "antibodi" : "kuman";
   const tipeTujuan = isPositive ? "kuman" : "antibodi";
   const ariaLabel  = `Ubah ${n} chip ${tipeSumber} menjadi ${tipeTujuan}`;
@@ -73,7 +88,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
           >
             &#8596; Konversi Pengurang
           </h2>
-          <p className="text-xs text-slate-400 font-mono">a &minus; b = a + (&minus;b)</p>
+          <p className="text-xs text-slate-400 font-mono">{formulaHeader}</p>
         </div>
 
         {/* Main conversion display */}
@@ -127,7 +142,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
                 &#8596;
               </div>
               <p className="text-[9px] text-slate-400 font-mono text-center leading-tight mt-0.5">
-                &minus;b&nbsp;=&nbsp;+(&minus;b)
+                {formulaArrow}
               </p>
               <div className="flex gap-1 mt-1">
                 {(["before","flipping","after"] as const).map((s) => (
@@ -199,7 +214,7 @@ export function TransformPanel({ bil2, b_konversi, isExiting }: TransformPanelPr
                 <span className={`font-bold ${toType === "ab" ? "text-intblue" : "text-intpink"}`}>{labelAfter}</span>
               </span>
             ) : (
-              <span>Sedang mengkonversi pengurang…</span>
+              <span dangerouslySetInnerHTML={{ __html: explainBefore }} />
             )}
           </div>
         </div>
