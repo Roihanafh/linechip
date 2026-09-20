@@ -98,6 +98,36 @@ export default function GameVirusPage() {
     [phase, resultValue],
   );
 
+  const removeFromBilangan = useCallback(
+    (bil: 1 | 2, tier: Tier, onRejectFlash?: (tier: Tier) => void) => {
+      // Phase Guard
+      if (phase !== "idle" || resultValue !== null) return;
+
+      const currentValue = bil === 1 ? bil1Value : bil2Value;
+      const absVal = Math.abs(currentValue);
+
+      // Tier-Presence Guard: tier not represented in the value
+      if (Math.floor(absVal / tier) % 10 === 0) return;
+
+      // Sign-Change Guard: removal would flip the sign
+      if (absVal - tier < 0) {
+        onRejectFlash?.(tier);
+        return;
+      }
+
+      // Success path
+      const type: "ab" | "ku" = currentValue >= 0 ? "ab" : "ku";
+      const delta = type === "ab" ? tier : -tier;
+      if (bil === 1) setBil1Value((v) => v - delta);
+      else setBil2Value((v) => v - delta);
+
+      // Push inverted history entry so undoLast can reverse this removal
+      const undoType: "ab" | "ku" = type === "ab" ? "ku" : "ab";
+      setHistory((h) => [...h, { type: undoType, tier, bil }]);
+    },
+    [phase, resultValue, bil1Value, bil2Value],
+  );
+
   const undoLast = () => {
     if (!history.length || phase !== "idle") return;
     const last = history[history.length - 1];
@@ -259,7 +289,25 @@ export default function GameVirusPage() {
     );
   }
 
-  function BilanganZone({ bil, value }: { bil: 1 | 2; value: number }) {
+  function BilanganZone({
+    bil,
+    value,
+    onChipRemove,
+  }: {
+    bil: 1 | 2;
+    value: number;
+    onChipRemove?: (tier: Tier, onRejectFlash: (t: Tier) => void) => void;
+  }) {
+    const [flashTier, setFlashTier] = useState<Tier | null>(null);
+
+    useEffect(() => {
+      if (flashTier === null) return;
+      const timer = setTimeout(() => setFlashTier(null), 300);
+      return () => clearTimeout(timer);
+    }, [flashTier]);
+
+    const canRemove = onChipRemove !== undefined && phase === "idle" && resultValue === null;
+
     const isDragTarget = dragOverZone === bil;
     const absVal = Math.abs(value);
     const charType: "ab" | "ku" = value >= 0 ? "ab" : "ku";
@@ -316,25 +364,94 @@ export default function GameVirusPage() {
         </div>
 
         {/* Character chips or empty state */}
-        {absVal > 0 ? (
-          <CharacterChips
-            value={absVal}
-            type={charType}
-            phase={phase}
-            maxPerTier={6}
-            size="sm"
-            uidPrefix={`zone${bil}`}
-          />
+        {onChipRemove !== undefined ? (
+          // Chip_Overlay mode — interactive chip removal
+          absVal > 0 ? (
+            <div className="space-y-1.5">
+              {(() => {
+                const groups: { tier: Tier; count: number }[] = [];
+                let rem = Math.floor(absVal);
+                for (const t of [1000, 100, 10, 1] as Tier[]) {
+                  const c = Math.floor(rem / t);
+                  if (c > 0) groups.push({ tier: t, count: c });
+                  rem %= t;
+                }
+                return groups;
+              })().map(({ tier: t, count }) => {
+                const shown = Math.min(count, 6);
+                const place = TIER_TO_PLACE[t];
+                return (
+                  <div key={t} className="space-y-0.5 mb-1">
+                    <div className="flex flex-wrap gap-1 items-center justify-center">
+                      {Array.from({ length: shown }, (_, i) => (
+                        <div
+                          key={`chip-${t}-${i}`}
+                          data-tier={t}
+                          className={`group ${canRemove ? "cursor-pointer" : "pointer-events-none"} relative inline-block ${
+                            flashTier === t ? "ring-2 ring-red-500 animate-pulse rounded" : ""
+                          }`}
+                          onClick={canRemove ? () => onChipRemove(t, setFlashTier) : undefined}
+                        >
+                          <div className={`w-8 h-8 shrink-0 ${
+                            canRemove ? "group-hover:opacity-60 group-hover:scale-95 transition-all duration-150" : ""
+                          }`}>
+                            {charType === "ab"
+                              ? <AntibodyCharacter type={place} uid={`zone${bil}-overlay-${t}-${i}`} />
+                              : <VirusCharacter type={place} uid={`zone${bil}-overlay-${t}-${i}`} />
+                            }
+                          </div>
+                          {canRemove && (
+                            <span className="absolute -top-1 -right-1 text-[8px] font-bold text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none leading-none">
+                              ×
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {count > 6 && (
+                      <span className={`text-xs font-mono font-bold ${
+                        charType === "ab" ? "text-intblue" : "text-intpink"
+                      }`}>
+                        +{count - 6}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-3">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="12" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeDasharray="3 2.5" />
+                <path d="M9 14h10M14 9v10" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <p className={`text-[9px] mt-1 text-center ${darkArena ? "text-slate-600" : "text-slate-300"}`}>
+                Seret Ab (+) atau Ku (−)<br />ke zona ini
+              </p>
+            </div>
+          )
         ) : (
-          <div className="flex flex-col items-center justify-center py-3">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="12" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeDasharray="3 2.5" />
-              <path d="M9 14h10M14 9v10" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            <p className={`text-[9px] mt-1 text-center ${darkArena ? "text-slate-600" : "text-slate-300"}`}>
-              Seret Ab (+) atau Ku (−)<br />ke zona ini
-            </p>
-          </div>
+          // Fallback mode — original CharacterChips (no interactivity)
+          absVal > 0 ? (
+            <CharacterChips
+              value={absVal}
+              type={charType}
+              phase={phase}
+              maxPerTier={6}
+              size="sm"
+              uidPrefix={`zone${bil}`}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center py-3">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="12" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeDasharray="3 2.5" />
+                <path d="M9 14h10M14 9v10" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <p className={`text-[9px] mt-1 text-center ${darkArena ? "text-slate-600" : "text-slate-300"}`}>
+                Seret Ab (+) atau Ku (−)<br />ke zona ini
+              </p>
+            </div>
+          )
         )}
       </div>
     );
@@ -652,7 +769,7 @@ export default function GameVirusPage() {
                   </div>
                 ) : (
                   <div className="flex-1 flex flex-col gap-2 mb-3">
-                    <BilanganZone bil={1} value={bil1Value} />
+                    <BilanganZone bil={1} value={bil1Value} onChipRemove={(tier, onRejectFlash) => removeFromBilangan(1, tier, onRejectFlash)} />
                     <div className="flex items-center justify-center gap-2">
                       <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
                       {/* Task 6 — operator-aware separator in live preview row */}
@@ -661,7 +778,7 @@ export default function GameVirusPage() {
                       </span>
                       <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
                     </div>
-                    <BilanganZone bil={2} value={bil2Value} />
+                    <BilanganZone bil={2} value={bil2Value} onChipRemove={(tier, onRejectFlash) => removeFromBilangan(2, tier, onRejectFlash)} />
                   </div>
                 )}
                 {hasChips && (

@@ -2,138 +2,171 @@
 
 ## Overview
 
-This feature adds direct chip removal on the game-virus page. Currently a player can only add chips or undo the most-recent action globally. After this change, clicking any chip already placed in a BilanganZone removes exactly one unit of that chip's tier from the zone, giving fine-grained control without a full reset.
+Fitur ini menambahkan kemampuan penghapusan chip individual pada halaman game Antibodi vs Kuman (`app/game-virus/page.tsx`). Sebelum fitur ini, pemain hanya bisa menambah chip satu per satu dan menggunakan tombol "Undo" untuk membatalkan chip terakhir. Dengan fitur ini, pemain bisa **mengklik langsung chip mana pun** di zona bilangan untuk menghapusnya — mengurangi nilai bilangan sebesar satu unit tier dari chip yang diklik.
 
-All changes are confined to `app/game-virus/page.tsx`. No shared components (`CharacterSVGs.tsx`, `TieredChips.tsx`, model-chip pages, number-line pages) are touched.
+Cakupan perubahan sepenuhnya terbatas pada `app/game-virus/page.tsx`. Komponen shared (`CharacterSVGs.tsx`, `CharacterChips`) tidak dimodifikasi.
 
 ---
 
 ## Architecture
 
-The feature follows the existing in-page component pattern of `game-virus/page.tsx`:
+Fitur ini diimplementasikan sebagai ekstensi organik di dalam file `app/game-virus/page.tsx` yang sudah ada, tanpa memperkenalkan file atau modul baru.
 
-- A new pure function `removeFromBilangan` is added as a `useCallback` inside the page component, symmetrical to the existing `addToBilangan`.
-- `BilanganZone` (the page-internal component) gains an optional `onChipRemove?: (tier: Tier) => void` prop. When the prop is absent the component renders identically to today.
-- A new `Chip_Overlay` wrapper is introduced **inside `BilanganZone`** to intercept clicks and render hover feedback. It wraps each rendered chip produced by `CharacterChips` by re-implementing the iteration logic locally (mirroring `CharacterChips`' decomposition), so `CharacterChips` itself is not modified.
+```mermaid
+flowchart TD
+    User["Pemain mengklik chip"] --> CO["Chip_Overlay\n(wrapper div baru di BilanganZone)"]
+    CO -->|"onChipRemove(tier, setFlashTier)"| BZ["BilanganZone (prop handler)"]
+    BZ -->|"removeFromBilangan(bil, tier, onRejectFlash)"| RH["removeFromBilangan\n(useCallback di GameVirusPage)"]
+    RH --> G1{Phase Guard}
+    G1 -->|fail| NOOP["no-op"]
+    G1 -->|pass| G2{Tier-Order Guard}
+    G2 -->|fail| FLASH["onRejectFlash(tier) → flashTier state"]
+    G2 -->|pass| G3{Tier-Presence Guard}
+    G3 -->|fail| NOOP
+    G3 -->|pass| G4{Sign-Change Guard}
+    G4 -->|fail| FLASH
+    G4 -->|pass| UPDATE["Update state\nbil1Value / bil2Value\nHistory (inverted entry)"]
+```
 
-```
-GameVirusPage
-├── removeFromBilangan(bil, tier)   ← new
-├── BilanganZone (bil=1, onChipRemove)
-│   └── Chip_Overlay × N           ← new, wraps each chip
-│       └── CharacterChips chip (unchanged)
-└── BilanganZone (bil=2, onChipRemove)
-    └── Chip_Overlay × N
-        └── CharacterChips chip (unchanged)
-```
+### Alur Data
 
-### Data flow
-
-```
-User click on Chip_Overlay
-  → reads data-tier from event.currentTarget.dataset.tier
-  → calls onChipRemove(tier)
-  → BilanganZone calls removeFromBilangan(bil, tier)
-  → removeFromBilangan validates → updates bil1Value/bil2Value + history
-  → React re-render → BilanganZone reflects new value
-```
+- `bil1Value` / `bil2Value` — integer React state milik `GameVirusPage`
+- `history: HistoryEntry[]` — array entri untuk fitur undo; penghapusan mencatat entri *inversi* agar `undoLast` bisa membalik operasi
+- `flashTier: Tier | null` — state lokal di dalam `BilanganZone`, auto-cleared setelah 300ms
 
 ---
 
 ## Components and Interfaces
 
-### `removeFromBilangan(bil: 1 | 2, tier: Tier): void`
+### `removeFromBilangan` (fungsi baru di `GameVirusPage`)
 
-New `useCallback` inside `GameVirusPage`. Guards and logic:
+```typescript
+const removeFromBilangan = useCallback(
+  (bil: 1 | 2, tier: Tier, onRejectFlash?: (tier: Tier) => void) => void,
+  [phase, resultValue, bil1Value, bil2Value]
+)
+```
 
-1. **Phase guard** — return early if `phase !== "idle"` or `resultValue !== null`.
-2. **Sign-change guard** — compute `newAbs = Math.abs(currentValue) - tier`; if `newAbs < 0` trigger rejection flash and return.
-3. **Tier-representability guard** — if `Math.abs(currentValue) % tier !== 0` return silently (tier not present in current decomposition).
-4. On success: update `bilNValue` by subtracting `delta` (where `delta = tier` for ab zones, `delta = -tier` for ku zones), and push an **inverse** history entry so `undoLast` restores the original value.
+Urutan guard (dieksekusi berurutan, berhenti di kegagalan pertama):
 
-History entry for a removal mirrors the format of an addition entry but records the inverse operation:
+| # | Guard | Kondisi gagal | Aksi saat gagal |
+|---|-------|--------------|-----------------|
+| 1 | **Phase Guard** | `phase !== "idle"` atau `resultValue !== null` | return (no-op, tanpa flash) |
+| 2 | **Tier-Order Guard** | Ada tier lebih kecil yang masih punya chip (`smallerTiers.some(t => Math.floor(absVal/t) % 10 > 0)`) | `onRejectFlash?.(tier)`, return |
+| 3 | **Tier-Presence Guard** | `Math.floor(absVal / tier) % 10 === 0` | return (no-op, tanpa flash) |
+| 4 | **Sign-Change Guard** | `absVal - tier < 0` | `onRejectFlash?.(tier)`, return |
+| — | **Success path** | semua guard lolos | update state + push history |
 
-| Removal scenario | History entry pushed | Undo effect |
-|---|---|---|
-| Remove Ab chip (tier T) from bil B | `{ type: "ab", tier: T, bil: B }` reversed by subtracting T (same as an add-ab undo) | restores +T to bilB |
-| Remove Ku chip (tier T) from bil B | `{ type: "ku", tier: T, bil: B }` reversed by adding T (same as an add-ku undo) | restores −T to bilB |
+**Success path detail:**
+- `type = currentValue >= 0 ? "ab" : "ku"`
+- `delta = type === "ab" ? tier : -tier`
+- `bil1Value` atau `bil2Value` dikurangi `delta`
+- History push: `{ type: undoType, tier, bil }` di mana `undoType = type === "ab" ? "ku" : "ab"` — entri inversi agar `undoLast` mengembalikan kondisi sebelumnya
 
-> Because `undoLast` subtracts the delta that was applied during the original action, and a removal applies the inverse delta of an addition, a removal's history entry is structurally identical to an addition entry — `undoLast` already handles it correctly with no modification.
+### `BilanganZone` (komponen internal yang diperluas)
 
-### `Chip_Overlay` (JSX element inside `BilanganZone`)
+**Prop baru (opsional):**
 
-A `div` wrapper rendered around each character chip in `BilanganZone`. Attributes and classes:
+```typescript
+onChipRemove?: (tier: Tier, onRejectFlash: (t: Tier) => void) => void
+```
+
+**State lokal baru:**
+
+```typescript
+const [flashTier, setFlashTier] = useState<Tier | null>(null);
+// useEffect: jika flashTier !== null, setTimeout 300ms → setFlashTier(null)
+```
+
+**Derived value:**
+
+```typescript
+const canRemove = onChipRemove !== undefined && phase === "idle" && resultValue === null;
+```
+
+**Dua mode render (berdasarkan kehadiran `onChipRemove`):**
+
+#### Mode Chip_Overlay (ketika `onChipRemove` terdefinisi)
+
+Menggantikan `<CharacterChips>` dengan loop dekomposisi lokal yang mencerminkan logika `CharacterChips`. Setiap chip dibungkus oleh sebuah `Chip_Overlay`:
 
 ```tsx
 <div
-  className={`relative group ${canRemove ? "cursor-pointer" : "pointer-events-none"}`}
-  data-tier={tier}
-  onClick={canRemove ? () => onChipRemove(tier) : undefined}
+  data-tier={t}
+  onClick={canRemove ? () => onChipRemove(t, setFlashTier) : undefined}
+  className={`group ${canRemove ? "cursor-pointer" : "pointer-events-none"} ${
+    flashTier === t ? "ring-2 ring-red-500 animate-pulse rounded" : ""
+  }`}
 >
-  {/* original chip content */}
+  {/* Karakter SVG */}
+  <div className={`${sizeClass} ${
+    canRemove ? "group-hover:opacity-60 group-hover:scale-95 transition-all duration-150" : ""
+  }`}>
+    {/* AntibodyCharacter atau VirusCharacter */}
+  </div>
+  {/* Indikator × */}
   {canRemove && (
-    <span className="absolute inset-0 flex items-center justify-center
-                     text-white text-[10px] font-bold
-                     opacity-0 group-hover:opacity-100
-                     transition-opacity duration-150 pointer-events-none">
+    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none">
       ×
     </span>
   )}
-  {/* rejection flash: applied via state-driven class, not CSS-only */}
 </div>
 ```
 
-`canRemove = onChipRemove !== undefined && phase === "idle" && resultValue === null`
+#### Mode Fallback (ketika `onChipRemove` tidak dioper)
 
-Hover treatment on the chip itself (passed down via a wrapper class applied to the chip div):
+Merender `<CharacterChips>` langsung — identik dengan perilaku sebelum fitur ini ada. Tidak ada perubahan visual.
 
-```
-group-hover:opacity-60 group-hover:scale-95 transition-all duration-150
-```
+### Page-level wiring
 
-### Updated `BilanganZone` signature
+Kedua instance `<BilanganZone>` menerima:
 
 ```tsx
-interface BilanganZoneProps {
-  bil: 1 | 2;
-  value: number;
-  onChipRemove?: (tier: Tier) => void;   // ← new, optional
-}
+<BilanganZone
+  bil={1}
+  value={bil1Value}
+  onChipRemove={(tier, onRejectFlash) => removeFromBilangan(1, tier, onRejectFlash)}
+/>
+<BilanganZone
+  bil={2}
+  value={bil2Value}
+  onChipRemove={(tier, onRejectFlash) => removeFromBilangan(2, tier, onRejectFlash)}
+/>
 ```
 
-When `onChipRemove` is undefined the component renders without any `Chip_Overlay`, maintaining full backward compatibility for any future callers.
+### Kompatibilitas Undo
 
-### Rejection flash state
+`undoLast` tidak diubah sama sekali. Kompatibilitas dijamin melalui entri history inversi:
 
-A small piece of state `flashTier: Tier | null` lives inside `BilanganZone` (or can be lifted to the page). When `removeFromBilangan` detects an invalid removal it calls a setter that sets `flashTier = tier`; a `useEffect` or `setTimeout` clears it after 300 ms. The `Chip_Overlay` for that tier gets the class `ring-2 ring-red-500 animate-pulse` for the duration.
+| Operasi penghapusan | Entri yang di-push ke history | Efek saat undo |
+|--------------------|------------------------------|----------------|
+| Hapus chip Ab (+tier) dari bil X | `{ type: "ku", tier, bil: X }` | `undoLast` menambahkan `+tier` → nilai naik |
+| Hapus chip Ku (−tier) dari bil X | `{ type: "ab", tier, bil: X }` | `undoLast` mengurangi `+tier` → nilai turun |
 
 ---
 
 ## Data Models
 
-No new persistent data models. All state is in-memory React state within `GameVirusPage`.
+### `HistoryEntry` (tidak berubah)
 
-### Existing state (relevant subset)
-
-| State | Type | Role |
-|---|---|---|
-| `bil1Value` | `number` | Integer value of Bilangan 1 |
-| `bil2Value` | `number` | Integer value of Bilangan 2 |
-| `history` | `HistoryEntry[]` | Undo log — one entry per chip add/remove |
-| `phase` | `AnimPhase` | Current animation phase gate |
-| `resultValue` | `number \| null` | Computed result; non-null disables editing |
-
-### `HistoryEntry` (unchanged)
-
-```ts
+```typescript
 interface HistoryEntry {
   type: "ab" | "ku";
-  tier: Tier;
+  tier: Tier;           // 1 | 10 | 100 | 1000
   bil: 1 | 2;
 }
 ```
 
-A removal pushes the same structure as an addition. `undoLast` reverses any entry uniformly, so no structural changes to `HistoryEntry` are needed.
+Fitur ini menggunakan tipe yang sama untuk entri penghapusan, namun mengisi `type` dengan nilai **inversi** dari tipe chip yang dihapus, sehingga `undoLast` bekerja tanpa modifikasi.
+
+### State `flashTier`
+
+```typescript
+type Tier = 1 | 10 | 100 | 1000;
+// flashTier: Tier | null — lokal di BilanganZone
+```
+
+Diset ke tier yang mengalami rejection, lalu di-clear otomatis setelah 300ms. Dipakai untuk menerapkan kelas `ring-2 ring-red-500 animate-pulse rounded` pada chip_overlay yang bersangkutan.
 
 ---
 
@@ -141,82 +174,116 @@ A removal pushes the same structure as an addition. `undoLast` reverses any entr
 
 *A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-### Property 1: Removal reduces value by exactly one tier unit
+### Property 1: Tier removal reduces value by exactly one tier unit
 
-*For any* bilangan value `v` and tier `T` where `T` is present in the decomposition of `|v|` (i.e., `|v| mod T === 0` and `|v| - T >= 0`), calling `removeFromBilangan` SHALL produce a new absolute value of `|v| - T`, preserving the sign.
+*For any* bilangan value yang valid (bukan nol) dan tier yang representasinya ada di dalamnya (tier hadir secara right-to-left tanpa tier lebih kecil yang masih aktif), memanggil `removeFromBilangan` harus mengubah nilai bilangan sebesar tepat **−tier** (untuk zona positif) atau **+tier** (untuk zona negatif).
 
 **Validates: Requirements 1.1, 1.2, 1.3**
 
 ---
 
-### Property 2: Removal followed by undo restores original value
+### Property 2: Rejected removals leave state unchanged (atomicity)
 
-*For any* bilangan value `v` and valid tier `T` (present in decomposition of `|v|`), calling `removeFromBilangan(bil, T)` and then `undoLast()` SHALL restore `bilNValue` to exactly `v`.
+*For any* kondisi yang memicu rejection — phase guard aktif, tier-order violation (ada tier lebih kecil yang masih aktif), tier-presence violation (tier tidak ada di bilangan), atau sign-change violation (absVal − tier < 0) — `removeFromBilangan` tidak boleh mengubah `bil1Value`, `bil2Value`, maupun `history`.
+
+**Validates: Requirements 1.4, 1.5, 3.1, 3.2, 3.4**
+
+---
+
+### Property 3: History inversion enables correct undo
+
+*For any* penghapusan yang berhasil dari zona ab (positif), entri yang di-push ke `history` harus memiliki `type = "ku"` dan tier yang sama; dan *for any* penghapusan dari zona ku (negatif), entri harus memiliki `type = "ab"` — sehingga menerapkan logika `undoLast` pada entri tersebut mengembalikan nilai bilangan ke kondisi sebelum penghapusan.
 
 **Validates: Requirements 1.2, 1.3**
 
 ---
 
-### Property 3: Rejection preserves state atomically
+### Property 4: Fallback mode renders identically without onChipRemove
 
-*For any* call to `removeFromBilangan(bil, T)` where the removal would change the sign of the bilangan (i.e., `|v| - T < 0`), or where `|v| mod T !== 0`, the values of `bil1Value`, `bil2Value`, and `history` SHALL remain identical to their values before the call.
+*For any* kombinasi nilai bilangan, phase, dan resultValue, jika `BilanganZone` di-render tanpa prop `onChipRemove`, markup yang dihasilkan harus tidak mengandung kelas atau elemen yang berkaitan dengan fitur chip-removal (tidak ada `group-hover:opacity-60`, tidak ada `ring-red-500`, tidak ada elemen `×`).
 
-**Validates: Requirements 1.5, 3.1, 3.2, 3.4**
+**Validates: Requirements 4.3, 4.4**
 
 ---
 
 ## Error Handling
 
-| Scenario | Guard | Outcome |
-|---|---|---|
-| Click during animation (`phase !== "idle"`) | Phase guard in `removeFromBilangan` | No-op; `Chip_Overlay` is `pointer-events-none` so click is unreachable in normal use |
-| Click after result computed (`resultValue !== null`) | Same phase guard | No-op |
-| Removal would flip sign (`newAbs < 0`) | Sign-change guard | State unchanged; 300 ms red flash on the clicked chip via `flashTier` state |
-| Tier not in decomposition (`|v| mod T !== 0`) | Tier-representability guard | Silent no-op (this chip shouldn't visually exist, but guard is defensive) |
-| `onChipRemove` absent | Prop undefined check in `BilanganZone` | No overlays rendered, no listeners attached |
-| `value === 0` | `CharacterChips` returns `null` | No chips rendered, no `Chip_Overlay` targets exist |
+### Flash visual (rejection feedback)
 
-All guards are evaluated in `removeFromBilangan` **before** any state mutation. No partial state updates are possible (atomicity).
+Ketika `removeFromBilangan` memanggil `onRejectFlash(tier)`, `BilanganZone` melakukan:
+1. Menyetel `flashTier = tier` → wrapper chip mendapat `ring-2 ring-red-500 animate-pulse rounded`
+2. `useEffect` dengan `setTimeout(300ms)` → `setFlashTier(null)` — efek flash hilang otomatis
+
+Flash hanya terjadi untuk rejection **tier-order** dan **sign-change**. Rejection karena phase guard atau tier-presence tidak menghasilkan flash (phase guard tidak relevan secara visual; tier-presence artinya chip tersebut secara logis tidak ada).
+
+### State atomicity
+
+Semua guard dievaluasi *sebelum* mutasi state apapun. Tidak ada partial update — setiap kegagalan guard menghasilkan `return` langsung sebelum `setState` dipanggil.
+
+### Tier-order enforcement (right-to-left)
+
+Implementasi menggunakan:
+
+```typescript
+const smallerTiers = ([1, 10, 100] as Tier[]).filter(t => t < tier);
+const hasSmaller = smallerTiers.some(t => Math.floor(absVal / t) % 10 > 0);
+if (hasSmaller) { onRejectFlash?.(tier); return; }
+```
+
+Ini memastikan chip selalu dihapus dari tier terkecil yang aktif terlebih dahulu, menjaga konsistensi representasi bilangan.
 
 ---
 
 ## Testing Strategy
 
-This feature is suited for a mix of property-based tests (for the pure logic of `removeFromBilangan`) and example-based tests (for UI rendering and integration).
+### Pendekatan dual testing
 
-### Property-Based Tests (fast-check)
+Fitur ini menggabinasikan **property-based tests** (untuk logika fungsi murni `removeFromBilangan`) dan **unit tests** (untuk perilaku rendering `BilanganZone`).
 
-Use [fast-check](https://fast-check.io/) — already the project's PBT library (used in `BattleStage.speed.property.test.ts`).
+### Property-Based Tests — `removeFromBilangan`
 
-Target: the extracted pure logic of `removeFromBilangan` (tier validation + value arithmetic), tested without React rendering overhead.
+Library: **fast-check** (sudah digunakan di proyek ini)
 
-Each property test runs a minimum of **100 iterations**.
+File: `__tests__/game-virus/removeFromBilangan.property.test.ts`
 
-**Property 1 test** — `Feature: game-virus-chip-removal, Property 1: Removal reduces value by exactly one tier unit`
-- Generators: `fc.integer({ min: 1, max: 9999 })` for value; derive a valid tier by picking a tier that divides the value.
-- Assert: `result === value - tier` (for positive zones) or `result === value + tier` (for negative zones).
+Setiap property dijalankan minimum **100 iterasi**. Karena `removeFromBilangan` adalah pure logic (menerima state lewat closure dan hanya bergantung pada parameter + state), ia bisa ditest dengan mocking state sederhana.
 
-**Property 2 test** — `Feature: game-virus-chip-removal, Property 2: Removal followed by undo restores original value`
-- Generators: same as Property 1; simulate `removeFromBilangan` then `undoLast`.
-- Assert: final value === original value.
+| Property | Tag | Iterasi |
+|----------|-----|---------|
+| Property 1: tier removal reduces value by exactly one tier unit | `Feature: game-virus-chip-removal, Property 1` | ≥ 100 |
+| Property 2: rejected removals leave state unchanged | `Feature: game-virus-chip-removal, Property 2` | ≥ 100 |
+| Property 3: history inversion enables correct undo | `Feature: game-virus-chip-removal, Property 3` | ≥ 100 |
 
-**Property 3 test** — `Feature: game-virus-chip-removal, Property 3: Rejection preserves state atomically`
-- Generators:
-  - Sign-flip case: `fc.integer({ min: 1, max: 999 })` for value; tier chosen > value.
-  - Non-representable tier case: value and tier where `value % tier !== 0`.
-- Assert: value and history are identical before and after the call.
+Strategi generator untuk Property 1:
+- Generate `value` ∈ non-zero integer (dengan tanda positif atau negatif)
+- Derive tier yang valid (hadir dan paling kecil yang aktif)
+- Verifikasi `newValue = oldValue ∓ tier`
 
-### Unit / Example-Based Tests
+Strategi generator untuk Property 2:
+- Generate berbagai kondisi rejection (phase != idle, tier lebih besar dari absVal, tier tidak ada, ada tier lebih kecil yang aktif)
+- Verifikasi state identik sebelum dan sesudah
 
-- Render `BilanganZone` with `onChipRemove` absent → assert no `Chip_Overlay` in DOM.
-- Render `BilanganZone` with `value=0` → assert no chip elements rendered.
-- Render `BilanganZone` with `phase="charging"` → assert `pointer-events-none` present on all overlays.
-- Render `BilanganZone` with `phase="idle"` and `value=10` → assert hover classes and `×` icon present.
-- Simulate click on a chip → assert `onChipRemove` callback invoked with correct tier.
-- Simulate invalid removal → assert `flashTier` class applied, state unchanged.
+Strategi generator untuk Property 3:
+- Generate nilai ab-zone valid + tier valid → verifikasi `history[last].type === "ku"`
+- Generate nilai ku-zone valid + tier valid → verifikasi `history[last].type === "ab"`
 
-### Integration Notes
+### Unit Tests — `BilanganZone`
 
-- `undoLast` is not modified; its correctness with removal entries is covered by Property 2.
-- `CharacterChips` is not modified; its own rendering is not re-tested here.
-- No new stylesheets; all visual states use existing Tailwind utility classes (`ring-2 ring-red-500 animate-pulse`, `group-hover:opacity-60`, etc.).
+File: `__tests__/game-virus/BilanganZone.unit.test.tsx`
+
+Menggunakan `renderToStaticMarkup` atau React Testing Library. Berfokus pada:
+
+| Skenario | Requirement |
+|----------|-------------|
+| Tanpa `onChipRemove`: tidak ada kelas hover di markup | Req 4.4 |
+| Dengan `onChipRemove` + canRemove=true: ada `group-hover:opacity-60` | Req 2.1 |
+| Dengan phase != idle: ada `pointer-events-none` pada chip | Req 1.4, 2.2 |
+| value = 0: tidak ada chip yang dirender | Req 3.3 |
+| `onChipRemove` tidak dipanggil saat phase guard aktif | Req 4.3 |
+| Flash class aktif ketika `flashTier` === tier | Req 3.1 |
+
+### Tidak menggunakan PBT untuk
+
+- Rendering CSS / visual feedback (snapshot / unit tests lebih tepat)
+- Komponen shared `CharacterChips` (sudah dicakup test suite yang ada)
+- Phase guard UI behavior (example-based test lebih cukup)
