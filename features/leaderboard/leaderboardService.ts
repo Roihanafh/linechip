@@ -67,6 +67,7 @@ export async function fetchTop10(): Promise<LeaderboardEntry[]> {
   const { db } = getFirebaseClient();
   const q = query(
     collection(db, 'users'),
+    where('totalScore', '>', 0),
     orderBy('totalScore', 'desc'),
     limit(10)
   );
