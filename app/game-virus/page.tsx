@@ -1,4 +1,4 @@
-﻿// app/game-virus/page.tsx
+// app/game-virus/page.tsx
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
@@ -57,7 +57,7 @@ export default function GameVirusPage() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [animating, setAnimating] = useState(false);
 
-  // --- Game-module integration state (tasks 7.1–7.4) ---
+  // --- Game-module integration state (tasks 7.1-7.4) ---
   const [currentQuestion, setCurrentQuestion] = useState<ChipQuestion | null>(
     () => generateChipQuestion()
   );
@@ -68,6 +68,7 @@ export default function GameVirusPage() {
   } | null>(null);
   const [sessionScore, setSessionScore] = useState(0);
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const checkInProgressRef = useRef(false);
 
   const { user, profile } = useAuth();
 
@@ -153,13 +154,13 @@ export default function GameVirusPage() {
     }
   };
 
-  // Original handleCompute — NOT modified (task 7.2 wraps it)
+  // Original handleCompute - NOT modified (task 7.2 wraps it)
   const handleCompute = () => {
     if (!canCompute) return;
     const op = currentQuestion?.op ?? "+";
-    const r = op === "+" ? bil1Value + bil2Value : bil1Value - bil2Value;
+    const r = bil1Value + bil2Value;
     computedEquation.current = { a: bil1Value, b: bil2Value, op };
-    // Store the result callback — InteractionAnimation will call this via onComplete
+    // Store the result callback - InteractionAnimation will call this via onComplete
     handleComputeResult.current = () => {
       setResultValue(r);
       setBil1Value(0);
@@ -191,6 +192,7 @@ export default function GameVirusPage() {
   // Task 7.3 — reset to a new question
   const handleNewChipQuestion = useCallback(() => {
     if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+    checkInProgressRef.current = false; // allow check on new question
     setCurrentQuestion(generateChipQuestion());
     setBil1Value(0);
     setBil2Value(0);
@@ -204,18 +206,32 @@ export default function GameVirusPage() {
   }, []);
 
   // Task 7.3 — check written answer
+  // checkInProgressRef: sinkron guard mencegah double-fire dalam render cycle yang sama.
+  // Jika jawaban benar, ref dibiarkan true hingga handleNewChipQuestion me-resetnya,
+  // sehingga event onClick button yang datang setelah microtask tidak bisa lolos.
   const handleCheckChipAnswer = useCallback(() => {
+    if (checkInProgressRef.current) return;
+    if (chipFeedback?.correct) return;
     if (animating) return;
     if (!currentQuestion) return;
+    checkInProgressRef.current = true;
     const result = validateChipAnswer(answerInput, currentQuestion);
     setChipFeedback(result);
     if (result.correct) {
-      setSessionScore((prev) => prev + awardPoints(user?.uid ?? null));
+      // Call awardPoints ONCE outside the updater — React 18 Strict Mode calls
+      // setState updaters twice to detect side effects, which would send two
+      // Firestore increment(10) writes and award 20 pts instead of 10.
+      const pts = awardPoints(user?.uid ?? null);
+      setSessionScore((prev) => prev + pts);
       autoAdvanceRef.current = setTimeout(() => {
         handleNewChipQuestion();
       }, 2000);
+      // ref stays true until handleNewChipQuestion resets it — blocks any late onClick
+    } else {
+      // Wrong answer: reset ref after microtask so user can try again
+      Promise.resolve().then(() => { checkInProgressRef.current = false; });
     }
-  }, [animating, currentQuestion, answerInput, user, handleNewChipQuestion]);
+  }, [animating, currentQuestion, answerInput, user, handleNewChipQuestion, chipFeedback]);
 
   const reset = () => {
     setBil1Value(0);
@@ -282,9 +298,9 @@ export default function GameVirusPage() {
           }
         </div>
         <p className={`font-bold text-xs leading-none ${isAb ? "text-intblue" : "text-intpink"}`}>
-          {isAb ? "+" : "−"}{valueLabel}
+          {isAb ? "+" : "-"}{valueLabel}
         </p>
-        <p className="text-[8px] text-slate-400">→ Bil.{target}</p>
+        <p className="text-[8px] text-slate-400">?</p>
       </div>
     );
   }
@@ -426,7 +442,7 @@ export default function GameVirusPage() {
                 <path d="M9 14h10M14 9v10" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <p className={`text-[9px] mt-1 text-center ${darkArena ? "text-slate-600" : "text-slate-300"}`}>
-                Seret Ab (+) atau Ku (−)<br />ke zona ini
+                Seret Ab (+) atau Ku (-)<br />ke zona ini
               </p>
             </div>
           )
@@ -448,7 +464,7 @@ export default function GameVirusPage() {
                 <path d="M9 14h10M14 9v10" stroke={darkArena ? "#475569" : "#CBD5E1"} strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <p className={`text-[9px] mt-1 text-center ${darkArena ? "text-slate-600" : "text-slate-300"}`}>
-                Seret Ab (+) atau Ku (−)<br />ke zona ini
+                Seret Ab (+) atau Ku (-)<br />ke zona ini
               </p>
             </div>
           )
@@ -474,9 +490,9 @@ export default function GameVirusPage() {
               </svg>
             </Link>
             <div>
-              <h1 className="font-heading font-bold text-2xl text-[#0f172a]">Antibodi vs Kuman 🧬</h1>
+              <h1 className="font-heading font-bold text-2xl text-[#0f172a]">Antibodi vs Kuman ??</h1>
               <p className="text-sm text-slate-500">
-                Isi <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong> dengan karakter Ab (+) atau Ku (−), lalu hitung hasilnya
+                Isi <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong> dengan karakter Ab (+) atau Ku (-), lalu hitung hasilnya
               </p>
             </div>
           </div>
@@ -540,7 +556,7 @@ export default function GameVirusPage() {
               {formatOperand(currentQuestion.a)}
             </span>
             <span className="font-mono font-bold text-xl text-slate-400">
-              {currentQuestion.op === "+" ? "+" : "−"}
+              {currentQuestion.op === "+" ? "+" : "-"}
             </span>
             <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
               {formatOperand(currentQuestion.b)}
@@ -578,7 +594,7 @@ export default function GameVirusPage() {
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-intpink" />
-              <span className="text-[10px] font-semibold text-intpink uppercase tracking-wide">Kuman (negatif −)</span>
+              <span className="text-[10px] font-semibold text-intpink uppercase tracking-wide">Kuman (negatif -)</span>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {TIERS.map((t) => {
@@ -588,7 +604,7 @@ export default function GameVirusPage() {
                     <div className="w-12 h-12">
                       <VirusCharacter type={place} uid={`leg-ku-${t}`} />
                     </div>
-                    <span className="text-[10px] font-bold text-intpink">−{t.toLocaleString("id-ID")}</span>
+                    <span className="text-[10px] font-bold text-intpink">-{t.toLocaleString("id-ID")}</span>
                     <span className="text-[8px] text-slate-500 text-center leading-tight">{CHAR_NAMES.ku[place]}</span>
                   </div>
                 );
@@ -626,7 +642,7 @@ export default function GameVirusPage() {
                 <div className="w-7 h-7 bg-intpink rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0">Ku</div>
                 <div>
                   <p className="font-heading font-bold text-intpink text-xs leading-tight">Kolam Kuman</p>
-                  <p className="text-[9px] text-slate-400">negatif (−)</p>
+                  <p className="text-[9px] text-slate-400">negatif (-)</p>
                 </div>
               </div>
               <TargetToggle target={kuTarget} setTarget={setKuTarget} color="intpink" />
@@ -671,9 +687,9 @@ export default function GameVirusPage() {
                 <div className="text-center">
                   {/* Task 6 — operator-aware separator */}
                   <p className="font-mono font-bold text-white/20 text-lg leading-none">
-                    {currentQuestion?.op === "+" ? "+" : "−"}
+                    {currentQuestion?.op === "+" ? "+" : "-"}
                   </p>
-                  <p className="text-[9px] font-bold mt-1 text-slate-500">⚗️</p>
+                  <p className="text-[9px] font-bold mt-1 text-slate-500">?</p>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
                   <div className={`w-10 h-10 ${bil2Value !== 0 ? "battle-float" : "opacity-20"}`} style={{ animationDelay: "0.3s" }}>
@@ -695,7 +711,7 @@ export default function GameVirusPage() {
             {!darkArena && (
               <div className="text-center mb-3">
                 <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-intblue to-intpink text-white text-xs font-bold px-3 py-1 rounded-full mb-1">
-                  ⚡️ REAKTOR NETRAL
+                  ?
                 </div>
                 <p className="text-xs font-semibold text-slate-400">Isi Bilangan 1 dan Bilangan 2</p>
               </div>
@@ -705,7 +721,7 @@ export default function GameVirusPage() {
             {darkArena && (phase === "charging" || phase === "exploding") && (
               <div className="text-center mb-3">
                 <p className={`text-xs font-semibold ${phase === "charging" ? "text-yellow-400 animate-pulse" : "text-orange-400"}`}>
-                  {phase === "charging" ? "⚡ Mengisi daya..." : "💥 Menghitung..."}
+                  {phase === "charging" ? "? Mengisi daya..." : "?? Menghitung..."}
                 </p>
               </div>
             )}
@@ -752,7 +768,7 @@ export default function GameVirusPage() {
                 )}
                 {resultValue === 0 && (
                   <div className="text-center">
-                    <p className="text-4xl">🎉</p>
+                    <p className="text-4xl">??</p>
                     <p className="text-success font-semibold text-sm mt-1">Tepat nol!</p>
                   </div>
                 )}
@@ -774,26 +790,11 @@ export default function GameVirusPage() {
                       <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
                       {/* Task 6 — operator-aware separator in live preview row */}
                       <span className={`font-bold text-base ${darkArena ? "text-slate-500" : "text-slate-400"}`}>
-                        {currentQuestion?.op === "+" ? "+" : "−"}
+                        {currentQuestion?.op === "+" ? "+" : "-"}
                       </span>
                       <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
                     </div>
                     <BilanganZone bil={2} value={bil2Value} onChipRemove={(tier, onRejectFlash) => removeFromBilangan(2, tier, onRejectFlash)} />
-                  </div>
-                )}
-                {hasChips && (
-                  <div className={`rounded-xl px-3 py-2 mb-3 text-center font-mono text-sm ${darkArena ? "bg-white/5 border border-white/10" : "bg-surface"}`}>
-                    <span className={bil1Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
-                      {bil1Value !== 0 ? (bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)) : "0"}
-                    </span>
-                    <span className={`mx-1.5 ${darkArena ? "text-slate-500" : "text-slate-400"}`}>
-                      {currentQuestion?.op === "+" ? "+" : "−"}
-                    </span>
-                    <span className={bil2Value >= 0 ? "text-intblue font-bold" : "text-intpink font-bold"}>
-                      {bil2Value !== 0 ? (bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)) : "0"}
-                    </span>
-                    <span className={`mx-1.5 ${darkArena ? "text-slate-500" : "text-slate-400"}`}>=</span>
-                    <span className={`font-bold ${darkArena ? "text-slate-600" : "text-slate-300"}`}>?</span>
                   </div>
                 )}
               </>
@@ -803,7 +804,7 @@ export default function GameVirusPage() {
             <div className={`pt-3 border-t space-y-2 ${darkArena ? "border-slate-700 border-dashed" : "border-dashed border-slate-200"}`}>
               {resultValue !== null ? (
                 <button onClick={reset} className="w-full py-3 rounded-xl font-bold text-sm bg-success/10 text-success border border-success/30 hover:bg-success/20 transition-colors">
-                  ↺ Hitung Lagi
+                  ?
                 </button>
               ) : (
                 /* Task 7.2 — button calls handleComputeWithValidation */
@@ -816,10 +817,10 @@ export default function GameVirusPage() {
                       : darkArena ? "bg-slate-800 text-slate-600 cursor-not-allowed" : "bg-slate-100 text-slate-400 cursor-not-allowed"
                   } ${phase === "charging" ? "animate-pulse" : ""}`}
                 >
-                  {phase === "charging" ? "⚡ Mengisi daya..."
-                    : phase === "exploding" ? "💥 Menghitung!"
-                    : phase === "settled" ? "✓ Selesai!"
-                    : canCompute ? "⚡ Hitung Hasil"
+                  {phase === "charging" ? "? Mengisi daya..."
+                    : phase === "exploding" ? "?? Menghitung!"
+                    : phase === "settled" ? "? Selesai!"
+                    : canCompute ? "? Hitung Hasil"
                     : "Isi bilangan dulu"}
                 </button>
               )}
@@ -832,7 +833,7 @@ export default function GameVirusPage() {
                       : "text-slate-400 border-border hover:bg-slate-50 hover:text-slate-600"
                   }`}
                 >
-                  ↩ Urungkan terakhir
+                  ?
                 </button>
               )}
             </div>
@@ -845,18 +846,20 @@ export default function GameVirusPage() {
           <div className="bg-white rounded-2xl border border-border shadow-sm p-5 mb-5">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3 text-center">Persamaan Lengkap</p>
             <div className="text-center font-mono flex items-baseline justify-center gap-2 flex-wrap">
-              {computedEquation.current && (<>
-              <span className={`font-bold text-xl ${computedEquation.current.a >= 0 ? "text-intblue" : "text-intpink"}`}>
-                {computedEquation.current.a < 0 ? `(${signed(computedEquation.current.a)})` : signed(computedEquation.current.a)}
+              {currentQuestion && (<>
+              <span className={`font-bold text-xl ${getOperandColorClass(currentQuestion.a)}`}>
+                {formatOperand(currentQuestion.a)}
               </span>
-              <span className="text-slate-400 text-xl">{computedEquation.current.op === "+" ? "+" : "−"}</span>
-              <span className={`font-bold text-xl ${computedEquation.current.b >= 0 ? "text-intblue" : "text-intpink"}`}>
-                {computedEquation.current.b < 0 ? `(${signed(computedEquation.current.b)})` : signed(computedEquation.current.b)}
+              <span className="font-bold text-xl text-slate-400">
+                {currentQuestion.op === "+" ? "+" : "-"}
               </span>
-              <span className="text-slate-400 text-xl">=</span>
+              <span className={`font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
+                {formatOperand(currentQuestion.b)}
+              </span>
+              <span className="font-bold text-xl text-slate-400">=</span>
               </>)}
               <span className={`font-bold text-2xl ${resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"}`}>
-                {resultValue === 0 ? "0 ✓" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
+                {resultValue === 0 ? "0 ?" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
               </span>
             </div>
           </div>
@@ -873,7 +876,7 @@ export default function GameVirusPage() {
               <span className={`font-bold ${getOperandColorClass(currentQuestion.a)}`}>
                 {formatOperand(currentQuestion.a)}
               </span>{" "}
-              {currentQuestion.op === "+" ? "+" : "−"}{" "}
+              {currentQuestion.op === "+" ? "+" : "-"}{" "}
               <span className={`font-bold ${getOperandColorClass(currentQuestion.b)}`}>
                 {formatOperand(currentQuestion.b)}
               </span>
@@ -890,7 +893,7 @@ export default function GameVirusPage() {
                 placeholder="Jawaban..."
                 onChange={(e) => setAnswerInput(filterAnswerInput(e.target.value))}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleCheckChipAnswer();
+                  if (e.key === "Enter") { e.preventDefault(); handleCheckChipAnswer(); }
                 }}
                 className="flex-1 rounded-xl border border-border px-4 py-2.5 font-mono text-base text-center focus:outline-none focus:ring-2 focus:ring-intblue/40 disabled:opacity-50"
               />
@@ -920,7 +923,7 @@ export default function GameVirusPage() {
               onClick={handleNewChipQuestion}
               className="w-full py-2.5 rounded-xl font-bold text-sm border border-border text-slate-600 hover:bg-slate-50 transition-colors"
             >
-              Soal Baru →
+              Soal Baru ?
             </button>
           </div>
         )}
@@ -935,9 +938,9 @@ export default function GameVirusPage() {
             Reset Ulang
           </button>
           <div className="flex gap-3">
-            <Link href="/materi" className="text-sm text-slate-400 hover:text-slate-600 transition-colors px-3 py-2.5">← Materi</Link>
+            <Link href="/materi" className="text-sm text-slate-400 hover:text-slate-600 transition-colors px-3 py-2.5">?</Link>
             <Link href="/leaderboard" className="bg-intblue text-white font-bold px-5 py-2.5 rounded-full hover:bg-intblue-dark transition-colors flex items-center gap-2">
-              🏆 Leaderboard
+              ??Leaderboard
             </Link>
           </div>
         </div>

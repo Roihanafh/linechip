@@ -94,14 +94,27 @@ export function validateChipAnswer(
   };
 }
 
+
 /**
  * Validates that the chip placement zones match the active question.
  *
  * Rules:
  *   bil1Value must equal q.a
- *   bil2Value must equal q.b
+ *   bil2Value must equal:
+ *     - q.b        when q.op === "+" (user places antibodi b)
+ *     - -q.b       when q.op === "-" (user places virus b, i.e. negative)
  *
- * If both are wrong, Bilangan 1 is mentioned first (single combined message).
+ * Game Virus uses the identity  a - b = a + (-b):
+ *   For subtraction, the user places a VIRUS chip of value b (bil2Value = -b)
+ *   handleCompute always uses  bil1Value + bil2Value  for both operators.
+ *
+ * Examples:
+ *   soal  5 + 3  -> valid when bil2Value = +3  (antibodi 3)
+ *   soal  5 - 3  -> valid when bil2Value = -3  (virus 3)
+ *
+ * @param bil1Value - total chip value placed in Bilangan 1 zone
+ * @param bil2Value - total chip value placed in Bilangan 2 zone
+ * @param question  - the active ChipQuestion (a, b, op, answer)
  */
 export function validateChipPlacement(
   bil1Value: number,
@@ -109,12 +122,14 @@ export function validateChipPlacement(
   question: ChipQuestion
 ): { valid: true } | { valid: false; message: string } {
   const bil1Wrong = bil1Value !== question.a;
-  const bil2Wrong = bil2Value !== question.b;
+  // For subtraction, user places -b (virus); for addition, user places +b (antibodi)
+  const expectedBil2 = question.op === '-' ? -question.b : question.b;
+  const bil2Wrong = bil2Value !== expectedBil2;
 
   if (bil1Wrong && bil2Wrong) {
     return {
       valid: false,
-      message: `Chip di Bilangan 1 harus bernilai ${question.a} dan Chip di Bilangan 2 harus bernilai ${question.b}.`,
+      message: `Chip di Bilangan 1 harus bernilai ${question.a} dan Chip di Bilangan 2 harus bernilai ${expectedBil2}.`,
     };
   }
 
@@ -128,7 +143,7 @@ export function validateChipPlacement(
   if (bil2Wrong) {
     return {
       valid: false,
-      message: `Chip di Bilangan 2 harus bernilai ${question.b}.`,
+      message: `Chip di Bilangan 2 harus bernilai ${expectedBil2}.`,
     };
   }
 
@@ -138,7 +153,7 @@ export function validateChipPlacement(
 /**
  * Generates an accessible aria-label for a Chip_Question.
  * Negative values are spoken as "negatif N".
- * Operator is spoken as "ditambah" (+) or "dikurangi" (−).
+ * Operator is spoken as "ditambah" (+) or "dikurangi" (-).
  *
  * Example:
  *   { a: 5, b: -3, op: '+' } → "Soal: 5 ditambah negatif 3 sama dengan berapa?"

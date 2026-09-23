@@ -1,0 +1,162 @@
+{
+  "pbtResults": {
+    "1. Write bug condition exploration test": {
+      "status": "passed",
+      "failingExample": "Counterexample 1 (call-count): question {a:1, b:-1, op:\"+\", answer:0}, answerInput:\"0\" — double-call with chipFeedback=null → awardPoints called 2x (expected 1x). Shrunk after 14 iterations.\n\nCounterexample 2 (delta): question {a:-1, b:1, op:\"+\", answer:0}, answerInput:\"0\" — double-call with chipFeedback=null → totalDelta = 20 (expected 10). Shrunk after 7 iterations.\n\nConcrete examples also failed:\n- {a:5, op:'+', b:3, answer:8}: double-call → awardPoints called 2x, received 2 calls instead of 1\n- {a:-10, op:'+', b:-5, answer:-15}: double-call → awardPoints called 2x\n- {a:100, op:'-', b:50, answer:50}: double-call → totalDelta = 20 instead of 10\n\nSummary: 5 failing tests (all bug-condition assertions), 8 passing tests (baselines: single-call, wrong answer, animating guard, isBugCondition predicates, awardPoints(null) baseline). Bug is systematic across all questions.",
+      "lastRunTimestamp": 1790135866603
+    },
+    "2. Write preservation property tests (BEFORE implementing fix)": {
+      "status": "passed",
+      "lastRunTimestamp": 1790136027207
+    },
+    "3.4 Verify bug condition exploration test now passes": {
+      "status": "passed",
+      "lastRunTimestamp": 1790136412500
+    }
+  },
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135670122
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135684651
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135894490
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135670324
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135899715
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136046225
+      }
+    ],
+    "3.1 Add early-return guard in `handleCheckChipAnswer`": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135670465
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136057370
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136133080
+      }
+    ],
+    "3.2 Add `e.preventDefault()` to the `onKeyDown` Enter handler on the answer input": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135670619
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136139726
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136147086
+      }
+    ],
+    "3.3 Add `chipFeedback` to `useCallback` dependency array of `handleCheckChipAnswer`": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135670921
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136168825
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136177286
+      }
+    ],
+    "3.4 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135671117
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136212678
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136431962
+      }
+    ],
+    "3.5 Verify preservation tests still pass": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135671279
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136437971
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136480384
+      }
+    ],
+    "4. Checkpoint — Ensure all tests pass": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790135671415
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136486847
+      },
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790137130123
+      }
+    ],
+    "3. Fix: prevent double awardPoints on Enter keypress in Game Virus": [
+      {
+        "executionId": "4eca6e48-7754-45d5-b02d-2d6ee7c0312a",
+        "chatSessionId": "sess_f98258c5-ba17-4f9a-a511-2d9694ad185e",
+        "timestamp": 1790136480496
+      }
+    ]
+  }
+}
