@@ -90,7 +90,7 @@ export function validateChipAnswer(
 
   return {
     correct: false,
-    feedback: `Jawaban salah. Jawaban yang benar adalah ${question.answer}.`,
+    feedback: `Jawaban salah. Hitung lagi dengan seksama! Kamu pasti bisa.`,
   };
 }
 

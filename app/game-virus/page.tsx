@@ -300,7 +300,7 @@ export default function GameVirusPage() {
         <p className={`font-bold text-xs leading-none ${isAb ? "text-intblue" : "text-intpink"}`}>
           {isAb ? "+" : "-"}{valueLabel}
         </p>
-        <p className="text-[8px] text-slate-400">?</p>
+        <p className="text-[8px] text-slate-400">{place}</p>
       </div>
     );
   }
@@ -394,7 +394,7 @@ export default function GameVirusPage() {
                 }
                 return groups;
               })().map(({ tier: t, count }) => {
-                const shown = Math.min(count, 6);
+                const shown = count;
                 const place = TIER_TO_PLACE[t];
                 return (
                   <div key={t} className="space-y-0.5 mb-1">
@@ -424,13 +424,7 @@ export default function GameVirusPage() {
                         </div>
                       ))}
                     </div>
-                    {count > 6 && (
-                      <span className={`text-xs font-mono font-bold ${
-                        charType === "ab" ? "text-intblue" : "text-intpink"
-                      }`}>
-                        +{count - 6}
-                      </span>
-                    )}
+
                   </div>
                 );
               })}
@@ -514,34 +508,36 @@ export default function GameVirusPage() {
               )}
             </div>
 
-            {/* Live VS preview */}
-            {bil1Value !== 0 && bil2Value !== 0 && (
-              <div className="hidden sm:flex items-center gap-2 bg-[#0f172a] rounded-2xl px-3 py-2 border border-[#1e293b]">
-                <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-9 h-9">
-                    {bil1Value > 0
-                      ? <AntibodyCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
-                      : <VirusCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
-                    }
-                  </div>
-                  <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                    {bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)}
-                  </span>
+            {/* Live VS preview — always visible */}
+            <div className="flex items-center gap-2 bg-[#0f172a] rounded-2xl px-3 py-2 border border-[#1e293b]">
+              <div className="flex flex-col items-center gap-0.5">
+                <div className={`w-9 h-9 ${bil1Value === 0 ? "opacity-20" : ""}`}>
+                  {bil1Value > 0
+                    ? <AntibodyCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
+                    : bil1Value < 0
+                      ? <VirusCharacter type={dominantPlace(bil1Value)} uid="hdr-b1" />
+                      : <AntibodyCharacter type="satuan" uid="hdr-b1-empty" />
+                  }
                 </div>
-                <span className="font-mono font-bold text-white/30 text-sm px-1">vs</span>
-                <div className="flex flex-col items-center gap-0.5">
-                  <div className="w-9 h-9">
-                    {bil2Value > 0
-                      ? <AntibodyCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
-                      : <VirusCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
-                    }
-                  </div>
-                  <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : "text-rose-400"}`}>
-                    {bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)}
-                  </span>
-                </div>
+                <span className={`font-mono text-[9px] font-bold ${bil1Value > 0 ? "text-blue-400" : bil1Value < 0 ? "text-rose-400" : "text-slate-600"}`}>
+                  {bil1Value !== 0 ? (bil1Value < 0 ? `(${signed(bil1Value)})` : signed(bil1Value)) : "Bil.1"}
+                </span>
               </div>
-            )}
+              <span className="font-mono font-bold text-white/30 text-sm px-1">vs</span>
+              <div className="flex flex-col items-center gap-0.5">
+                <div className={`w-9 h-9 ${bil2Value === 0 ? "opacity-20" : ""}`}>
+                  {bil2Value > 0
+                    ? <AntibodyCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
+                    : bil2Value < 0
+                      ? <VirusCharacter type={dominantPlace(bil2Value)} uid="hdr-b2" />
+                      : <VirusCharacter type="satuan" uid="hdr-b2-empty" />
+                  }
+                </div>
+                <span className={`font-mono text-[9px] font-bold ${bil2Value > 0 ? "text-blue-400" : bil2Value < 0 ? "text-rose-400" : "text-slate-600"}`}>
+                  {bil2Value !== 0 ? (bil2Value < 0 ? `(${signed(bil2Value)})` : signed(bil2Value)) : "Bil.2"}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -685,11 +681,7 @@ export default function GameVirusPage() {
                   </span>
                 </div>
                 <div className="text-center">
-                  {/* Task 6 — operator-aware separator */}
-                  <p className="font-mono font-bold text-white/20 text-lg leading-none">
-                    {currentQuestion?.op === "+" ? "+" : "-"}
-                  </p>
-                  <p className="text-[9px] font-bold mt-1 text-slate-500">?</p>
+                  <p className="text-[9px] font-bold text-slate-500">vs</p>
                 </div>
                 <div className="flex flex-col items-center gap-0.5">
                   <div className={`w-10 h-10 ${bil2Value !== 0 ? "battle-float" : "opacity-20"}`} style={{ animationDelay: "0.3s" }}>
@@ -711,7 +703,10 @@ export default function GameVirusPage() {
             {!darkArena && (
               <div className="text-center mb-3">
                 <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-intblue to-intpink text-white text-xs font-bold px-3 py-1 rounded-full mb-1">
-                  ?
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M6 1l1.27 2.57L10 4.18l-2 1.95.47 2.75L6 7.57 3.53 8.88 4 6.13 2 4.18l2.73-.61L6 1z" fill="currentColor"/>
+                  </svg>
+                  Mulai
                 </div>
                 <p className="text-xs font-semibold text-slate-400">Isi Bilangan 1 dan Bilangan 2</p>
               </div>
@@ -721,7 +716,7 @@ export default function GameVirusPage() {
             {darkArena && (phase === "charging" || phase === "exploding") && (
               <div className="text-center mb-3">
                 <p className={`text-xs font-semibold ${phase === "charging" ? "text-yellow-400 animate-pulse" : "text-orange-400"}`}>
-                  {phase === "charging" ? "? Mengisi daya..." : "?? Menghitung..."}
+                  {phase === "charging" ? "⚡ Mengisi daya..." : "💥 Menghitung..."}
                 </p>
               </div>
             )}
@@ -742,33 +737,27 @@ export default function GameVirusPage() {
             {resultValue !== null && phase === "idle" ? (
               <div className="flex-1 flex flex-col items-center justify-center py-4">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Hasil</p>
-                {resultValue !== 0 && (
-                  <div className="w-16 h-16 mb-2 victory-pop">
-                    {resultValue > 0
-                      ? <AntibodyCharacter type={dominantPlace(resultValue)} uid="result-char" />
-                      : <VirusCharacter type={dominantPlace(resultValue)} uid="result-char" />
-                    }
-                  </div>
-                )}
-                <p className={`font-heading font-black text-4xl mb-3 ${
-                  resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"
-                }`}>
-                  {resultValue === 0 ? "0" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
-                </p>
-                {resultValue !== 0 && (
-                  <div className="flex justify-center">
-                    <CharacterChips
-                      value={Math.abs(resultValue)}
-                      type={resultValue > 0 ? "ab" : "ku"}
-                      size="sm"
-                      uidPrefix="result"
-                      maxPerTier={6}
-                    />
-                  </div>
-                )}
-                {resultValue === 0 && (
+                {resultValue !== 0 ? (
+                  <>
+                    <div className="w-20 h-20 mb-2 victory-pop">
+                      {resultValue > 0
+                        ? <AntibodyCharacter type={dominantPlace(resultValue)} uid="result-char" />
+                        : <VirusCharacter type={dominantPlace(resultValue)} uid="result-char" />
+                      }
+                    </div>
+                    <div className="flex justify-center">
+                      <CharacterChips
+                        value={Math.abs(resultValue)}
+                        type={resultValue > 0 ? "ab" : "ku"}
+                        size="sm"
+                        uidPrefix="result"
+                        maxPerTier={6}
+                      />
+                    </div>
+                  </>
+                ) : (
                   <div className="text-center">
-                    <p className="text-4xl">??</p>
+                    <p className="text-5xl">🎯</p>
                     <p className="text-success font-semibold text-sm mt-1">Tepat nol!</p>
                   </div>
                 )}
@@ -786,14 +775,7 @@ export default function GameVirusPage() {
                 ) : (
                   <div className="flex-1 flex flex-col gap-2 mb-3">
                     <BilanganZone bil={1} value={bil1Value} onChipRemove={(tier, onRejectFlash) => removeFromBilangan(1, tier, onRejectFlash)} />
-                    <div className="flex items-center justify-center gap-2">
-                      <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
-                      {/* Task 6 — operator-aware separator in live preview row */}
-                      <span className={`font-bold text-base ${darkArena ? "text-slate-500" : "text-slate-400"}`}>
-                        {currentQuestion?.op === "+" ? "+" : "-"}
-                      </span>
-                      <div className={`flex-1 h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
-                    </div>
+                    <div className={`h-px ${darkArena ? "bg-slate-700" : "bg-slate-200"}`} />
                     <BilanganZone bil={2} value={bil2Value} onChipRemove={(tier, onRejectFlash) => removeFromBilangan(2, tier, onRejectFlash)} />
                   </div>
                 )}
@@ -804,7 +786,7 @@ export default function GameVirusPage() {
             <div className={`pt-3 border-t space-y-2 ${darkArena ? "border-slate-700 border-dashed" : "border-dashed border-slate-200"}`}>
               {resultValue !== null ? (
                 <button onClick={reset} className="w-full py-3 rounded-xl font-bold text-sm bg-success/10 text-success border border-success/30 hover:bg-success/20 transition-colors">
-                  ?
+                  🔄 Coba Lagi
                 </button>
               ) : (
                 /* Task 7.2 — button calls handleComputeWithValidation */
@@ -817,10 +799,10 @@ export default function GameVirusPage() {
                       : darkArena ? "bg-slate-800 text-slate-600 cursor-not-allowed" : "bg-slate-100 text-slate-400 cursor-not-allowed"
                   } ${phase === "charging" ? "animate-pulse" : ""}`}
                 >
-                  {phase === "charging" ? "? Mengisi daya..."
-                    : phase === "exploding" ? "?? Menghitung!"
-                    : phase === "settled" ? "? Selesai!"
-                    : canCompute ? "? Hitung Hasil"
+                  {phase === "charging" ? "⚡ Mengisi daya..."
+                    : phase === "exploding" ? "💥 Menghitung!"
+                    : phase === "settled" ? "✅ Selesai!"
+                    : canCompute ? "⚔️ Hitung Hasil"
                     : "Isi bilangan dulu"}
                 </button>
               )}
@@ -833,7 +815,7 @@ export default function GameVirusPage() {
                       : "text-slate-400 border-border hover:bg-slate-50 hover:text-slate-600"
                   }`}
                 >
-                  ?
+                  ↩ Batalkan terakhir
                 </button>
               )}
             </div>
@@ -841,29 +823,7 @@ export default function GameVirusPage() {
 
         </div>
 
-        {/* Result equation */}
-        {resultValue !== null && phase === "idle" && (
-          <div className="bg-white rounded-2xl border border-border shadow-sm p-5 mb-5">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3 text-center">Persamaan Lengkap</p>
-            <div className="text-center font-mono flex items-baseline justify-center gap-2 flex-wrap">
-              {currentQuestion && (<>
-              <span className={`font-bold text-xl ${getOperandColorClass(currentQuestion.a)}`}>
-                {formatOperand(currentQuestion.a)}
-              </span>
-              <span className="font-bold text-xl text-slate-400">
-                {currentQuestion.op === "+" ? "+" : "-"}
-              </span>
-              <span className={`font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
-                {formatOperand(currentQuestion.b)}
-              </span>
-              <span className="font-bold text-xl text-slate-400">=</span>
-              </>)}
-              <span className={`font-bold text-2xl ${resultValue > 0 ? "text-intblue" : resultValue < 0 ? "text-intpink" : "text-success"}`}>
-                {resultValue === 0 ? "0 ?" : (resultValue < 0 ? `(${signed(resultValue)})` : signed(resultValue))}
-              </span>
-            </div>
-          </div>
-        )}
+
 
         {/* Task 7.3 — Answer section (shown when result is ready and question active) */}
         {resultValue !== null && phase === "idle" && currentQuestion && (
@@ -923,7 +883,7 @@ export default function GameVirusPage() {
               onClick={handleNewChipQuestion}
               className="w-full py-2.5 rounded-xl font-bold text-sm border border-border text-slate-600 hover:bg-slate-50 transition-colors"
             >
-              Soal Baru ?
+              🎲 Soal Baru
             </button>
           </div>
         )}
@@ -938,9 +898,14 @@ export default function GameVirusPage() {
             Reset Ulang
           </button>
           <div className="flex gap-3">
-            <Link href="/materi" className="text-sm text-slate-400 hover:text-slate-600 transition-colors px-3 py-2.5">?</Link>
+            <Link href="/materi" className="text-sm text-slate-400 hover:text-slate-600 transition-colors px-3 py-2.5 flex items-center gap-1">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1a6 6 0 1 0 0 12A6 6 0 0 0 7 1zm0 9.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zm.75-3.25a.75.75 0 0 1-1.5 0V5a.75.75 0 0 1 1.5 0v2.25z" fill="currentColor"/>
+              </svg>
+              Materi
+            </Link>
             <Link href="/leaderboard" className="bg-intblue text-white font-bold px-5 py-2.5 rounded-full hover:bg-intblue-dark transition-colors flex items-center gap-2">
-              ??Leaderboard
+              🏆 Leaderboard
             </Link>
           </div>
         </div>

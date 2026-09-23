@@ -414,7 +414,7 @@ export function CharacterChips({
   return (
     <div className="space-y-1.5">
       {groups.map(({ tier, count }) => {
-        const shown = Math.min(count, maxPerTier);
+        const shown = count;
         const place = TIER_TO_PLACE[tier];
         const indices = Array.from({ length: shown }, (_, i) => i);
         const rows = chunks(indices, rowSize);
@@ -448,13 +448,7 @@ export function CharacterChips({
                 })}
               </div>
             ))}
-            {count > maxPerTier && !isExploding && !isSettled && (
-              <span className={`text-xs font-mono font-bold ${
-                type === "ab" ? "text-blue-500" : "text-rose-500"
-              }`}>
-                +{(count - maxPerTier).toLocaleString("id-ID")}
-              </span>
-            )}
+
           </div>
         );
       })}

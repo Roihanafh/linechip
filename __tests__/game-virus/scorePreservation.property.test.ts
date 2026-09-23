@@ -396,7 +396,7 @@ describe(
         // chipFeedback.correct is false → guard must NOT fire → normal flow
         const incorrectFeedback: ChipFeedback = {
           correct: false,
-          feedback: "Jawaban salah. Jawaban yang benar adalah 8.",
+          feedback: "Jawaban salah. Hitung lagi dengan seksama! Kamu pasti bisa.",
         };
 
         const result = checkAnswerLogic_fixed(
