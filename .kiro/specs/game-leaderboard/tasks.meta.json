@@ -1,0 +1,349 @@
+{
+  "pbtResults": {
+    "8.4 Tulis `OwnRankCard.property.test.tsx` — Property 7": {
+      "status": "passed",
+      "lastRunTimestamp": 1790154370277
+    },
+    "8.1 Tulis `leaderboardService.property.test.ts` — Property 1 dan 6": {
+      "status": "passed",
+      "lastRunTimestamp": 1790154691145
+    },
+    "8.2 Tulis `LeaderboardTable.property.test.tsx` — Property 2 dan 5": {
+      "status": "passed",
+      "lastRunTimestamp": 1790154701064
+    },
+    "8.3 Tulis `Podium.property.test.tsx` — Property 3 dan 4": {
+      "status": "passed",
+      "lastRunTimestamp": 1790154706897
+    }
+  },
+  "executionHistory": {
+    "1.1 Buat `features/leaderboard/types.ts` dengan interface `LeaderboardEntry`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150703119
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150722185
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150766207
+      }
+    ],
+    "1.2 Buat `features/leaderboard/leaderboardService.ts` dengan fungsi `fetchTop10` dan `fetchCurrentUserEntry`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150705187
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150772051
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150890589
+      }
+    ],
+    "1.3 Buat `features/leaderboard/index.ts` sebagai barrel export": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150706091
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150896782
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151299616
+      }
+    ],
+    "2.1 Buat `app/leaderboard/page.tsx` sebagai Server Component murni": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150706209
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150902598
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151306126
+      }
+    ],
+    "2.2 Buat `app/leaderboard/LeaderboardSkeleton.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707164
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150906660
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151312427
+      }
+    ],
+    "3.1 Buat `app/leaderboard/Podium.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707272
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151319130
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151583641
+      }
+    ],
+    "3.2 Tulis unit test `Podium.unit.test.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707415
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151920618
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152476714
+      }
+    ],
+    "4.1 Buat `app/leaderboard/LeaderboardTable.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707526
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151325192
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151899074
+      }
+    ],
+    "4.2 Tulis unit test `LeaderboardTable.unit.test.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707596
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151926244
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152485146
+      }
+    ],
+    "5.1 Buat `app/leaderboard/OwnRankCard.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707677
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151331831
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151906762
+      }
+    ],
+    "5.2 Buat `app/leaderboard/PlayCTACard.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707748
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151338292
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151912182
+      }
+    ],
+    "5.3 Tulis unit test `OwnRankCard.unit.test.tsx` dan `PlayCTACard.unit.test.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707815
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151935231
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152492445
+      }
+    ],
+    "6. Checkpoint — Pastikan semua tes unit lulus, tanya pengguna jika ada pertanyaan.": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707884
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152507874
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152532880
+      }
+    ],
+    "7.1 Buat `app/leaderboard/LeaderboardClient.tsx`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150707955
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151943939
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152499051
+      }
+    ],
+    "8.1 Tulis `leaderboardService.property.test.ts` — Property 1 dan 6": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708087
+      },
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152539807
+      }
+    ],
+    "8.2 Tulis `LeaderboardTable.property.test.tsx` — Property 2 dan 5": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708161
+      }
+    ],
+    "8.3 Tulis `Podium.property.test.tsx` — Property 3 dan 4": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708231
+      }
+    ],
+    "8.4 Tulis `OwnRankCard.property.test.tsx` — Property 7": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708294
+      }
+    ],
+    "8.5 Tulis `leaderboardService.unit.test.ts`": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708358
+      }
+    ],
+    "9. Final checkpoint — Pastikan semua tes lulus dan build berjalan tanpa error, tanya pengguna jika ada pertanyaan.": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790150708456
+      }
+    ],
+    "1. Buat tipe dan service layer leaderboard": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151299735
+      }
+    ],
+    "2. Buat Server Component dan skeleton loading": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790151312513
+      }
+    ],
+    "3. Buat komponen visual Podium": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152476893
+      }
+    ],
+    "4. Buat komponen LeaderboardTable": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152485330
+      }
+    ],
+    "5. Buat OwnRankCard dan PlayCTACard": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152492570
+      }
+    ],
+    "7. Buat LeaderboardClient sebagai orchestrator": [
+      {
+        "executionId": "3cbfece3-41d4-47cb-b76a-f7991a8381b8",
+        "chatSessionId": "sess_b0efd1e2-d148-49b0-91a6-21d0068bb9a0",
+        "timestamp": 1790152499268
+      }
+    ]
+  }
+}
