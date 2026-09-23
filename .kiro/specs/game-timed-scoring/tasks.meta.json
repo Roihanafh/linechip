@@ -1,0 +1,366 @@
+{
+  "pbtResults": {
+    "1.2 Tulis property-based test untuk `computeTimedScore`": {
+      "status": "passed",
+      "lastRunTimestamp": 1790145047474
+    },
+    "2.2 Tulis property-based test untuk `awardPoints` yang dimodifikasi": {
+      "status": "passed",
+      "lastRunTimestamp": 1790145072937
+    },
+    "4.2 Tulis property-based test untuk `TimerDisplay`": {
+      "status": "passed",
+      "lastRunTimestamp": 1790145681772
+    }
+  },
+  "executionHistory": {
+    "1.1 Buat file `lib/game/timedScore.ts` dengan konstanta dan implementasi `computeTimedScore`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144456361
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144479069
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144605412
+      }
+    ],
+    "1.2 Tulis property-based test untuk `computeTimedScore`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144458533
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144610985
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145095137
+      }
+    ],
+    "2.1 Tambahkan parameter opsional `pts?: number` ke `awardPoints`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144462349
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144479699
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144605709
+      }
+    ],
+    "2.2 Tulis property-based test untuk `awardPoints` yang dimodifikasi": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144462543
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144611566
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145095638
+      }
+    ],
+    "3.1 Buat file `hooks/useTimedScoring.ts` dengan implementasi hook": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144462740
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144611984
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145096022
+      }
+    ],
+    "3.2 Tulis unit test untuk `useTimedScoring`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144462893
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145102890
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145206846
+      }
+    ],
+    "4.1 Buat file `components/game/TimerDisplay.tsx`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144464768
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145103252
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145207149
+      }
+    ],
+    "4.2 Tulis property-based test untuk `TimerDisplay`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144464969
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145215327
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145704188
+      }
+    ],
+    "5. Checkpoint — Pastikan semua unit test lolos": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465093
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146235472
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146922311
+      }
+    ],
+    "6.1 Tambahkan import dan inisialisasi `useTimedScoring` di `GameVirusPage`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465275
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145215668
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145704691
+      }
+    ],
+    "6.2 Modifikasi `handleNewChipQuestion` untuk mereset timer": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465413
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145724010
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146136639
+      }
+    ],
+    "6.3 Modifikasi `handleCheckChipAnswer` untuk menghentikan timer dan menggunakan `getScore()`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465559
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145724622
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146137025
+      }
+    ],
+    "6.4 Tambahkan `TimerDisplay` ke banner soal di `GameVirusPage`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465720
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146148098
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146227890
+      }
+    ],
+    "7.1 Tambahkan import dan inisialisasi `useTimedScoring` di `IntLineRunPage`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144465866
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145216344
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145704978
+      }
+    ],
+    "7.2 Bungkus `newQuestion` dengan wrapper `handleNewQuestion` yang memanggil `startTimer()`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144466047
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145725203
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146137877
+      }
+    ],
+    "7.3 Modifikasi `handleCheckAnswer` untuk menghentikan timer dan menggunakan `getScore()`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144466231
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145725888
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146138529
+      }
+    ],
+    "7.4 Tambahkan `TimerDisplay` ke kartu soal di `IntLineRunPage`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144466399
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146147432
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146228329
+      }
+    ],
+    "8. Final checkpoint — Pastikan semua tests pass": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790144466553
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146928574
+      },
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790147409399
+      }
+    ],
+    "1. Buat pure function `computeTimedScore` di `lib/game/timedScore.ts`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145095245
+      }
+    ],
+    "2. Modifikasi `awardPoints` di `features/game/scoreService.ts`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145095716
+      }
+    ],
+    "3. Buat hook `useTimedScoring` di `hooks/useTimedScoring.ts`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145206931
+      }
+    ],
+    "4. Buat komponen `TimerDisplay` di `components/game/TimerDisplay.tsx`": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790145704269
+      }
+    ],
+    "6. Integrasi timer ke Game Virus (`app/game-virus/page.tsx`)": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146228061
+      }
+    ],
+    "7. Integrasi timer ke Game Garis Bilangan (`app/intline-run/page.tsx`)": [
+      {
+        "executionId": "a06858bf-c98d-478e-9627-1a8b9e9266c1",
+        "chatSessionId": "sess_e31aab4d-54cb-45fa-ae31-a4fca38edebf",
+        "timestamp": 1790146228470
+      }
+    ]
+  }
+}

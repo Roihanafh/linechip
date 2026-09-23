@@ -33,6 +33,8 @@ import {
 } from "@/lib/game/chipHelpers";
 import { awardPoints, POINTS_PER_CORRECT } from "@/features/game/scoreService";
 import { useAuth } from "@/features/auth";
+import { useTimedScoring } from "@/hooks/useTimedScoring";
+import { TimerDisplay } from "@/components/game/TimerDisplay";
 
 interface HistoryEntry {
   type: "ab" | "ku";
@@ -71,6 +73,15 @@ export default function GameVirusPage() {
   const checkInProgressRef = useRef(false);
 
   const { user, profile } = useAuth();
+
+  // Task 6.1 — Timed scoring hook
+  const { elapsedTime, startTimer, stopTimer, getScore } = useTimedScoring();
+
+  // Task 6.1 — Start timer when the first question mounts
+  useEffect(() => {
+    startTimer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Cleanup auto-advance timer on unmount
   useEffect(() => {
@@ -203,7 +214,8 @@ export default function GameVirusPage() {
     setChipFeedback(null);
     computedEquation.current = null; // clear Persamaan Lengkap on new question
     // sessionScore intentionally NOT reset
-  }, []);
+    startTimer(); // Task 6.2 — reset timer for each new question
+  }, [startTimer]);
 
   // Task 7.3 — check written answer
   // checkInProgressRef: sinkron guard mencegah double-fire dalam render cycle yang sama.
@@ -218,10 +230,12 @@ export default function GameVirusPage() {
     const result = validateChipAnswer(answerInput, currentQuestion);
     setChipFeedback(result);
     if (result.correct) {
+      // Stop timer and capture timed score before awarding points
+      stopTimer();
       // Call awardPoints ONCE outside the updater — React 18 Strict Mode calls
       // setState updaters twice to detect side effects, which would send two
-      // Firestore increment(10) writes and award 20 pts instead of 10.
-      const pts = awardPoints(user?.uid ?? null);
+      // Firestore increment writes and award double points.
+      const pts = awardPoints(user?.uid ?? null, getScore());
       setSessionScore((prev) => prev + pts);
       autoAdvanceRef.current = setTimeout(() => {
         handleNewChipQuestion();
@@ -484,9 +498,9 @@ export default function GameVirusPage() {
               </svg>
             </Link>
             <div>
-              <h1 className="font-heading font-bold text-2xl text-[#0f172a]">Antibodi vs Kuman ??</h1>
+              <h1 className="font-heading font-bold text-2xl text-[#0f172a]">Antibodi vs Kuman</h1>
               <p className="text-sm text-slate-500">
-                Isi <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong> dengan karakter Ab (+) atau Ku (-), lalu hitung hasilnya
+                Isi <strong>Bilangan 1</strong> dan <strong>Bilangan 2</strong> dengan karakter yang sesuai
               </p>
             </div>
           </div>
@@ -541,27 +555,6 @@ export default function GameVirusPage() {
           </div>
         </div>
 
-        {/* Task 7.4 — Chip_Question banner */}
-        {currentQuestion && (
-          <div
-            className="bg-white rounded-2xl border border-border p-4 mb-4 flex items-center justify-center gap-2"
-            aria-label={generateAriaLabel(currentQuestion)}
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mr-2">SOAL:</span>
-            <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.a)}`}>
-              {formatOperand(currentQuestion.a)}
-            </span>
-            <span className="font-mono font-bold text-xl text-slate-400">
-              {currentQuestion.op === "+" ? "+" : "-"}
-            </span>
-            <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
-              {formatOperand(currentQuestion.b)}
-            </span>
-            <span className="font-mono font-bold text-xl text-slate-400">=</span>
-            <span className="font-mono font-bold text-xl text-slate-300">?</span>
-          </div>
-        )}
-
         {/* Tier legend — SVG characters, no chip badges */}
         <div className="bg-white rounded-2xl border border-border p-4 mb-4">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3">Tingkatan Karakter:</p>
@@ -608,6 +601,34 @@ export default function GameVirusPage() {
             </div>
           </div>
         </div>
+
+        {/* Task 7.4 — Chip_Question banner (below tier legend) */}
+        {currentQuestion && (
+          <div
+            className="bg-white rounded-2xl border border-border p-3 mb-4"
+            aria-label={generateAriaLabel(currentQuestion)}
+          >
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              {/* Question */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide bg-slate-100 px-2 py-0.5 rounded-full">SOAL</span>
+                <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.a)}`}>
+                  {formatOperand(currentQuestion.a)}
+                </span>
+                <span className="font-mono font-bold text-xl text-slate-400">
+                  {currentQuestion.op === "+" ? "+" : "-"}
+                </span>
+                <span className={`font-mono font-bold text-xl ${getOperandColorClass(currentQuestion.b)}`}>
+                  {formatOperand(currentQuestion.b)}
+                </span>
+                <span className="font-mono font-bold text-xl text-slate-400">=</span>
+                <span className="font-mono font-bold text-xl text-slate-300">?</span>
+              </div>
+              {/* Inline stopwatch timer */}
+              <TimerDisplay elapsedTime={elapsedTime} />
+            </div>
+          </div>
+        )}
 
         {/* 3-col game layout */}
         <div className="flex flex-col gap-4 mb-5">

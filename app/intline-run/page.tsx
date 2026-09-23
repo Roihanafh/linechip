@@ -11,6 +11,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useGameLineState } from "../../components/game-line/useGameLineState";
+import { useTimedScoring } from "@/hooks/useTimedScoring";
+import { TimerDisplay } from "@/components/game/TimerDisplay";
 import GameLineCanvas from "../../components/game-line/GameLineCanvas";
 import GameLineArrowControls from "../../components/game-line/GameLineArrowControls";
 import GameLineKeypad from "../../components/game-line/GameLineKeypad";
@@ -45,7 +47,16 @@ export default function IntLineRunPage() {
   const [sessionScore, setSessionScore] = useState(0);
   const [arrowFeedback, setArrowFeedback] = useState<string | null>(null);
 
+  const { elapsedTime, startTimer, stopTimer, getScore } = useTimedScoring();
+
   const playLaunch = useSound("/luncurkan.mp3");
+
+  // Wrapper that resets arrow feedback, advances to a new question, and restarts the timer
+  const handleNewQuestion = () => {
+    newQuestion();
+    setArrowFeedback(null);
+    startTimer();
+  };
 
   // Auto-advance after correct answer (2000 ms delay)
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -54,6 +65,11 @@ export default function IntLineRunPage() {
     return () => {
       if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
     };
+  }, []);
+
+  // Start timer when the first question mounts
+  useEffect(() => {
+    startTimer();
   }, []);
 
   const handleCheckAnswer = () => {
@@ -68,10 +84,10 @@ export default function IntLineRunPage() {
     setArrowFeedback(null);
     const correct = checkAnswer();
     if (correct) {
-      setSessionScore(prev => prev + awardPoints(user?.uid ?? null));
+      stopTimer();
+      setSessionScore(prev => prev + awardPoints(user?.uid ?? null, getScore()));
       autoAdvanceRef.current = setTimeout(() => {
-        newQuestion();
-        setArrowFeedback(null);
+        handleNewQuestion();
       }, 2000);
     }
   };
@@ -143,6 +159,7 @@ export default function IntLineRunPage() {
                 {currentQuestion.b < 0 ? `(${currentQuestion.b})` : currentQuestion.b}
                 {" = ?"}
               </p>
+              <TimerDisplay elapsedTime={elapsedTime} className="mt-3" />
             </div>
 
             {/* Game canvas */}
@@ -227,7 +244,7 @@ export default function IntLineRunPage() {
                 Periksa
               </button>
               <button
-                onClick={() => { newQuestion(); setArrowFeedback(null); }}
+                onClick={() => { handleNewQuestion(); }}
                 className="flex-1 py-3 rounded-xl border border-border text-slate-600 font-semibold hover:bg-slate-50 transition-colors"
               >
                 Soal Baru

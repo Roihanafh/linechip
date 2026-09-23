@@ -43,13 +43,24 @@ async function writeIncrement(uid: string, pts: number, attempt = 1): Promise<vo
 }
 
 /**
- * Award 10 pts. Fire-and-forget Firestore write.
- * Returns the local delta (always POINTS_PER_CORRECT).
+ * Award points. Fire-and-forget Firestore write.
+ * @param uid  Firestore user ID. If null/undefined, no write is attempted.
+ * @param pts  Points to award. Defaults to POINTS_PER_CORRECT (backward compatible).
+ *             Floats are floored. Values ≤ 0 skip the Firestore write and return 0.
+ * Returns the local delta (the effective integer pts, or 0 if skipped).
  */
-export function awardPoints(uid: string | null | undefined): number {
+export function awardPoints(uid: string | null | undefined, pts?: number): number {
+  const effective = pts === undefined
+    ? POINTS_PER_CORRECT
+    : Math.floor(pts);
+
+  if (effective <= 0) {
+    return 0;
+  }
+
   if (uid) {
     const queued = getPending(uid);
-    writeIncrement(uid, POINTS_PER_CORRECT + queued).catch(() => {});
+    writeIncrement(uid, effective + queued).catch(() => {});
   }
-  return POINTS_PER_CORRECT;
+  return effective;
 }

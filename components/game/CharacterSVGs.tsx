@@ -448,6 +448,13 @@ export function CharacterChips({
                 })}
               </div>
             ))}
+            {count > maxPerTier && !isExploding && !isSettled && (
+              <span className={`text-xs font-mono font-bold ${
+                type === "ab" ? "text-blue-500" : "text-rose-500"
+              }`}>
+                +{(count - maxPerTier).toLocaleString("id-ID")}
+              </span>
+            )}
 
           </div>
         );
