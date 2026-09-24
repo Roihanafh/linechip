@@ -20,10 +20,11 @@ export function useLoginForm(): UseLoginFormReturn {
     setErrors({});
 
     try {
-      await AuthService.loginWithEmail(email, password, rememberMe);
+      const { uid } = await AuthService.loginWithEmail(email, password, rememberMe);
       setToast({ message: 'Login berhasil! Selamat datang kembali.', type: 'success' });
-      const redirect = searchParams.get('redirect');
-      const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+      const redirectParam = searchParams.get('redirect');
+      const role = await AuthService.getRoleAfterSession(uid);
+      const targetUrl = AuthService.resolveLoginRedirect(role, redirectParam);
       if (typeof window !== 'undefined') {
         window.location.href = targetUrl;
       } else {
@@ -49,10 +50,12 @@ export function useLoginForm(): UseLoginFormReturn {
     setErrors({});
 
     try {
-      await AuthService.loginWithGoogle();
+      const result = await AuthService.loginWithGoogle();
+      if (result === null) return; // popup dismissed — silent
       setToast({ message: 'Login Google berhasil! Selamat datang kembali.', type: 'success' });
-      const redirect = searchParams.get('redirect');
-      const targetUrl = redirect ? decodeURIComponent(redirect) : '/';
+      const redirectParam = searchParams.get('redirect');
+      const role = await AuthService.getRoleAfterSession(result.uid);
+      const targetUrl = AuthService.resolveLoginRedirect(role, redirectParam);
       if (typeof window !== 'undefined') {
         window.location.href = targetUrl;
       } else {

@@ -1,4 +1,4 @@
-import {
+﻿import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
@@ -191,10 +191,11 @@ export async function loginWithEmail(
   email: string,
   password: string,
   rememberMe: boolean
-): Promise<void> {
+): Promise<{ uid: string }> {
   try {
     const { auth } = getFirebaseClient();
     const credential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = credential.user.uid;
     const idToken = await credential.user.getIdToken();
 
     const res = await fetch('/api/auth/session', {
@@ -209,6 +210,8 @@ export async function loginWithEmail(
         message: getErrorMessage('unknown'),
       } satisfies AuthError;
     }
+
+    return { uid };
   } catch (err) {
     // Selalu normalisasi — Firebase SDK error juga memiliki 'code' & 'message'
     // tapi message-nya adalah string raw seperti "Firebase: Error (auth/invalid-credential)."
@@ -219,7 +222,7 @@ export async function loginWithEmail(
 
 // ─── Login with Google ────────────────────────────────────────────────────────
 
-export async function loginWithGoogle(): Promise<void> {
+export async function loginWithGoogle(): Promise<{ uid: string } | null> {
   try {
     const { auth, db } = getFirebaseClient();
     const provider = new GoogleAuthProvider();
@@ -251,10 +254,12 @@ export async function loginWithGoogle(): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken, rememberMe: false }),
     });
+
+    return { uid: user.uid };
   } catch (err) {
     const code = (err as { code?: string }).code ?? 'unknown';
     // Silent — user intentionally dismissed the popup
-    if (SILENT_ERRORS.has(code)) return;
+    if (SILENT_ERRORS.has(code)) return null;
     throw normalizeAuthError(err);
   }
 }
@@ -264,23 +269,29 @@ export async function loginWithGoogle(): Promise<void> {
 export async function logout(): Promise<void> {
   const { auth } = getFirebaseClient();
 
-  const [signOutResult, fetchResult] = await Promise.allSettled([
-    signOut(auth),
-    fetch('/api/auth/logout', { method: 'POST' }),
-  ]);
-
-  if (signOutResult.status === 'rejected') {
-    throw signOutResult.reason;
-  }
-
-  if (fetchResult.status === 'rejected') {
+  // Step 1: delete the httpOnly session cookie on the server first.
+  // Must complete before any navigation so the browser receives the
+  // cleared Set-Cookie header before the next page load.
+  let fetchRes: Response;
+  try {
+    fetchRes = await fetch('/api/auth/logout', { method: 'POST' });
+  } catch (err) {
     console.warn('[AuthService] Server-side logout failed (network error)');
     throw new Error('Cookie logout failed');
   }
 
-  if (!fetchResult.value.ok) {
+  if (!fetchRes.ok) {
     console.warn('[AuthService] Server-side logout returned non-ok status');
     throw new Error('Cookie logout returned non-ok status');
+  }
+
+  // Step 2: sign out from Firebase client SDK after cookie is cleared.
+  // This triggers onAuthStateChanged → AuthProvider resets to unauthenticated.
+  try {
+    await signOut(auth);
+  } catch (err) {
+    // Firebase client signOut failure is non-fatal — cookie is already gone.
+    console.warn('[AuthService] Firebase signOut failed (best-effort):', err);
   }
 }
 
@@ -293,4 +304,54 @@ export async function sendPasswordReset(email: string): Promise<void> {
   } catch {
     // Swallow all errors — don't reveal whether the email is registered
   }
+}
+
+// ─── Role-Based Redirect ──────────────────────────────────────────────────────
+
+/**
+ * Pure function — no side effects.
+ * Determines the post-login redirect path based on the user's role and the
+ * optional `redirect` query param supplied by the login page.
+ *
+ * Rules:
+ *  - admin + redirectParam starts with `/admin` → redirectParam
+ *  - admin + anything else (or null)            → `/admin`
+ *  - user  + redirectParam does NOT start with `/admin` (and not null) → redirectParam
+ *  - user  + redirectParam starts with `/admin` (or null)              → `/`
+ */
+export function resolveLoginRedirect(
+  role: 'user' | 'admin',
+  redirectParam: string | null
+): string {
+  const isAdminPath = (p: string) => p === '/admin' || p.startsWith('/admin/');
+
+  if (role === 'admin') {
+    if (redirectParam !== null && isAdminPath(redirectParam)) {
+      return redirectParam;
+    }
+    return '/admin';
+  }
+
+  // role === 'user'
+  if (redirectParam !== null && !isAdminPath(redirectParam)) {
+    return redirectParam;
+  }
+  return '/';
+}
+
+// ─── Role Resolution ──────────────────────────────────────────────────────────
+
+/**
+ * Reads the user's role from Firestore after a successful login session.
+ * Races against a 5-second timeout — returns 'user' as a safe fallback
+ * if the profile can't be fetched or the timeout fires first.
+ */
+export async function getRoleAfterSession(uid: string): Promise<'user' | 'admin'> {
+  const timeoutPromise = new Promise<'user'>((resolve) =>
+    setTimeout(() => resolve('user'), 5000)
+  );
+  const rolePromise = getUserProfile(uid).then(
+    (profile) => (profile?.role ?? 'user') as 'user' | 'admin'
+  );
+  return Promise.race([rolePromise, timeoutPromise]).catch(() => 'user' as const);
 }

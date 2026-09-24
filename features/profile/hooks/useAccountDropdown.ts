@@ -1,7 +1,6 @@
-'use client';
+﻿'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { logout } from '@/features/auth/services/authService';
 import type { UseAccountDropdownReturn } from '../types';
 
@@ -23,7 +22,6 @@ export function useAccountDropdown(): UseAccountDropdownReturn {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const router = useRouter();
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
@@ -42,8 +40,8 @@ export function useAccountDropdown(): UseAccountDropdownReturn {
     }
     // Always redirect and close, even if logout() throws
     close();
-    router.push('/');
-  }, [close, router]);
+    window.location.href = '/';  // Full reload ensures server reads cleared cookie
+  }, [close]);
 
   // Requirement 6.7: close on outside click
   useEffect(() => {

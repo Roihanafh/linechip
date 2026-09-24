@@ -122,6 +122,7 @@ describe('loginWithEmail() -- observation on unfixed code', () => {
    */
   it('calls fetch("/api/auth/session") and resolves when credentials are valid', async () => {
     const mockUser = {
+      uid: 'mock-uid-123',
       getIdToken: jest.fn().mockResolvedValue('mock-id-token'),
     };
     mockSignInWithEmailAndPassword.mockResolvedValue({ user: mockUser });
@@ -132,7 +133,7 @@ describe('loginWithEmail() -- observation on unfixed code', () => {
 
     await expect(
       loginWithEmail('user@test.com', 'password123', false)
-    ).resolves.toBeUndefined();
+    ).resolves.toMatchObject({ uid: expect.any(String) });
 
     expect(fetchSpy).toHaveBeenCalledWith(
       '/api/auth/session',

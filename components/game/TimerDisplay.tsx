@@ -1,6 +1,6 @@
 // components/game/TimerDisplay.tsx
 // Stateless presentational component — no useEffect or useState.
-// Renders a compact circular stopwatch-style countdown from 90 → 0 → negative (time over).
+// Displays elapsed time since question started with speed tier label.
 "use client";
 
 export interface TimerDisplayProps {
@@ -10,78 +10,81 @@ export interface TimerDisplayProps {
   className?: string;
 }
 
-/** Total seconds before the countdown crosses zero */
-const COUNTDOWN_FROM = 90;
-
 /** Radius of the SVG arc circle */
 const R = 22;
 const CIRC = 2 * Math.PI * R;
 
+/** Total seconds before reaching minimum score tier */
+const BONUS_WINDOW = 90;
+
 interface SpeedTier {
   label: string;
-  color: string;
+  colorClass: string;
   hex: string;
 }
 
+/**
+ * Returns the speed tier for a given elapsed time (integer seconds).
+ * Boundaries based on elapsedTime:
+ *   0–29  → Sangat Cepat 🔥  (text-success)
+ *   30–59 → Cepat ⚡          (text-intblue)
+ *   60–89 → Masih Oke 👍      (text-amber-500)
+ *   ≥ 90  → Waktu Habis ⏰   (text-error)
+ */
 function getSpeedTier(elapsed: number): SpeedTier {
-  const remaining = COUNTDOWN_FROM - elapsed;
-  if (remaining > 60) return { label: "Cepat 🔥",      color: "text-emerald-500", hex: "#10b981" };
-  if (remaining > 30) return { label: "Oke ⚡",         color: "text-blue-500",    hex: "#3b82f6" };
-  if (remaining > 0)  return { label: "Hampir ⏳",      color: "text-amber-500",   hex: "#f59e0b" };
-  return                     { label: "Waktu Habis ⏰", color: "text-rose-500",    hex: "#ef4444" };
+  if (elapsed < 30) return { label: "Sangat Cepat 🔥", colorClass: "text-success",    hex: "#22c55e" };
+  if (elapsed < 60) return { label: "Cepat ⚡",        colorClass: "text-intblue",    hex: "#3b82f6" };
+  if (elapsed < 90) return { label: "Masih Oke 👍",    colorClass: "text-amber-500",  hex: "#f59e0b" };
+  return                   { label: "Waktu Habis ⏰",  colorClass: "text-error",       hex: "#ef4444" };
 }
 
 /**
- * Compact circular stopwatch countdown.
+ * Circular stopwatch displaying elapsed time since question started.
  *
- * - Counts DOWN from 90 to 0; after 0 shows negative elapsed seconds (e.g. -5).
- * - Arc depletes clockwise as time passes; turns red when over.
- * - Fits inline next to question text — ~56 px tall.
+ * - Displays elapsed time in MM:SS format.
+ * - Shows speed tier label alongside the clock.
+ * - Accessible: aria-label on time element; aria-label on speed label span.
  *
  * Edge cases:
- * - elapsedTime < 0 or NaN → treated as 0.
+ * - elapsedTime < 0: treated as 0 → shows "00:00" and "Sangat Cepat 🔥"
+ * - NaN or non-finite: shows "00:00" with aria-label "Waktu tidak tersedia"
  */
 export function TimerDisplay({ elapsedTime, className }: TimerDisplayProps) {
-  const t = Number.isFinite(elapsedTime) && elapsedTime >= 0 ? Math.floor(elapsedTime) : 0;
-  const remaining = COUNTDOWN_FROM - t;
+  const isInvalid = !Number.isFinite(elapsedTime);
+  const t = isInvalid ? 0 : Math.max(0, Math.floor(elapsedTime));
+
   const tier = getSpeedTier(t);
 
-  // Arc progress: 0 elapsed → full arc; 90 elapsed → empty arc; beyond → stays empty
-  const progress = Math.max(0, Math.min(1, remaining / COUNTDOWN_FROM));
+  // Arc progress: 0 elapsed → full arc; BONUS_WINDOW elapsed → empty arc; beyond → stays empty
+  const progress = Math.max(0, Math.min(1, 1 - t / BONUS_WINDOW));
   const dashOffset = CIRC * (1 - progress);
 
-  // Display: countdown when positive, negative when time is over
-  const absVal = Math.abs(remaining);
-  const sign = remaining < 0 ? "-" : "";
-  const mm = Math.floor(absVal / 60);
-  const ss = absVal % 60;
-  const timeStr = mm > 0
-    ? `${sign}${mm}:${String(ss).padStart(2, "0")}`
-    : `${sign}${ss}`;
+  // MM:SS format of elapsed time
+  const mm = Math.floor(t / 60);
+  const ss = t % 60;
+  const timeStr = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 
-  const ariaLabel =
-    remaining >= 0
-      ? `Sisa waktu: ${remaining} detik`
-      : `Waktu habis: lewat ${Math.abs(remaining)} detik`;
-
-  const overClass = remaining <= 0 ? "animate-pulse" : "";
+  // aria-label on the time element
+  const timeAriaLabel = isInvalid
+    ? "Waktu tidak tersedia"
+    : `Waktu berlalu: ${mm} menit ${ss} detik`;
 
   return (
     <div
       className={`inline-flex items-center gap-2 ${className ?? ""}`}
-      aria-label={ariaLabel}
+      aria-label={`Sisa waktu: ${t} detik`}
     >
       {/* Circular SVG clock */}
-      <div className={`relative shrink-0 ${overClass}`}>
+      <div className="relative shrink-0">
         <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
           {/* Background track */}
           <circle
             cx="28" cy="28" r={R}
-            stroke={remaining <= 0 ? "#fecaca" : "#e2e8f0"}
+            stroke="#e2e8f0"
             strokeWidth="4"
-            fill={remaining <= 0 ? "#fff1f2" : "#f8fafc"}
+            fill="#f8fafc"
           />
-          {/* Progress arc — depletes clockwise */}
+          {/* Progress arc — depletes as time increases */}
           <circle
             cx="28" cy="28" r={R}
             stroke={tier.hex}
@@ -101,11 +104,12 @@ export function TimerDisplay({ elapsedTime, className }: TimerDisplayProps) {
             x="28" y="28"
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={mm > 0 ? "8" : "11"}
+            fontSize="8"
             fontWeight="700"
             fontFamily="monospace"
             fill={tier.hex}
             aria-live="polite"
+            aria-label={timeAriaLabel}
           >
             {timeStr}
           </text>
@@ -120,7 +124,10 @@ export function TimerDisplay({ elapsedTime, className }: TimerDisplayProps) {
       </div>
 
       {/* Speed tier label */}
-      <span className={`text-xs font-semibold leading-tight max-w-[64px] ${tier.color}`}>
+      <span
+        className={`text-xs font-semibold leading-tight max-w-[64px] ${tier.colorClass}`}
+        aria-label={tier.label}
+      >
         {tier.label}
       </span>
     </div>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bug Condition Exploration Test — Task 1 / Task 3.3 (Post-Fix Verification)
  *
  * Feature: auth-logout-state-bug
@@ -99,7 +99,9 @@ describe('logout() — Fix Verified: Errors Are Propagated', () => {
     // On fixed code: logout() throws → caller is notified that cookie was NOT cleared
     await expect(logout()).rejects.toThrow();
 
-    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    // With sequential logout: when fetch fails, signOut is NOT called.
+    // This is intentional — no point signing out client-side if cookie was not cleared.
+    expect(mockSignOut).not.toHaveBeenCalled();
     expect(fetchSpy).toHaveBeenCalledWith('/api/auth/logout', { method: 'POST' });
 
     fetchSpy.mockRestore();
@@ -123,7 +125,8 @@ describe('logout() — Fix Verified: Errors Are Propagated', () => {
     // On fixed code: res.ok check throws → caller is notified
     await expect(logout()).rejects.toThrow();
 
-    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    // With sequential logout: when fetch returns non-ok, signOut is NOT called.
+    expect(mockSignOut).not.toHaveBeenCalled();
     expect(fetchSpy).toHaveBeenCalledWith('/api/auth/logout', { method: 'POST' });
 
     fetchSpy.mockRestore();

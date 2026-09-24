@@ -62,16 +62,22 @@ interface FloatingInputProps {
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   icon: React.ReactNode;
   error?: string;
   rightSlot?: React.ReactNode;
   valid?: boolean;
   autoComplete?: string;
+  disabled?: boolean;
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
 }
 
 export function FloatingInput({
-  id, label, type, placeholder, value, onChange, icon,
-  error, rightSlot, valid, autoComplete,
+  id, label, type, placeholder, value, onChange, onBlur, icon,
+  error, rightSlot, valid, autoComplete, disabled,
+  'aria-invalid': ariaInvalid,
+  'aria-describedby': ariaDescribedby,
 }: FloatingInputProps) {
   const [focused, setFocused] = useState(false);
   const lifted = focused || value.length > 0;
@@ -109,10 +115,13 @@ export function FloatingInput({
           placeholder={lifted ? placeholder : ""}
           value={value}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => { setFocused(false); onBlur?.(); }}
           onChange={(e) => onChange(e.target.value)}
           autoComplete={autoComplete}
-          className={`w-full pt-5 pb-2 pl-10 ${rightSlot ? "pr-10" : "pr-4"} text-[14px] font-['Plus_Jakarta_Sans',sans-serif] bg-white border rounded-xl outline-none transition-all duration-200 text-[#0f172a] shadow-[0_1px_3px_0_rgba(0,0,0,0.06)] ${
+          disabled={disabled}
+          aria-invalid={ariaInvalid}
+          aria-describedby={ariaDescribedby}
+          className={`w-full pt-5 pb-2 pl-10 ${rightSlot ? "pr-10" : "pr-4"} text-[14px] font-['Plus_Jakarta_Sans',sans-serif] bg-white border rounded-xl outline-none transition-all duration-200 text-[#0f172a] shadow-[0_1px_3px_0_rgba(0,0,0,0.06)] disabled:opacity-50 disabled:cursor-not-allowed ${
             error
               ? "border-[#f43f5e] focus:ring-2 focus:ring-rose-100"
               : focused
