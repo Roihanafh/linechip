@@ -65,21 +65,6 @@ export default function TentangPage() {
           <div className="flex-1 h-px bg-border" />
         </div>
 
-        {/* Team */}
-        <h2 className="font-bold text-2xl text-[#0f172a] mb-4" style={{ fontFamily: "var(--font-baloo2), system-ui, sans-serif" }}>Tim Pengembang</h2>
-        <div className="space-y-3 mb-8">
-          {TEAM.map((dev, i) => (
-            <div key={i} className="flex items-center gap-4 bg-white rounded-xl p-4 border border-border hover:shadow-sm transition-shadow">
-              <div className={`w-12 h-12 ${dev.color === "intblue" ? "bg-intblue-light" : "bg-intpink-light"} rounded-2xl flex items-center justify-center text-2xl`}>
-                {dev.avatar}
-              </div>
-              <div>
-                <p className="font-semibold text-[#0f172a]">{dev.name}</p>
-                <p className="text-sm text-slate-500">{dev.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
 
         {/* Institution */}
         <div className="bg-gradient-to-r from-intblue-light to-intpink-light rounded-2xl p-6 border border-border text-center mb-8">
