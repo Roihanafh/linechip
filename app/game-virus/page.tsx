@@ -17,6 +17,7 @@ import {
 } from "@/components/game/CharacterSVGs";
 import { InteractionAnimation } from "@/components/game/InteractionAnimation";
 import { useSound } from "@/hooks/useSound";
+import GameIntroModal from "@/components/game/GameIntroModal";
 import { generateChipQuestion, type ChipQuestion } from "@/lib/game/chipQuestion";
 import {
   validateChipPlacement,
@@ -44,6 +45,19 @@ const isTier = (n: number): n is Tier => [1, 10, 100, 1000].includes(n);
 
 function signed(v: number): string {
   return v > 0 ? `+${v.toLocaleString("id-ID")}` : v.toLocaleString("id-ID");
+}
+
+function GameVirusInstructions() {
+  return (
+    <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside">
+      <li>Baca soal di banner atas — perhatikan nilai <strong>Bilangan 1</strong> (positif/Ab) dan <strong>Bilangan 2</strong> (negatif/Ku).</li>
+      <li>Seret chip <strong>Ab (+)</strong> dari Kolam Antibodi ke zona <strong>Bilangan 1</strong> sesuai nilai soal.</li>
+      <li>Seret chip <strong>Ku (−)</strong> dari Kolam Kuman ke zona <strong>Bilangan 2</strong> sesuai nilai soal.</li>
+      <li>Tekan <strong>⚔️ Hitung Hasil</strong> untuk memulai animasi pertempuran.</li>
+      <li>Ketikkan jawaban numerik lalu tekan <strong>Periksa</strong>.</li>
+      <li className="text-intblue font-semibold">Semakin cepat kamu menjawab, semakin besar poin yang kamu dapatkan!</li>
+    </ol>
+  );
 }
 
 export default function GameVirusPage() {
@@ -75,11 +89,15 @@ export default function GameVirusPage() {
   // Task 6.1 — Timed scoring hook
   const { elapsedTime, startTimer, stopTimer, getScore } = useTimedScoring();
 
-  // Task 6.1 — Start timer when the first question mounts
-  useEffect(() => {
+  // Intro popup state — timer starts only after user closes the modal
+  const [gameStarted, setGameStarted] = useState(false);
+  const handleStart = () => {
+    setGameStarted(true);
     startTimer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+
+  // Task 6.1 — Start timer when the first question mounts
+  // Timer is now started in handleStart (after intro popup closes) — useEffect removed
 
   // Cleanup auto-advance timer on unmount
   useEffect(() => {
@@ -481,7 +499,13 @@ export default function GameVirusPage() {
 
   return (
     <div className="min-h-full bg-surface overflow-auto">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <GameIntroModal
+        isOpen={!gameStarted}
+        title="Antibodi vs Kuman"
+        instructions={<GameVirusInstructions />}
+        onStart={handleStart}
+      />
+      <div className={`max-w-5xl mx-auto px-4 py-8${!gameStarted ? " pointer-events-none select-none" : ""}`}>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
@@ -712,12 +736,6 @@ export default function GameVirusPage() {
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Hasil</p>
                 {resultValue !== 0 ? (
                   <>
-                    <div className="w-20 h-20 mb-2 victory-pop">
-                      {resultValue > 0
-                        ? <AntibodyCharacter type={dominantPlace(resultValue)} uid="result-char" />
-                        : <VirusCharacter type={dominantPlace(resultValue)} uid="result-char" />
-                      }
-                    </div>
                     <div className="flex justify-center">
                       <CharacterChips
                         value={Math.abs(resultValue)}

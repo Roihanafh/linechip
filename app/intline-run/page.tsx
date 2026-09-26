@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useGameLineState } from "../../components/game-line/useGameLineState";
 import { useTimedScoring } from "@/hooks/useTimedScoring";
 import { TimerDisplay } from "@/components/game/TimerDisplay";
+import GameIntroModal from "@/components/game/GameIntroModal";
 import GameLineCanvas from "../../components/game-line/GameLineCanvas";
 import GameLineArrowControls from "../../components/game-line/GameLineArrowControls";
 import GameLineKeypad from "../../components/game-line/GameLineKeypad";
@@ -21,6 +22,18 @@ import { validateArrowPlacement } from "../../lib/game/arrowHelpers";
 import { awardPoints } from "../../features/game/scoreService";
 import { resolveDisplayScore, formatScore } from "../../lib/game/chipHelpers";
 import { useAuth } from "../../features/auth";
+
+function GameLineInstructions() {
+  return (
+    <ol className="space-y-2 text-sm text-slate-700 list-decimal list-inside">
+      <li>Baca soal di kartu soal — perhatikan nilai dan operasi (+/−).</li>
+      <li>Atur <strong>Panah 1</strong> dan <strong>Panah 2</strong> pada garis bilangan agar posisinya sesuai nilai soal.</li>
+      <li>Tekan <strong>▶ Cek Posisi</strong> untuk melihat animasi panah.</li>
+      <li>Ketikkan jawaban numerik lalu tekan <strong>Periksa</strong>.</li>
+      <li className="text-intblue font-semibold">Semakin cepat kamu menjawab, semakin besar poin yang kamu dapatkan!</li>
+    </ol>
+  );
+}
 
 export default function IntLineRunPage() {
   const {
@@ -44,12 +57,19 @@ export default function IntLineRunPage() {
 
   const { user, profile } = useAuth();
 
+  const [gameStarted, setGameStarted] = useState(false);
   const [sessionScore, setSessionScore] = useState(0);
   const [arrowFeedback, setArrowFeedback] = useState<string | null>(null);
 
   const { elapsedTime, startTimer, stopTimer, getScore } = useTimedScoring();
 
   const playLaunch = useSound("/luncurkan.mp3");
+
+  // Called when the user dismisses the intro modal — starts the timer
+  const handleStart = () => {
+    setGameStarted(true);
+    startTimer();
+  };
 
   // Wrapper that resets arrow feedback, advances to a new question, and restarts the timer
   const handleNewQuestion = () => {
@@ -67,10 +87,7 @@ export default function IntLineRunPage() {
     };
   }, []);
 
-  // Start timer when the first question mounts
-  useEffect(() => {
-    startTimer();
-  }, []);
+  // Timer is started by handleStart (after the intro modal is dismissed)
 
   const handleCheckAnswer = () => {
     // Layer 1: validate arrow placement
@@ -94,7 +111,13 @@ export default function IntLineRunPage() {
 
   return (
     <div className="min-h-screen bg-surface py-8">
-      <div className="max-w-5xl mx-auto px-4">
+      <GameIntroModal
+        isOpen={!gameStarted}
+        title="Game Garis Bilangan 🎯"
+        instructions={<GameLineInstructions />}
+        onStart={handleStart}
+      />
+      <div className={`max-w-5xl mx-auto px-4${!gameStarted ? " pointer-events-none select-none" : ""}`}>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

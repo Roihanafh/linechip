@@ -1,0 +1,346 @@
+{
+  "pbtResults": {
+    "2.4 Tulis property test untuk `GameIntroModal` — Property 1: Title selalu tampil": {
+      "status": "passed",
+      "lastRunTimestamp": 1790394222828
+    },
+    "2.5 Tulis property test — Property 2: Instructions selalu mengandung `<ol>`": {
+      "status": "passed",
+      "lastRunTimestamp": 1790394227830
+    },
+    "2.6 Tulis property test — Property 3: ARIA attributes selalu hadir": {
+      "status": "passed",
+      "lastRunTimestamp": 1790394231768
+    },
+    "2.7 Tulis property test — Property 4: `aria-labelledby` selalu menunjuk ke elemen judul": {
+      "status": "passed",
+      "lastRunTimestamp": 1790394235865
+    }
+  },
+  "executionHistory": {
+    "1.1 Tambahkan keyframe `modal-enter-kf` dan `modal-exit-kf` beserta utility class `.modal-enter` dan `.modal-exit`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392870491
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392883448
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392958871
+      }
+    ],
+    "2.1 Buat file `components/game/GameIntroModal.tsx` dengan interface dan struktur dasar": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392872414
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392964507
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393076886
+      }
+    ],
+    "2.2 Implementasi struktur DOM dan styling modal": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392873374
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393081020
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393139090
+      }
+    ],
+    "2.3 Implementasi focus trap dan focus restoration": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392873934
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393178082
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393270435
+      }
+    ],
+    "2.4 Tulis property test untuk `GameIntroModal` — Property 1: Title selalu tampil": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874071
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393275393
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394254612
+      }
+    ],
+    "2.5 Tulis property test — Property 2: Instructions selalu mengandung `<ol>`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874177
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393280095
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394258753
+      }
+    ],
+    "2.6 Tulis property test — Property 3: ARIA attributes selalu hadir": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874262
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393283966
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394323325
+      }
+    ],
+    "2.7 Tulis property test — Property 4: `aria-labelledby` selalu menunjuk ke elemen judul": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874355
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393288327
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394327839
+      }
+    ],
+    "3. Checkpoint — Pastikan komponen `GameIntroModal` dapat dirender tanpa error": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874452
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394460662
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395568722
+      }
+    ],
+    "4.1 Tambahkan state `gameStarted`, handler `handleStart`, dan JSX `GameIntroModal`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874550
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790393292641
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394332596
+      }
+    ],
+    "4.2 Blokir interaksi game saat modal terbuka": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874630
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394348253
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394436832
+      }
+    ],
+    "4.3 Tulis unit test state `gameStarted` untuk game-virus": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874707
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394464884
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395561515
+      }
+    ],
+    "5.1 Tambahkan state `gameStarted`, handler `handleStart`, dan JSX `GameIntroModal`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874782
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394338768
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394442072
+      }
+    ],
+    "5.2 Blokir interaksi game saat modal terbuka": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874859
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394352702
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395553073
+      }
+    ],
+    "6. Checkpoint — Pastikan kedua halaman game bekerja end-to-end": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392874935
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395574145
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395817674
+      }
+    ],
+    "7.1 Tulis unit tests example-based untuk `GameIntroModal`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392875064
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394468820
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395824065
+      }
+    ],
+    "8. Final checkpoint — Pastikan semua test lulus": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392875181
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395832383
+      },
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395899722
+      }
+    ],
+    "1. Tambahkan keyframe animasi modal ke `app/animations.css`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790392958949
+      }
+    ],
+    "2. Buat komponen `GameIntroModal`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790394327928
+      }
+    ],
+    "5. Integrasi `GameIntroModal` ke `app/intline-run/page.tsx`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395554472
+      }
+    ],
+    "4. Integrasi `GameIntroModal` ke `app/game-virus/page.tsx`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395562948
+      }
+    ],
+    "7. Tulis unit tests untuk `GameIntroModal`": [
+      {
+        "executionId": "ceba05bb-201c-4094-90ff-bb59eaec0270",
+        "chatSessionId": "sess_db60a854-848d-43ed-8b3c-6b3a8d6ced94",
+        "timestamp": 1790395824688
+      }
+    ]
+  }
+}
